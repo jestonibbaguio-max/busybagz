@@ -12,16 +12,22 @@
   <meta property="og:url" content="https://busybagz.com/store/UBEC%20Gigcase">
   <meta property="og:image" content="https://res.cloudinary.com/sjnrfmjm/image/upload/v1788515161/gigcase_logo.jpg">
   <meta name="twitter:card" content="summary_large_image">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7446487671504565" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="/css/styles.css">
   <style>
     body { padding: 112px 20px 48px; background: #f7f5f0; }
     .store-page { width: min(100%, 980px); margin: 0 auto; }
+    .store-layout { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 2rem; align-items: start; }
+    .store-column { min-width: 0; }
     .store-hero { overflow: hidden; border-radius: 18px; background: white; box-shadow: 0 18px 38px rgba(41, 67, 154, 0.12); }
+    .store-ad-rail { position: sticky; top: 6rem; align-self: start; }
     .store-banner { width: 100%; height: min(42vw, 360px); min-height: 220px; object-fit: cover; display: block; }
     .store-content { padding: clamp(24px, 5vw, 52px); }
-    .store-content h1 { margin: 8px 0 10px; font-size: clamp(2rem, 5vw, 3.5rem); }
+    .store-content h1 { margin: 8px 0 10px; font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.1; }
+    .store-content h2 { margin: 1.5rem 0 0.75rem; font-size: 1.05rem; color: #17362b; }
     .store-category { margin: 0; color: #1b8f66; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.78rem; }
     .store-description { max-width: 650px; color: #53608a; line-height: 1.7; }
+    .store-details-list { margin: 0; padding-left: 1.2rem; color: #2c415f; line-height: 1.8; }
     .store-reservation { margin: 24px 0; font-weight: 700; }
     .store-reservation a { color: #1b8f66; }
     .store-reservation a:hover { text-decoration: underline; }
@@ -37,7 +43,21 @@
     .store-product-card:hover { border-color: #1b8f66; box-shadow: 0 10px 22px rgba(23, 54, 43, 0.1); }
     .store-missing { padding: 48px 24px; text-align: center; }
     .store-missing h1 { margin-top: 0; }
-    @media (max-width: 600px) { body { padding: 180px 12px 32px; } .store-banner { min-height: 180px; } .store-product-grid { grid-template-columns: 1fr; } }
+    .store-address { margin-top: 1rem; color: #2c415f; }
+    .store-address a { color: #17362b; }
+    @media (max-width: 1024px) {
+      .store-layout { grid-template-columns: 1fr; }
+      .store-ad-rail { position: static; }
+    }
+    @media (max-width: 768px) {
+      body { padding: 120px 12px 32px; }
+      .store-page { width: min(100%, 100%); }
+      .store-content { padding: 1.25rem 1rem 1.5rem; }
+      .store-banner { min-height: 180px; }
+      .store-product-grid { grid-template-columns: 1fr; }
+      .store-hero { border-radius: 14px; }
+      .store-ad-rail { margin-top: 1rem; }
+    }
   </style>
 </head>
 <body>
@@ -48,7 +68,39 @@
     <a href="/index.html" class="nav-cart" aria-label="Back to storefront">Storefront</a>
   </nav>
 
-  <main class="store-page" id="storePage"></main>
+  <main class="store-page">
+    <div class="store-layout">
+      <div class="store-column" id="storePage"></div>
+
+      <aside class="ad-rail store-ad-rail" aria-label="Sponsored content">
+        <p class="ad-rail-label">Sponsored</p>
+        <ins class="adsbygoogle ad-slot ad-slot-featured"
+          style="display:block"
+          data-ad-client="ca-pub-7446487671504565"
+          data-ad-slot="9568789244"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+        <a class="ad-slot ad-slot-featured" href="#" data-ad-slot="featured">
+          <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=480&h=320&fit=crop&q=80" alt="Travel bag collection">
+          <span class="ad-slot-content">
+            <small>Featured partner</small>
+            <strong>Gear up for your next trip</strong>
+            <span>Promote your brand here</span>
+          </span>
+        </a>
+        <a class="ad-slot ad-slot-secondary" href="#" data-ad-slot="secondary">
+          <span class="ad-slot-content">
+            <small>Sponsored</small>
+            <strong>Reach BusyBagz shoppers</strong>
+            <span>Your campaign could be here</span>
+          </span>
+        </a>
+      </aside>
+    </div>
+  </main>
 
   <footer class="footer">
     <div class="footer-bottom">
@@ -105,6 +157,46 @@
       storePage.innerHTML = '<section class="store-hero store-missing"><h1>Store not found</h1><p>That BusyBagz store is no longer available.</p><a class="store-back" href="/index.html">Back to storefront</a></section>';
     } else {
       document.title = `${store.name} | BusyBagz`;
+      const productOffers = [
+        { name: 'Transparent bag', url: '/pdp.html?id=5', price: 'Pre-order' },
+        { name: 'Pickle Bag', url: '/pdp.html?id=6', price: 'Pre-order' }
+      ];
+
+      const structuredData = {
+        '@context': 'https://schema.org',
+        '@type': 'Store',
+        name: store.name,
+        description: store.description,
+        image: store.image || fallbackImage,
+        url: `https://busybagz.com/store/${encodeURIComponent(store.name)}`,
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: store.address,
+          addressCountry: 'PH'
+        },
+        sameAs: store.facebookUrl ? [store.facebookUrl] : [],
+        makesOffer: productOffers.map(product => ({
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Product',
+            name: product.name,
+            url: `https://busybagz.com${product.url}`,
+            category: store.category,
+            offers: {
+              '@type': 'Offer',
+              price: '0',
+              priceCurrency: 'PHP',
+              availability: 'https://schema.org/InStock'
+            }
+          }
+        }))
+      };
+
+      const jsonLd = document.createElement('script');
+      jsonLd.type = 'application/ld+json';
+      jsonLd.textContent = JSON.stringify(structuredData);
+      document.head.appendChild(jsonLd);
+
       storePage.innerHTML = `
         <article class="store-hero">
           <img class="store-banner" src="${escapeHTML(store.image || fallbackImage)}" alt="${escapeHTML(store.name)} banner">
