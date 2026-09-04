@@ -16,11 +16,13 @@
   <link rel="stylesheet" href="/css/styles.css">
   <style>
     body { padding: 112px 20px 48px; background: #f7f5f0; }
-    .store-page { width: min(100%, 980px); margin: 0 auto; }
-    .store-layout { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 2rem; align-items: start; }
+    .store-page { width: min(100%, 1440px); margin: 0 auto; }
+    .store-layout { display: grid; grid-template-columns: minmax(0, 980px) 280px; justify-content: space-between; gap: 2rem; align-items: start; }
     .store-column { min-width: 0; }
     .store-hero { overflow: hidden; border-radius: 18px; background: white; box-shadow: 0 18px 38px rgba(41, 67, 154, 0.12); }
     .store-ad-rail { position: sticky; top: 6rem; align-self: start; }
+    .store-ad-rail .adsbygoogle { width: 100% !important; min-width: 0; max-width: 100%; overflow: hidden; }
+    .store-ad-rail .adsbygoogle iframe { max-width: 100%; }
     .store-banner { width: 100%; height: min(42vw, 360px); min-height: 220px; object-fit: cover; display: block; }
     .store-content { padding: clamp(24px, 5vw, 52px); }
     .store-content h1 { margin: 8px 0 10px; font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.1; }
