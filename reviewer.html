@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BusyBagz Reviewer</title>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7446487671504565" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="css/styles.css">
   <style>
     :root {
       --bg: #eef3ff;
@@ -33,7 +34,7 @@
     }
 
     body {
-      padding: 32px 20px 80px;
+      padding: 104px 20px 80px;
     }
 
     a { color: inherit; text-decoration: none; }
@@ -587,23 +588,64 @@
     @media (max-width: 920px) {
       .layout { grid-template-columns: 1fr; }
       .field-row, .summary-row { grid-template-columns: 1fr; }
-      .topbar { flex-wrap: wrap; }
       .quiz-layout { grid-template-columns: 1fr; }
       .quiz-card { padding: 22px 18px; }
       .quiz-ad { position: static; }
     }
+
+    @media (max-width: 600px) {
+      body { padding: 116px 12px 40px; }
+      .quiz-layout { grid-template-columns: minmax(0, 1fr); }
+      .quiz-card { width: 100%; max-width: 100%; padding: 20px 14px; border-radius: 18px; }
+      .quiz-header h1 { font-size: 1.75rem; }
+      .pdf-toolbar { align-items: flex-start; flex-direction: column; }
+      .pdf-actions, .quiz-actions { width: 100%; }
+      .pdf-actions .button, .quiz-actions .button { width: 100%; }
+      .quiz-ad { padding: 16px; border-radius: 16px; }
+      .store-dialog { width: calc(100vw - 24px); padding: 24px 18px; }
+    }
   </style>
 </head>
 <body>
-  <div class="page-shell">
-    <header class="topbar">
-      <div class="brand" aria-label="BusyBagz brand logo">
-        <span class="brand-mark">BB</span>
-        <span class="brand-name">BusyBagz</span>
-      </div>
-      <a class="nav-link" href="index.html">Back to storefront</a>
-    </header>
+  <nav class="navbar" id="navbar">
+    <a href="index.html" class="nav-logo" aria-label="BusyBagz home">
+      <img src="https://res.cloudinary.com/sjnrfmjm/image/upload/v1788502910/busyBagz.png" alt="BusyBagz logo" class="brand-logo-image" />
+    </a>
+    <form class="site-search" id="site-search">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35m1.35-5.4a6.75 6.75 0 1 1-13.5 0 6.75 6.75 0 0 1 13.5 0Z"/>
+      </svg>
+      <input id="search-input" type="search" placeholder="Search products or stores" aria-label="Search products or stores">
+      <div class="search-results" id="search-results" role="listbox" aria-label="Search results"></div>
+    </form>
+    <button class="create-store-button" id="open-store-modal" type="button">Create a store</button>
+    <a href="#" class="nav-cart" id="nav-cart">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1-.75 0Z"/>
+      </svg>
+      <span class="cart-count">0</span>
+    </a>
+  </nav>
 
+  <div class="store-modal" id="store-modal" hidden>
+    <div class="store-modal-backdrop" data-close-store-modal></div>
+    <section class="store-dialog" role="dialog" aria-modal="true" aria-labelledby="store-dialog-title">
+      <button class="store-dialog-close" type="button" aria-label="Close" data-close-store-modal>&times;</button>
+      <p class="eyebrow">Join BusyBagz</p>
+      <h2 id="store-dialog-title">Create a store</h2>
+      <p class="store-dialog-intro">Add your storefront to the BusyBagz directory so shoppers can find it.</p>
+      <form id="store-form">
+        <label>Store name<input name="name" type="text" required maxlength="60" placeholder="e.g. Field &amp; Form"></label>
+        <label>Category<input name="category" type="text" required maxlength="40" placeholder="e.g. Travel gear"></label>
+        <label>Short description<textarea name="description" required maxlength="180" rows="3" placeholder="What makes your store special?"></textarea></label>
+        <label>Store image URL <span>(optional)</span><input name="image" type="url" placeholder="https://..."></label>
+        <button class="hero-cta store-submit" type="submit">Publish store</button>
+        <p class="form-message" id="store-form-message" role="status"></p>
+      </form>
+    </section>
+  </div>
+
+  <div class="page-shell">
     <div class="quiz-layout">
       <main class="quiz-card">
         <div class="quiz-header">
@@ -653,6 +695,7 @@
     </div>
   </div>
 
+  <script src="js/app.js"></script>
   <script>
     const REVIEW_RESULTS_KEY = 'busybagz-review-results';
     const fallbackQuestions = [
