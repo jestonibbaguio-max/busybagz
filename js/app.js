@@ -107,7 +107,7 @@ const DEFAULT_STORES = [
   },
   {
     id: 'all-in-the-van',
-    name: 'ALL_IN_THE_VAN',
+    name: 'All in the Van',
     category: 'Travel & Tour',
     description: 'All in the Van Travel & Tour is a premier, newly established transport and tour provider dedicated to delivering seamless, safe, and comfortable travel experiences. Specializing in private van rentals and customized tour packages, we cater to families, corporate groups, and independent travelers looking to explore the region’s top destinations. DM us to reserve yours today! 📩',
     image: 'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788542559/store_van_logo.jpg',
