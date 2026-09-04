@@ -75,11 +75,16 @@
     }
 
     .breadcrumbs {
+      position: sticky;
+      top: 106px;
+      z-index: 900;
       display: flex;
       align-items: center;
       gap: 0.5rem;
       margin-top: 32px;
       margin-bottom: 1rem;
+      padding: 0.5rem 0;
+      background: var(--bg);
       color: var(--muted);
       font-size: 0.82rem;
     }
@@ -168,7 +173,7 @@
       .ads { position: static; }
       body { padding: 125px 12px 72px; }
       .page-shell { padding-top: 14px; }
-      .breadcrumbs { margin-top: 90px; }
+      .breadcrumbs { top: 146px; margin-top: 90px; }
     }
   </style>
 </head>
@@ -203,6 +208,11 @@
 
       <aside class="ad-rail" aria-label="Sponsored content">
         <p class="ad-rail-label">Sponsored</p>
+        <a class="ad-slot ad-slot-featured" href="#" data-ad-slot="featured">
+          <video autoplay muted loop playsinline preload="metadata" aria-label="BusyBagz brand video">
+            <source src="https://res.cloudinary.com/sjnrfmjm/video/upload/v1788517203/busybagz_vertical_animation.mp4" type="video/mp4">
+          </video>
+        </a>
         <ins class="adsbygoogle ad-slot ad-slot-featured"
           style="display:block"
           data-ad-client="ca-pub-7446487671504565"
@@ -212,21 +222,6 @@
         <script>
           (adsbygoogle = window.adsbygoogle || []).push({});
         </script>
-        <a class="ad-slot ad-slot-featured" href="#" data-ad-slot="featured">
-          <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=480&h=320&fit=crop&q=80" alt="Travel bag collection">
-          <span class="ad-slot-content">
-            <small>Featured partner</small>
-            <strong>Gear up for your next trip</strong>
-            <span>Promote your brand here</span>
-          </span>
-        </a>
-        <a class="ad-slot ad-slot-secondary" href="#" data-ad-slot="secondary">
-          <span class="ad-slot-content">
-            <small>Sponsored</small>
-            <strong>Reach BusyBagz shoppers</strong>
-            <span>Your campaign could be here</span>
-          </span>
-        </a>
       </aside>
     </div>
   </div>
