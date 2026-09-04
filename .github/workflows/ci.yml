@@ -1,0 +1,45 @@
+name: BusyBagz CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Validate JavaScript syntax
+        run: node --check server.js && node --check js/app.js
+
+      - name: Start application
+        run: node server.js > server.log 2>&1 &
+
+      - name: Smoke-test reviewer routes
+        run: |
+          for attempt in {1..20}; do
+            if curl --fail --silent http://localhost:3000/reviewer > reviewer.html; then
+              break
+            fi
+            sleep 1
+          done
+          grep -q "SAP Commerce Cloud Reviewer" reviewer.html
+          grep -q "adsbygoogle" reviewer.html
+          test "$(curl --fail --silent http://localhost:3000/api/ecommerce-cloud | node -e "let data=''; process.stdin.on('data', chunk => data += chunk); process.stdin.on('end', () => { const payload = JSON.parse(data); if (payload.questions.length !== 155) process.exit(1); console.log(payload.questions.length); });")" = "155"
+
+      - name: Show server log on failure
+        if: failure()
+        run: cat server.log
