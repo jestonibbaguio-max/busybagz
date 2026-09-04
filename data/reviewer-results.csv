@@ -1,0 +1,2 @@
+id,date,reviewerName,documentName,documentType,status,rating,summary,tags,pdfText
+"1788489130422","2026-09-04T02:32:10.422Z","Quiz taker","Q&A assessment","Quiz","Failed","40","Scored 2/5 (40%). Passing rate is 80%.","quiz,assessment,score",""

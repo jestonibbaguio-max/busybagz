@@ -1,0 +1,9 @@
+{
+  "name": "busybagz",
+  "version": "1.0.0",
+  "private": true,
+  "description": "BusyBagz storefront served with a Node.js static server.",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

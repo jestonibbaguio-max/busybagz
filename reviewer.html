@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BusyBagz Reviewer</title>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7446487671504565" crossorigin="anonymous"></script>
+  <style>
+    :root {
+      --bg: #fffaf5;
+      --panel: #ffffff;
+      --panel-soft: #fff2ea;
+      --ink: #1c1c2e;
+      --muted: #67627d;
+      --line: rgba(28, 28, 46, 0.12);
+      --brand: #1d1d3a;
+      --brand-soft: #ff8a66;
+      --success: #168868;
+      --warning: #ffb703;
+      --danger: #d94c4c;
+      --shadow: 0 20px 48px rgba(29, 29, 58, 0.1);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: Inter, Arial, sans-serif;
+      font-size: 16px;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    body {
+      padding: 32px 20px 80px;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page-shell {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 28px;
+      padding: 18px 22px;
+      background: var(--brand);
+      color: white;
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #f9d77a;
+      font-size: 1rem;
+      font-weight: 900;
+      letter-spacing: -0.14em;
+    }
+
+    .brand-name {
+      font-size: 1.25rem;
+    }
+
+    .nav-link {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
+      gap: 28px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .reviewer-panel {
+      padding: 24px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .eyebrow {
+      margin: 0;
+      color: var(--brand-soft);
+      font-weight: 800;
+      font-size: 0.76rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 8px 0 0;
+      font-size: clamp(1.8rem, 3vw, 2.35rem);
+      letter-spacing: -0.06em;
+    }
+
+    .summary-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin: 18px 0 24px;
+    }
+
+    .summary-card {
+      background: var(--panel-soft);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .summary-card .label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .summary-card strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 1.7rem;
+      letter-spacing: -0.06em;
+    }
+
+    .document-viewer {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .pdf-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 18px;
+      background: #faf7f3;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .pdf-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .pdf-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      background: var(--brand);
+      color: white;
+      padding: 10px 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.18s ease, opacity 0.18s ease;
+    }
+
+    .button:hover { transform: translateY(-1px); }
+    .button.secondary {
+      background: white;
+      color: var(--ink);
+      border-color: var(--line);
+    }
+
+    .button.warn {
+      background: var(--brand-soft);
+      color: white;
+    }
+
+    .pdf-stage {
+      min-height: 420px;
+      padding: 18px;
+      background: linear-gradient(180deg, #f9f8f7, #f5f2ef);
+    }
+
+    .pdf-placeholder {
+      display: grid;
+      place-items: center;
+      min-height: 420px;
+      border: 1px dashed rgba(28, 28, 46, 0.22);
+      border-radius: 18px;
+      text-align: center;
+      background: rgba(255,255,255,0.45);
+      color: var(--muted);
+    }
+
+    .pdf-placeholder strong {
+      display: block;
+      font-size: 1.3rem;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+
+    .reviewer-form {
+      padding: 24px;
+    }
+
+    .reviewer-form h2 {
+      margin: 0 0 16px;
+      font-size: 1.4rem;
+      letter-spacing: -0.04em;
+    }
+
+    form {
+      display: grid;
+      gap: 14px;
+    }
+
+    .field,
+    .field-row {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field-row {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font: inherit;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: rgba(29, 29, 58, 0.34);
+      box-shadow: 0 0 0 4px rgba(29,29,58,0.05);
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: #ecfdf5;
+      color: var(--success);
+    }
+
+    .status-pill.pending {
+      background: #fff6d2;
+      color: #9a6400;
+    }
+
+    .status-pill.rejected {
+      background: #ffe8e8;
+      color: var(--danger);
+    }
+
+    .quiz-card {
+      min-width: 0;
+      margin: 0 auto;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 30px 28px 24px;
+    }
+
+    .quiz-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 900px) 260px;
+      gap: 24px;
+      align-items: start;
+      justify-content: center;
+    }
+
+    .quiz-ad {
+      position: sticky;
+      top: 24px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .quiz-ad-label {
+      display: block;
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .quiz-ad .adsbygoogle {
+      display: block;
+      min-height: 220px;
+    }
+
+    .quiz-header {
+      margin-bottom: 18px;
+    }
+
+    .progress-wrap {
+      margin-bottom: 22px;
+    }
+
+    .progress-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(29,29,58,0.08);
+      overflow: hidden;
+    }
+
+    .progress-bar span {
+      display: block;
+      height: 100%;
+      width: 20%;
+      background: var(--brand-soft);
+      border-radius: inherit;
+      transition: width 0.2s ease;
+    }
+
+    .question-section h2 {
+      margin: 0 0 18px;
+      font-size: clamp(1.35rem, 2.5vw, 1.85rem);
+      letter-spacing: -0.05em;
+      line-height: 1.2;
+    }
+
+    .answer-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .answer-option {
+      width: 100%;
+      padding: 16px 18px;
+      text-align: left;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      color: var(--ink);
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .answer-option:hover:not(:disabled) {
+      border-color: rgba(29,29,58,0.34);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(29,29,58,0.05);
+    }
+
+    .answer-option.selected {
+      border-color: var(--brand-soft);
+      box-shadow: 0 0 0 3px rgba(255,138,102,0.14);
+    }
+
+    .answer-option.correct {
+      background: #ebfff3;
+      border-color: var(--success);
+      color: #0d5d44;
+    }
+
+    .answer-option.incorrect {
+      background: #fff1f1;
+      border-color: var(--danger);
+      color: #8d2f2f;
+    }
+
+    .feedback-box {
+      margin-top: 22px;
+      padding: 14px 16px;
+      background: rgba(29,29,58,0.04);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .feedback-box strong {
+      color: var(--brand);
+    }
+
+    .quiz-actions {
+      margin-top: 22px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .summary-section {
+      text-align: center;
+      padding-top: 8px;
+    }
+
+    .result-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      background: rgba(22,136,104,0.12);
+      color: var(--success);
+    }
+
+    .result-badge.fail {
+      background: rgba(217,76,76,0.12);
+      color: var(--danger);
+    }
+
+    .summary-section h2 {
+      margin: 0 0 10px;
+      font-size: 2rem;
+      letter-spacing: -0.05em;
+    }
+
+    .score-value {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: -0.06em;
+      margin-bottom: 8px;
+    }
+
+    .score-percent {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--brand-soft);
+      margin-bottom: 16px;
+    }
+
+    .summary-section p {
+      color: var(--muted);
+      margin-bottom: 18px;
+      font-size: 1rem;
+    }
+
+    .results-list {
+      margin-top: 20px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .result-item {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+    }
+
+    .result-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .result-name {
+      font-weight: 800;
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .result-meta {
+      color: var(--muted);
+      font-size: 0.78rem;
+      margin-top: 6px;
+    }
+
+    .result-summary {
+      color: var(--muted);
+      line-height: 1.65;
+      margin: 0;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .tag {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(29,29,58,0.06);
+      color: var(--ink);
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 920px) {
+      .layout { grid-template-columns: 1fr; }
+      .field-row, .summary-row { grid-template-columns: 1fr; }
+      .topbar { flex-wrap: wrap; }
+      .quiz-layout { grid-template-columns: 1fr; }
+      .quiz-card { padding: 22px 18px; }
+      .quiz-ad { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <div class="brand" aria-label="BusyBagz brand logo">
+        <span class="brand-mark">BB</span>
+        <span class="brand-name">BusyBagz</span>
+      </div>
+      <a class="nav-link" href="/">Back to storefront</a>
+    </header>
+
+    <div class="quiz-layout">
+      <main class="quiz-card">
+        <div class="quiz-header">
+          <p class="eyebrow">Assessment</p>
+          <h1>Question and Answer</h1>
+        </div>
+
+        <div class="progress-wrap" aria-live="polite">
+          <div class="progress-label" id="progressLabel">Question 1 of 5</div>
+          <div class="progress-bar">
+            <span id="progressBar"></span>
+          </div>
+        </div>
+
+        <section id="questionSection" class="question-section">
+          <h2 id="questionText">Question</h2>
+          <div id="answerList" class="answer-list"></div>
+        </section>
+
+        <div id="feedbackBox" class="feedback-box hidden" aria-live="polite"></div>
+
+        <div class="quiz-actions">
+          <button id="nextBtn" class="button hidden" type="button">Next question</button>
+        </div>
+
+        <section id="summarySection" class="summary-section hidden" aria-live="polite">
+          <div id="resultBadge" class="result-badge">Passed</div>
+          <h2>Your score</h2>
+          <div id="scoreValue" class="score-value">0 / 5</div>
+          <div id="scorePercent" class="score-percent">0%</div>
+          <p id="resultMessage">You met the 80% passing rate.</p>
+          <button id="restartBtn" class="button secondary" type="button">Retake quiz</button>
+        </section>
+      </main>
+
+      <aside class="quiz-ad" aria-label="Advertisement">
+        <span class="quiz-ad-label">Advertisement</span>
+        <ins class="adsbygoogle"
+          data-ad-client="ca-pub-7446487671504565"
+          data-ad-slot="9568789244"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    const fallbackQuestions = [
+      {
+        prompt: 'What is the main purpose of the BusyBagz website?',
+        options: [
+          'To sell premium bags and accessories',
+          'To provide online banking services',
+          'To sell groceries and food items',
+          'To host apartment rentals'
+        ],
+        correctIndex: 0,
+        explanation: 'BusyBagz is designed for premium bag and accessory shopping.'
+      },
+      {
+        prompt: 'Which feature best supports a premium shopping experience?',
+        options: [
+          'A clean product catalog with detailed pricing',
+          'Only a plain text homepage',
+          'No search functionality',
+          'Hidden product information'
+        ],
+        correctIndex: 0,
+        explanation: 'A polished catalog with clear pricing makes shopping easier and more premium.'
+      },
+      {
+        prompt: 'Why is highlighting the correct answer important in a quiz?',
+        options: [
+          'It helps the learner understand the result immediately',
+          'It removes all questions',
+          'It hides the score',
+          'It makes the page load faster'
+        ],
+        correctIndex: 0,
+        explanation: 'Immediate feedback makes the learning experience clearer and more effective.'
+      },
+      {
+        prompt: 'What score is required to pass this quiz?',
+        options: [
+          '80%',
+          '50%',
+          '25%',
+          '100%'
+        ],
+        correctIndex: 0,
+        explanation: 'The quiz pass threshold is set to 80%.'
+      },
+      {
+        prompt: 'What does the final score screen show?',
+        options: [
+          'The score and pass/fail status',
+          'Only the last selected answer',
+          'A blank page',
+          'No feedback at all'
+        ],
+        correctIndex: 0,
+        explanation: 'The final screen summarizes the result and tells the user whether they passed.'
+      }
+    ];
+
+    let questions = [...fallbackQuestions];
+
+    const progressLabel = document.getElementById('progressLabel');
+    const progressBar = document.getElementById('progressBar');
+    const questionText = document.getElementById('questionText');
+    const answerList = document.getElementById('answerList');
+    const feedbackBox = document.getElementById('feedbackBox');
+    const nextBtn = document.getElementById('nextBtn');
+    const summarySection = document.getElementById('summarySection');
+    const questionSection = document.getElementById('questionSection');
+    const resultBadge = document.getElementById('resultBadge');
+    const scoreValue = document.getElementById('scoreValue');
+    const scorePercent = document.getElementById('scorePercent');
+    const resultMessage = document.getElementById('resultMessage');
+    const restartBtn = document.getElementById('restartBtn');
+
+    const state = {
+      currentIndex: 0,
+      score: 0,
+      answered: false,
+      selectedIndex: null
+    };
+
+    function saveQuizResult(score, total) {
+      const percentage = Math.round((score / total) * 100);
+      const passed = percentage >= 80;
+      const payload = {
+        reviewerName: 'Quiz taker',
+        documentName: 'Q&A assessment',
+        documentType: 'Quiz',
+        status: passed ? 'Passed' : 'Failed',
+        rating: percentage,
+        summary: `Scored ${score}/${total} (${percentage}%). Passing rate is 80%.`,
+        tags: 'quiz,assessment,score',
+        pdfText: ''
+      };
+
+      fetch('/api/reviewer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).catch(() => {});
+    }
+
+    function formatAnswerText(text) {
+      return String(text || '').replace(/(^|\s)([1-9])\./g, (match, prefix, number) => {
+        return `${prefix}${String.fromCharCode(64 + Number(number))}.`;
+      });
+    }
+
+    function renderQuestion() {
+      const current = questions[state.currentIndex];
+      if (!current) return;
+
+      const total = questions.length;
+      const progress = ((state.currentIndex + 1) / total) * 100;
+
+      progressLabel.textContent = `Question ${state.currentIndex + 1} of ${total}`;
+      progressBar.style.width = `${progress}%`;
+      questionText.textContent = current.prompt;
+      answerList.innerHTML = '';
+
+      current.options.forEach((option, index) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'answer-option';
+        button.textContent = `${String.fromCharCode(65 + index)}. ${option}`;
+
+        if (state.answered && index === current.correctIndex) {
+          button.classList.add('correct');
+        }
+
+        if (state.answered && state.selectedIndex === index && index !== current.correctIndex) {
+          button.classList.add('incorrect');
+        }
+
+        if (state.answered && state.selectedIndex === index) {
+          button.classList.add('selected');
+        }
+
+        button.disabled = state.answered;
+        button.addEventListener('click', () => handleAnswer(index));
+        answerList.appendChild(button);
+      });
+
+      feedbackBox.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      summarySection.classList.add('hidden');
+      questionSection.classList.remove('hidden');
+    }
+
+    function handleAnswer(selectedIndex) {
+      if (state.answered) return;
+
+      const current = questions[state.currentIndex];
+      if (!current) return;
+
+      state.answered = true;
+      state.selectedIndex = selectedIndex;
+
+      const isCorrect = selectedIndex === Number(current.correctIndex ?? 0);
+      if (isCorrect) {
+        state.score += 1;
+      }
+
+      renderQuestion();
+
+      feedbackBox.classList.remove('hidden');
+      feedbackBox.innerHTML = isCorrect
+        ? `<strong>Correct.</strong> ${formatAnswerText(current.explanation)}`
+        : `<strong>Not quite.</strong> ${formatAnswerText(current.explanation)}`;
+
+      nextBtn.classList.remove('hidden');
+      nextBtn.textContent = state.currentIndex === questions.length - 1 ? 'See results' : 'Next question';
+    }
+
+    function showSummary() {
+      const total = questions.length;
+      const percentage = Math.round((state.score / total) * 100);
+      const passed = percentage >= 80;
+
+      questionSection.classList.add('hidden');
+      feedbackBox.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      summarySection.classList.remove('hidden');
+
+      resultBadge.textContent = passed ? 'Passed' : 'Failed';
+      resultBadge.classList.toggle('pass', passed);
+      resultBadge.classList.toggle('fail', !passed);
+
+      scoreValue.textContent = `${state.score} / ${total}`;
+      scorePercent.textContent = `${percentage}%`;
+      resultMessage.textContent = passed
+        ? `You passed with an 80% requirement. Great job!`
+        : `You scored below the 80% passing rate. Try again and improve your score.`;
+
+      saveQuizResult(state.score, total);
+    }
+
+    function goToNext() {
+      if (!state.answered) return;
+
+      if (state.currentIndex < questions.length - 1) {
+        state.currentIndex += 1;
+        state.answered = false;
+        state.selectedIndex = null;
+        renderQuestion();
+        return;
+      }
+
+      showSummary();
+    }
+
+    function restartQuiz() {
+      state.currentIndex = 0;
+      state.score = 0;
+      state.answered = false;
+      state.selectedIndex = null;
+      renderQuestion();
+    }
+
+    async function loadQuestions() {
+      try {
+        const response = await fetch('/api/ecommerce-cloud');
+        if (!response.ok) {
+          throw new Error('Could not load data');
+        }
+
+        const payload = await response.json();
+        if (Array.isArray(payload.questions) && payload.questions.length > 0) {
+          questions = payload.questions.map((q) => ({
+            ...q,
+            correctIndex: Number(q.correctIndex ?? 0),
+            options: Array.isArray(q.options) ? q.options : []
+          }));
+          state.currentIndex = 0;
+          state.score = 0;
+          state.answered = false;
+          state.selectedIndex = null;
+          renderQuestion();
+          return;
+        }
+
+        throw new Error('No questions loaded');
+      } catch (error) {
+        questions = [...fallbackQuestions];
+        state.currentIndex = 0;
+        state.score = 0;
+        state.answered = false;
+        state.selectedIndex = null;
+        renderQuestion();
+      }
+    }
+
+    nextBtn.addEventListener('click', goToNext);
+    restartBtn.addEventListener('click', restartQuiz);
+
+    loadQuestions();
+  </script>
+</body>
+</html>

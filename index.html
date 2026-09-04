@@ -4,20 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BusyBagz — Premium Bags & Accessories</title>
-  <meta name="description" content="Discover handcrafted premium bags and accessories at BusyBagz. Shop backpacks, totes, crossbody bags, and duffles built for style and durability.">
+  <meta name="description" content="Discover handcrafted premium bags and accessories at BusyBagz. Browse backpacks, totes, crossbody bags, and duffles built for style and durability.">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
   <!-- Navigation -->
   <nav class="navbar" id="navbar">
-    <a href="index.html" class="nav-logo">BusyBagz</a>
-    <ul class="nav-links">
-      <li><a href="index.html">Shop</a></li>
-      <li><a href="#collections">Collections</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
+    <a href="index.html" class="nav-logo" aria-label="BusyBagz home">
+      <span class="brand-mark" aria-hidden="true">BB</span>
+      <span class="brand-name">BusyBagz</span>
+    </a>
+    <form class="site-search" id="site-search">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35m1.35-5.4a6.75 6.75 0 1 1-13.5 0 6.75 6.75 0 0 1 13.5 0Z"/>
+      </svg>
+      <input id="search-input" type="search" placeholder="Search products or stores" aria-label="Search products or stores">
+      <div class="search-results" id="search-results" role="listbox" aria-label="Search results"></div>
+    </form>
+    <button class="create-store-button" id="open-store-modal" type="button">Create a store</button>
     <a href="#" class="nav-cart" id="nav-cart">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"/>
@@ -26,116 +31,53 @@
     </a>
   </nav>
 
-  <!-- Hero Section -->
-  <section class="hero" id="hero">
-    <div class="hero-badge">
-      <span class="dot"></span>
-      New Collection 2026
-    </div>
-    <h1>Carry Your World<br>in <span class="accent">Style</span></h1>
-    <p>Handcrafted premium bags designed for the modern explorer. Where timeless craftsmanship meets everyday functionality.</p>
-    <a href="#collections" class="hero-cta">
-      Explore Collection
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/>
-      </svg>
-    </a>
-  </section>
-
-  <!-- Features Bar -->
-  <div class="features-bar">
-    <div class="feature-item">
-      <div class="feature-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.079-.481 1.042-1.101-.037-.618-.306-2.025-.876-3.424a4.85 4.85 0 0 0-1.59-2.113L16.5 9.656V4.5h-4.5"/>
-        </svg>
-      </div>
-      <div class="feature-text">
-        <h4>Free Shipping</h4>
-        <p>On orders over $99</p>
-      </div>
-    </div>
-    <div class="feature-item">
-      <div class="feature-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/>
-        </svg>
-      </div>
-      <div class="feature-text">
-        <h4>2-Year Warranty</h4>
-        <p>Quality guaranteed</p>
-      </div>
-    </div>
-    <div class="feature-item">
-      <div class="feature-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182"/>
-        </svg>
-      </div>
-      <div class="feature-text">
-        <h4>Easy Returns</h4>
-        <p>30-day return policy</p>
-      </div>
-    </div>
-    <div class="feature-item">
-      <div class="feature-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z"/>
-        </svg>
-      </div>
-      <div class="feature-text">
-        <h4>Secure Payment</h4>
-        <p>100% secure checkout</p>
-      </div>
-    </div>
+  <div class="store-modal" id="store-modal" hidden>
+    <div class="store-modal-backdrop" data-close-store-modal></div>
+    <section class="store-dialog" role="dialog" aria-modal="true" aria-labelledby="store-dialog-title">
+      <button class="store-dialog-close" type="button" aria-label="Close" data-close-store-modal>&times;</button>
+      <p class="eyebrow">Join BusyBagz</p>
+      <h2 id="store-dialog-title">Create a store</h2>
+      <p class="store-dialog-intro">Add your storefront to the BusyBagz directory so shoppers can find it.</p>
+      <form id="store-form">
+        <label>Store name<input name="name" type="text" required maxlength="60" placeholder="e.g. Field &amp; Form"></label>
+        <label>Category<input name="category" type="text" required maxlength="40" placeholder="e.g. Travel gear"></label>
+        <label>Short description<textarea name="description" required maxlength="180" rows="3" placeholder="What makes your store special?"></textarea></label>
+        <label>Store image URL <span>(optional)</span><input name="image" type="url" placeholder="https://..."></label>
+        <button class="hero-cta store-submit" type="submit">Publish store</button>
+        <p class="form-message" id="store-form-message" role="status"></p>
+      </form>
+    </section>
   </div>
 
   <!-- Products Section -->
   <section class="products-section" id="collections">
-    <div class="section-header">
-      <h2>Curated Collection</h2>
-      <p>Each bag is crafted with intention — designed to carry your essentials and elevate your everyday.</p>
-    </div>
-    <div class="product-grid" id="product-grid">
-      <!-- Products rendered by JS -->
+    <div class="catalog-layout">
+      <div class="product-grid" id="product-grid">
+        <!-- Products rendered by JS -->
+      </div>
+      <aside class="ad-rail" aria-label="Sponsored content">
+        <p class="ad-rail-label">Sponsored</p>
+        <a class="ad-slot ad-slot-featured" href="#" data-ad-slot="featured">
+          <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=480&h=320&fit=crop&q=80" alt="Travel bag collection">
+          <span class="ad-slot-content">
+            <small>Featured partner</small>
+            <strong>Gear up for your next trip</strong>
+            <span>Promote your brand here</span>
+          </span>
+        </a>
+        <a class="ad-slot ad-slot-secondary" href="#" data-ad-slot="secondary">
+          <span class="ad-slot-content">
+            <small>Sponsored</small>
+            <strong>Reach BusyBagz shoppers</strong>
+            <span>Your campaign could be here</span>
+          </span>
+        </a>
+      </aside>
     </div>
   </section>
 
   <!-- Footer -->
   <footer class="footer" id="contact">
-    <div class="footer-top">
-      <div class="footer-brand">
-        <a href="index.html" class="nav-logo">BusyBagz</a>
-        <p>Premium handcrafted bags for the modern explorer. Designed in Manila, made for the world.</p>
-      </div>
-      <div class="footer-col">
-        <h4>Shop</h4>
-        <ul>
-          <li><a href="#">Backpacks</a></li>
-          <li><a href="#">Tote Bags</a></li>
-          <li><a href="#">Crossbody</a></li>
-          <li><a href="#">Duffle Bags</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Company</h4>
-        <ul>
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Sustainability</a></li>
-          <li><a href="#">Careers</a></li>
-          <li><a href="#">Press</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Support</h4>
-        <ul>
-          <li><a href="#">Contact</a></li>
-          <li><a href="#">Shipping Info</a></li>
-          <li><a href="#">Returns</a></li>
-          <li><a href="#">FAQ</a></li>
-        </ul>
-      </div>
-    </div>
     <div class="footer-bottom">
       <p>&copy; 2026 BusyBagz. All rights reserved.</p>
       <div class="footer-socials">

@@ -19,6 +19,11 @@ const PRODUCTS = [
       'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&h=600&fit=crop&q=80',
       'https://images.unsplash.com/photo-1581605405669-fcdf81165b27?w=600&h=600&fit=crop&q=80',
       'https://images.unsplash.com/photo-1622560480605-d83c661c4293?w=600&h=600&fit=crop&q=80',
+    ],
+    comments: [
+      { author: 'Mia R.', text: 'The quality feels premium and the straps are incredibly comfortable for daily use.', rating: 5 },
+      { author: 'Alvin T.', text: 'Looks sharp and durable. It fits my laptop and everyday essentials without feeling bulky.', rating: 5 },
+      { author: 'Nina S.', text: 'Beautiful design and solid craftsmanship. Definitely worth it for the price.', rating: 4 }
     ]
   },
   {
@@ -37,6 +42,11 @@ const PRODUCTS = [
       'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=600&h=600&fit=crop&q=80',
       'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&h=600&fit=crop&q=80',
       'https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=600&h=600&fit=crop&q=80',
+    ],
+    comments: [
+      { author: 'Ella P.', text: 'The leather is soft and the design is elegant enough for both work and evenings out.', rating: 5 },
+      { author: 'Jules M.', text: 'It looks beautiful in person and the size is perfect for everyday essentials.', rating: 5 },
+      { author: 'Sera K.', text: 'I get compliments whenever I carry it. The finish feels expensive and polished.', rating: 4 }
     ]
   },
   {
@@ -55,6 +65,11 @@ const PRODUCTS = [
       'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&h=600&fit=crop&q=80',
       'https://images.unsplash.com/photo-1473188588951-1d53a5c1e463?w=600&h=600&fit=crop&q=80',
       'https://images.unsplash.com/photo-1594223274512-ad4803739b7c?w=600&h=600&fit=crop&q=80',
+    ],
+    comments: [
+      { author: 'Priya W.', text: 'Lightweight, functional, and easy to carry everywhere. I love the hidden pocket.', rating: 5 },
+      { author: 'Chris D.', text: 'Very sleek and durable. It feels premium without being bulky.', rating: 4 },
+      { author: 'Lena G.', text: 'Perfect for everyday errands and travel.', rating: 5 }
     ]
   },
   {
@@ -73,6 +88,11 @@ const PRODUCTS = [
       'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&h=600&fit=crop&q=80',
       'https://images.unsplash.com/photo-1622560480605-d83c661c4293?w=600&h=600&fit=crop&q=80',
       'https://images.unsplash.com/photo-1581605405669-fcdf81165b27?w=600&h=600&fit=crop&q=80',
+    ],
+    comments: [
+      { author: 'Marcus L.', text: 'The storage is excellent and the bag handles travel really well.', rating: 5 },
+      { author: 'Hannah B.', text: 'It feels substantial and high-end without being too heavy.', rating: 5 },
+      { author: 'Tina R.', text: 'The pockets are smart and the leather has a beautiful finish.', rating: 4 }
     ]
   }
 ];
@@ -95,7 +115,12 @@ function getProductById(id) {
 }
 
 function formatPrice(price) {
-  return `$${price.toFixed(2)}`;
+  return new Intl.NumberFormat('en-PH', {
+    style: 'currency',
+    currency: 'PHP',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(price);
 }
 
 function generateStars(rating) {
@@ -108,6 +133,80 @@ function generateStars(rating) {
   return html;
 }
 
+const STORES_STORAGE_KEY = 'busybagz-stores';
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>'"]/g, character => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  })[character]);
+}
+
+function getStores() {
+  try {
+    const stores = JSON.parse(localStorage.getItem(STORES_STORAGE_KEY) || '[]');
+    return Array.isArray(stores) ? stores : [];
+  } catch {
+    return [];
+  }
+}
+
+function renderProductCard(product) {
+  const comments = Array.isArray(product.comments) ? product.comments.slice(0, 3) : [];
+
+  return `
+    <article class="product-card" id="product-${product.id}">
+      <a href="pdp.html?id=${product.id}" class="product-card-link">
+        <div class="product-card-image">
+          <img src="${product.image}" alt="${escapeHTML(product.name)}" loading="lazy">
+          ${product.tag ? `<span class="product-card-tag">${escapeHTML(product.tag)}</span>` : ''}
+          <div class="product-card-quick">Quick View →</div>
+        </div>
+        <div class="product-card-info">
+          <h3 class="product-card-name">${escapeHTML(product.name)}</h3>
+          <p class="product-card-category">${escapeHTML(product.category)}</p>
+          <p class="product-card-price">
+            ${formatPrice(product.price)}
+            ${product.originalPrice ? `<span class="original">${formatPrice(product.originalPrice)}</span>` : ''}
+          </p>
+        </div>
+      </a>
+
+      ${comments.length ? `
+        <div class="product-card-comments">
+          ${comments.map(comment => `
+            <div class="product-card-comment">
+              <div class="product-card-comment-head">
+                <span class="product-card-stars">${'★'.repeat(comment.rating)}${'☆'.repeat(5 - comment.rating)}</span>
+                <strong>${escapeHTML(comment.author)}</strong>
+              </div>
+              <p>${escapeHTML(comment.text)}</p>
+            </div>
+          `).join('')}
+        </div>
+      ` : ''}
+    </article>`;
+}
+
+function renderStoreCard(store) {
+  const image = store.image || PRODUCTS[0].image;
+  return `
+    <article class="product-card store-card">
+      <div class="product-card-image">
+        <img src="${escapeHTML(image)}" alt="${escapeHTML(store.name)} store" loading="lazy">
+        <span class="product-card-tag">Store</span>
+      </div>
+      <div class="product-card-info">
+        <h3 class="product-card-name">${escapeHTML(store.name)}</h3>
+        <p class="product-card-category">${escapeHTML(store.category)}</p>
+        <p class="store-card-description">${escapeHTML(store.description)}</p>
+      </div>
+    </article>`;
+}
+
 /* ---------- Navbar Scroll Effect ---------- */
 function initNavbar() {
   const navbar = document.querySelector('.navbar');
@@ -118,27 +217,109 @@ function initNavbar() {
 }
 
 /* ---------- Home Page: Render Product Grid ---------- */
-function renderProductGrid() {
+function renderProductGrid(query = '') {
   const grid = document.getElementById('product-grid');
   if (!grid) return;
 
-  grid.innerHTML = PRODUCTS.map(product => `
-    <a href="pdp.html?id=${product.id}" class="product-card" id="product-${product.id}">
-      <div class="product-card-image">
-        <img src="${product.image}" alt="${product.name}" loading="lazy">
-        ${product.tag ? `<span class="product-card-tag">${product.tag}</span>` : ''}
-        <div class="product-card-quick">Quick View →</div>
-      </div>
-      <div class="product-card-info">
-        <h3 class="product-card-name">${product.name}</h3>
-        <p class="product-card-category">${product.category}</p>
-        <p class="product-card-price">
-          ${formatPrice(product.price)}
-          ${product.originalPrice ? `<span class="original">${formatPrice(product.originalPrice)}</span>` : ''}
-        </p>
-      </div>
-    </a>
-  `).join('');
+  const normalizedQuery = query.trim().toLowerCase();
+  const products = PRODUCTS.filter(product => [product.name, product.category, product.description]
+    .some(value => value.toLowerCase().includes(normalizedQuery)));
+  const stores = getStores().filter(store => [store.name, store.category, store.description]
+    .some(value => value.toLowerCase().includes(normalizedQuery)));
+  const results = [...products.map(renderProductCard), ...stores.map(renderStoreCard)];
+
+  grid.innerHTML = results.length
+    ? results.join('')
+    : `<p class="empty-search">No products or stores match “${escapeHTML(query)}”.</p>`;
+}
+
+function renderSearchResults(query = '') {
+  const resultsContainer = document.getElementById('search-results');
+  if (!resultsContainer) return;
+
+  const normalizedQuery = query.trim().toLowerCase();
+  if (!normalizedQuery) {
+    resultsContainer.innerHTML = '';
+    return;
+  }
+
+  const products = PRODUCTS.filter(product => [product.name, product.category, product.description]
+    .some(value => value.toLowerCase().includes(normalizedQuery)))
+    .slice(0, 5)
+    .map(product => `
+      <a class="search-result" role="option" href="pdp.html?id=${product.id}">
+        <img src="${product.image}" alt="">
+        <span><strong>${escapeHTML(product.name)}</strong><span>${escapeHTML(product.category)}</span></span>
+        <span class="search-result-type">Product</span>
+      </a>`);
+  const stores = getStores().filter(store => [store.name, store.category, store.description]
+    .some(value => value.toLowerCase().includes(normalizedQuery)))
+    .slice(0, 5)
+    .map(store => `
+      <a class="search-result" role="option" href="#collections">
+        <img src="${escapeHTML(store.image || PRODUCTS[0].image)}" alt="">
+        <span><strong>${escapeHTML(store.name)}</strong><span>${escapeHTML(store.category)}</span></span>
+        <span class="search-result-type">Store</span>
+      </a>`);
+  const results = [...products, ...stores];
+  resultsContainer.innerHTML = results.length
+    ? results.join('')
+    : '<p class="search-no-results">No products or stores found.</p>';
+}
+
+function initHomeSearch() {
+  const search = document.getElementById('site-search');
+  const input = document.getElementById('search-input');
+  if (!search || !input) return;
+
+  search.addEventListener('submit', event => event.preventDefault());
+  input.addEventListener('input', event => {
+    renderProductGrid(event.target.value);
+    renderSearchResults(event.target.value);
+  });
+}
+
+function initStoreCreation() {
+  const modal = document.getElementById('store-modal');
+  const openButton = document.getElementById('open-store-modal');
+  const form = document.getElementById('store-form');
+  const message = document.getElementById('store-form-message');
+  if (!modal || !openButton || !form || !message) return;
+
+  const closeModal = () => {
+    modal.hidden = true;
+    document.body.style.overflow = '';
+  };
+
+  openButton.addEventListener('click', () => {
+    modal.hidden = false;
+    form.elements.name.focus();
+    document.body.style.overflow = 'hidden';
+  });
+  modal.addEventListener('click', event => {
+    if (event.target.hasAttribute('data-close-store-modal')) closeModal();
+  });
+
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    const data = new FormData(form);
+    const store = {
+      id: Date.now(),
+      name: data.get('name').trim(),
+      category: data.get('category').trim(),
+      description: data.get('description').trim(),
+      image: data.get('image').trim()
+    };
+    localStorage.setItem(STORES_STORAGE_KEY, JSON.stringify([...getStores(), store]));
+    form.reset();
+    renderProductGrid(document.getElementById('search-input').value);
+    renderSearchResults(document.getElementById('search-input').value);
+    message.textContent = `${store.name} is now searchable.`;
+    setTimeout(() => {
+      message.textContent = '';
+      closeModal();
+    }, 1400);
+  });
 }
 
 /* ---------- PDP: Render Product Detail ---------- */
@@ -234,6 +415,21 @@ function renderPDP() {
         </div>
       </div>
     </div>
+
+    <div class="pdp-comments">
+      <h2>Customer Reviews</h2>
+      <div class="pdp-comments-list">
+        ${(product.comments || []).slice(0, 3).map(comment => `
+          <article class="pdp-comment">
+            <div class="pdp-comment-head">
+              <strong>${escapeHTML(comment.author)}</strong>
+              <span>${'★'.repeat(comment.rating)}${'☆'.repeat(5 - comment.rating)}</span>
+            </div>
+            <p>${escapeHTML(comment.text)}</p>
+          </article>
+        `).join('')}
+      </div>
+    </div>
   `;
 
   // Render related products
@@ -301,6 +497,8 @@ function initAddToCart() {
 document.addEventListener('DOMContentLoaded', () => {
   initNavbar();
   renderProductGrid();
+  initHomeSearch();
+  initStoreCreation();
   renderPDP();
   initAddToCart();
 });
