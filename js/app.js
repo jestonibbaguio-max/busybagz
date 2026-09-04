@@ -54,98 +54,6 @@ const PRODUCTS = [
     ],
     comments: []
   },
-  {
-    id: 1,
-    name: 'Voyager Canvas Backpack',
-    category: 'Backpacks',
-    price: 189.00,
-    originalPrice: 249.00,
-    tag: 'Best Seller',
-    description: 'Crafted from premium waxed canvas, the Voyager is the ultimate everyday companion. Featuring a padded 15" laptop sleeve, hidden anti-theft pocket, and water-resistant lining, it blends timeless style with modern functionality. The adjustable leather straps and brass hardware age beautifully over time.',
-    colors: ['#2c3e50', '#8b7355', '#3a3a3a', '#c8a97e'],
-    rating: 4.8,
-    reviews: 234,
-    image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&h=600&fit=crop&q=80',
-    images: [
-      'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&h=600&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1581605405669-fcdf81165b27?w=600&h=600&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1622560480605-d83c661c4293?w=600&h=600&fit=crop&q=80',
-    ],
-    comments: [
-      { author: 'Mia R.', text: 'The quality feels premium and the straps are incredibly comfortable for daily use.', rating: 5 },
-      { author: 'Alvin T.', text: 'Looks sharp and durable. It fits my laptop and everyday essentials without feeling bulky.', rating: 5 },
-      { author: 'Nina S.', text: 'Beautiful design and solid craftsmanship. Definitely worth it for the price.', rating: 4 }
-    ]
-  },
-  {
-    id: 2,
-    name: 'Élise Leather Tote',
-    category: 'Tote Bags',
-    price: 279.00,
-    originalPrice: 349.00,
-    tag: 'New Arrival',
-    description: 'The Élise Tote redefines luxury with its buttery-soft Italian full-grain leather. Spacious enough for work, refined enough for evening — featuring a magnetic snap closure, interior zippered pocket, and suede lining. Each bag develops a unique patina that tells your story.',
-    colors: ['#c8a97e', '#5c3a21', '#1a1a2e', '#d4a574'],
-    rating: 4.9,
-    reviews: 187,
-    image: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=600&h=600&fit=crop&q=80',
-    images: [
-      'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=600&h=600&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&h=600&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=600&h=600&fit=crop&q=80',
-    ],
-    comments: [
-      { author: 'Ella P.', text: 'The leather is soft and the design is elegant enough for both work and evenings out.', rating: 5 },
-      { author: 'Jules M.', text: 'It looks beautiful in person and the size is perfect for everyday essentials.', rating: 5 },
-      { author: 'Sera K.', text: 'I get compliments whenever I carry it. The finish feels expensive and polished.', rating: 4 }
-    ]
-  },
-  {
-    id: 3,
-    name: 'Sierra Crossbody Sling',
-    category: 'Crossbody',
-    price: 149.00,
-    originalPrice: null,
-    tag: 'Trending',
-    description: 'Minimalist by design, maximalist in function. The Sierra sling features a sleek profile with surprisingly generous capacity. Made from water-resistant recycled nylon with genuine leather accents, it includes RFID-blocking technology and quick-access front pocket for your essentials.',
-    colors: ['#3a3a3a', '#2c3e50', '#5c3a21'],
-    rating: 4.7,
-    reviews: 312,
-    image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&h=600&fit=crop&q=80',
-    images: [
-      'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&h=600&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1473188588951-1d53a5c1e463?w=600&h=600&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1594223274512-ad4803739b7c?w=600&h=600&fit=crop&q=80',
-    ],
-    comments: [
-      { author: 'Priya W.', text: 'Lightweight, functional, and easy to carry everywhere. I love the hidden pocket.', rating: 5 },
-      { author: 'Chris D.', text: 'Very sleek and durable. It feels premium without being bulky.', rating: 4 },
-      { author: 'Lena G.', text: 'Perfect for everyday errands and travel.', rating: 5 }
-    ]
-  },
-  {
-    id: 4,
-    name: 'Nomad Weekend Duffle',
-    category: 'Duffle Bags',
-    price: 329.00,
-    originalPrice: 429.00,
-    tag: 'Limited Edition',
-    description: 'Built for the discerning traveler, the Nomad Duffle features a heritage-inspired silhouette in rugged full-grain leather. With a dedicated shoe compartment, trolley sleeve, and brass YKK zippers, it handles every journey in style. The canvas-lined interior keeps belongings organized and protected.',
-    colors: ['#8b7355', '#3a3a3a', '#2c3e50'],
-    rating: 4.9,
-    reviews: 156,
-    image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&h=600&fit=crop&q=80',
-    images: [
-      'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&h=600&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1622560480605-d83c661c4293?w=600&h=600&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1581605405669-fcdf81165b27?w=600&h=600&fit=crop&q=80',
-    ],
-    comments: [
-      { author: 'Marcus L.', text: 'The storage is excellent and the bag handles travel really well.', rating: 5 },
-      { author: 'Hannah B.', text: 'It feels substantial and high-end without being too heavy.', rating: 5 },
-      { author: 'Tina R.', text: 'The pockets are smart and the leather has a beautiful finish.', rating: 4 }
-    ]
-  }
 ];
 
 /* ---------- SVG Icons ---------- */
@@ -484,11 +392,121 @@ function renderPDP() {
 
   // Render related products
   renderRelated(product.id);
+  initPDPImageZoom();
+}
+
+function initPDPImageZoom() {
+  const mainImage = document.getElementById('pdp-main-img');
+  if (!mainImage) return;
+
+  let overlay = document.getElementById('pdp-zoom-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'pdp-zoom-overlay';
+    overlay.className = 'pdp-zoom-overlay';
+    overlay.hidden = true;
+    overlay.innerHTML = `
+      <button class="pdp-zoom-close" type="button" aria-label="Close image view">&times;</button>
+      <button class="pdp-zoom-nav pdp-zoom-prev" type="button" aria-label="Previous image">&#10094;</button>
+      <img class="pdp-zoom-image" src="" alt="Product image zoom view">
+      <button class="pdp-zoom-nav pdp-zoom-next" type="button" aria-label="Next image">&#10095;</button>
+    `;
+    document.body.appendChild(overlay);
+  }
+
+  const zoomImage = overlay.querySelector('.pdp-zoom-image');
+  const closeButton = overlay.querySelector('.pdp-zoom-close');
+  const prevButton = overlay.querySelector('.pdp-zoom-prev');
+  const nextButton = overlay.querySelector('.pdp-zoom-next');
+  const productImages = Array.from(document.querySelectorAll('.pdp-thumb img')).map((img) => img.src);
+  const state = {
+    currentIndex: 0,
+    pointerStartX: 0,
+    pointerStartY: 0,
+  };
+
+  const setZoomImage = (index) => {
+    if (productImages.length === 0) return;
+    const safeIndex = (index + productImages.length) % productImages.length;
+    state.currentIndex = safeIndex;
+    zoomImage.src = productImages[safeIndex];
+    zoomImage.alt = (document.querySelector('.pdp-thumb.active img') || mainImage).alt || 'Product image zoom view';
+  };
+
+  const openZoom = (index = 0) => {
+    if (productImages.length === 0) {
+      productImages.push(mainImage.src);
+    }
+    setZoomImage(index);
+    overlay.hidden = false;
+    document.body.classList.add('pdp-zoom-open');
+  };
+
+  const closeZoom = () => {
+    overlay.hidden = true;
+    document.body.classList.remove('pdp-zoom-open');
+  };
+
+  const findCurrentImageIndex = () => {
+    const currentSrc = mainImage.src;
+    const index = productImages.indexOf(currentSrc);
+    return index >= 0 ? index : 0;
+  };
+
+  mainImage.onclick = () => {
+    openZoom(findCurrentImageIndex());
+  };
+  mainImage.onkeydown = (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      openZoom(findCurrentImageIndex());
+    }
+  };
+  mainImage.setAttribute('tabindex', '0');
+  mainImage.setAttribute('role', 'button');
+  mainImage.setAttribute('aria-label', 'Open full-size product image');
+
+  prevButton.onclick = () => setZoomImage(state.currentIndex - 1);
+  nextButton.onclick = () => setZoomImage(state.currentIndex + 1);
+  closeButton.onclick = closeZoom;
+
+  overlay.onclick = (event) => {
+    if (event.target === overlay) {
+      closeZoom();
+    }
+  };
+
+  overlay.addEventListener('touchstart', (event) => {
+    const touch = event.changedTouches[0];
+    state.pointerStartX = touch.clientX;
+    state.pointerStartY = touch.clientY;
+  }, { passive: true });
+
+  overlay.addEventListener('touchend', (event) => {
+    const touch = event.changedTouches[0];
+    const deltaX = touch.clientX - state.pointerStartX;
+    const deltaY = touch.clientY - state.pointerStartY;
+
+    if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) {
+      if (deltaX < 0) {
+        setZoomImage(state.currentIndex + 1);
+      } else {
+        setZoomImage(state.currentIndex - 1);
+      }
+    }
+  }, { passive: true });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !overlay.hidden) {
+      closeZoom();
+    }
+  });
 }
 
 /* ---------- PDP Interactions ---------- */
 function switchImage(src, thumbEl) {
-  document.getElementById('pdp-main-img').src = src;
+  const mainImage = document.getElementById('pdp-main-img');
+  if (mainImage) mainImage.src = src;
   document.querySelectorAll('.pdp-thumb').forEach(t => t.classList.remove('active'));
   thumbEl.classList.add('active');
 }

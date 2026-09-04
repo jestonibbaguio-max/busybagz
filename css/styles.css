@@ -1236,11 +1236,24 @@ body::before {
   color: var(--color-text-secondary);
 }
 
+.pdp-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 2.5rem;
+  align-items: start;
+}
+
 .pdp-main {
   display: grid;
   grid-template-columns: 1.1fr 1fr;
   gap: 4rem;
   margin-bottom: 5rem;
+}
+
+.pdp-ad-rail {
+  align-self: start;
+  position: sticky;
+  top: 6rem;
 }
 
 .pdp-gallery {
@@ -1261,10 +1274,105 @@ body::before {
   height: 100%;
   object-fit: cover;
   transition: transform var(--transition-smooth);
+  cursor: zoom-in;
 }
 
 .pdp-image-main:hover img {
   transform: scale(1.05);
+}
+
+.pdp-zoom-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: grid;
+  place-items: center;
+  background: rgba(10, 18, 16, 0.9);
+  padding: 2rem;
+}
+
+.pdp-zoom-overlay[hidden] {
+  display: none;
+}
+
+.pdp-zoom-image {
+  max-width: min(92vw, 1200px);
+  max-height: min(90vh, 900px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+}
+
+.pdp-zoom-close {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.5rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-on-accent);
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.pdp-zoom-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-on-accent);
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+
+.pdp-zoom-prev {
+  left: 1.25rem;
+}
+
+.pdp-zoom-next {
+  right: 1.25rem;
+}
+
+body.pdp-zoom-open {
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .pdp-zoom-overlay {
+    padding: 1rem;
+  }
+
+  .pdp-zoom-close {
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.7rem;
+  }
+
+  .pdp-zoom-nav {
+    width: 2.4rem;
+    height: 2.4rem;
+    font-size: 1.3rem;
+  }
+
+  .pdp-zoom-prev {
+    left: 0.5rem;
+  }
+
+  .pdp-zoom-next {
+    right: 0.5rem;
+  }
 }
 
 .pdp-thumbnails {
