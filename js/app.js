@@ -15,7 +15,7 @@ const PRODUCTS = [
     description: 'PRE-ORDERS NOW OPEN! 🎒\nPickle Bag - Approved Standard Size',
     storeName: 'UBEC Gigcase',
     storeUrl: 'https://www.facebook.com/Ubecgigcase',
-    storePageUrl: 'store/UBEC%20Gigcase',
+    storePageUrl: 'store/UBEC-Gigcase',
     reservationUrl: 'https://www.facebook.com/Ubecgigcase',
     colors: ['#d8e5ed'],
     rating: 0,
@@ -41,7 +41,7 @@ const PRODUCTS = [
     description: 'PRE-ORDERS NOW OPEN! 🎒\nTransparent Bag - Approved Standard Size & Model for School ✅\nMade of THICK PLASTIC material ✅',
     storeName: 'UBEC Gigcase',
     storeUrl: 'https://www.facebook.com/Ubecgigcase',
-    storePageUrl: 'store/UBEC%20Gigcase',
+    storePageUrl: 'store/UBEC-Gigcase',
     reservationUrl: 'https://www.facebook.com/Ubecgigcase',
     colors: ['#d8e5ed'],
     rating: 0,
@@ -117,6 +117,17 @@ function escapeHTML(value) {
   })[character]);
 }
 
+function normalizeStoreSlug(value = '') {
+  return String(value)
+    .trim()
+    .toLowerCase()
+    .replace(/%20/g, ' ')
+    .replace(/[_\s]+/g, '-')
+    .replace(/[^a-z0-9-]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
 function getStores() {
   try {
     const stores = JSON.parse(localStorage.getItem(STORES_STORAGE_KEY) || '[]');
@@ -128,7 +139,7 @@ function getStores() {
 }
 
 function getStoreUrl(store) {
-  return `store/${encodeURIComponent(store.name)}`;
+  return `store/${normalizeStoreSlug(store?.name || '')}`;
 }
 
 function setMetaContent(selector, content) {

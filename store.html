@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Store | BusyBagz</title>
   <meta name="description" content="Discover custom bags, store services, delivery, and pre-order products from BusyBagz stores.">
-  <link rel="canonical" href="https://busybagz.com/store/UBEC%20Gigcase">
+  <link rel="canonical" href="https://busybagz.com/store/UBEC-Gigcase">
   <meta property="og:type" content="website">
   <meta property="og:title" content="UBEC Gigcase | BusyBagz">
   <meta property="og:description" content="Custom bags, in-store shopping, delivery, and pre-order products from UBEC Gigcase.">
-  <meta property="og:url" content="https://busybagz.com/store/UBEC%20Gigcase">
+  <meta property="og:url" content="https://busybagz.com/store/UBEC-Gigcase">
   <meta property="og:image" content="https://res.cloudinary.com/sjnrfmjm/image/upload/v1788515161/gigcase_logo.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7446487671504565" crossorigin="anonymous"></script>
@@ -154,6 +154,17 @@
       })[character]);
     }
 
+    function normalizeStoreSlug(value = '') {
+      return String(value)
+        .trim()
+        .toLowerCase()
+        .replace(/%20/g, ' ')
+        .replace(/[_\s]+/g, '-')
+        .replace(/[^a-z0-9-]/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '');
+    }
+
     function getStores() {
       try {
         const stored = JSON.parse(localStorage.getItem(STORES_STORAGE_KEY) || '[]');
@@ -164,8 +175,8 @@
       }
     }
 
-    const storeName = decodeURIComponent(window.location.pathname.split('/').filter(Boolean).pop() || '');
-    const store = getStores().find(item => item.name === storeName);
+    const storeSlug = normalizeStoreSlug(window.location.pathname.split('/').filter(Boolean).pop() || '');
+    const store = getStores().find(item => normalizeStoreSlug(item.name) === storeSlug || item.name === decodeURIComponent(window.location.pathname.split('/').filter(Boolean).pop() || ''));
 
     if (!store) {
       document.title = 'Store not found | BusyBagz';
@@ -183,7 +194,7 @@
         name: store.name,
         description: store.description,
         image: store.image || fallbackImage,
-        url: `https://busybagz.com/store/${encodeURIComponent(store.name)}`,
+        url: `https://busybagz.com/store/${normalizeStoreSlug(store.name)}`,
         address: {
           '@type': 'PostalAddress',
           streetAddress: store.address,
