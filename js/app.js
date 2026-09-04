@@ -223,6 +223,11 @@ function getStoreUrl(store) {
   return `store/${encodeURIComponent(store.name)}`;
 }
 
+function setMetaContent(selector, content) {
+  const element = document.querySelector(selector);
+  if (element) element.setAttribute('content', content);
+}
+
 function renderProductCard(product) {
   return `
     <article class="product-card" id="product-${product.id}">
@@ -399,6 +404,15 @@ function renderPDP() {
 
   // Update page title
   document.title = `${product.name} — BusyBagz`;
+  const productUrl = `https://busybagz.com/pdp.html?id=${product.id}`;
+  const productDescription = product.description.replace(/\n/g, ' ');
+  const canonical = document.querySelector('link[rel="canonical"]');
+  if (canonical) canonical.href = productUrl;
+  setMetaContent('meta[property="og:title"]', `${product.name} — BusyBagz`);
+  setMetaContent('meta[property="og:description"]', productDescription);
+  setMetaContent('meta[property="og:url"]', productUrl);
+  setMetaContent('meta[property="og:image"]', product.image);
+  setMetaContent('meta[name="description"]', productDescription);
 
   // Breadcrumb
   const breadcrumb = document.getElementById('pdp-breadcrumb');

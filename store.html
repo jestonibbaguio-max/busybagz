@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Store | BusyBagz</title>
+  <meta name="description" content="Discover custom bags, store services, delivery, and pre-order products from BusyBagz stores.">
+  <link rel="canonical" href="https://busybagz.com/store/UBEC%20Gigcase">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="UBEC Gigcase | BusyBagz">
+  <meta property="og:description" content="Custom bags, in-store shopping, delivery, and pre-order products from UBEC Gigcase.">
+  <meta property="og:url" content="https://busybagz.com/store/UBEC%20Gigcase">
+  <meta property="og:image" content="https://res.cloudinary.com/sjnrfmjm/image/upload/v1788515161/gigcase_logo.jpg">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="/css/styles.css">
   <style>
     body { padding: 112px 20px 48px; background: #f7f5f0; }
@@ -18,9 +26,18 @@
     .store-reservation a { color: #1b8f66; }
     .store-reservation a:hover { text-decoration: underline; }
     .store-back { display: inline-flex; margin-top: 20px; padding: 11px 16px; border-radius: 8px; background: #1b8f66; color: white; font-weight: 700; }
+    .store-products { margin-top: 28px; }
+    .store-products h2 { margin: 0 0 14px; color: #17362b; }
+    .store-product-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .store-product-card { overflow: hidden; border: 1px solid rgba(23, 54, 43, 0.16); border-radius: 12px; background: white; color: #17362b; }
+    .store-product-card img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+    .store-product-card-content { padding: 14px 16px 16px; }
+    .store-product-card h3 { margin: 0 0 5px; font-size: 1rem; }
+    .store-product-card p { margin: 0; color: #1b8f66; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
+    .store-product-card:hover { border-color: #1b8f66; box-shadow: 0 10px 22px rgba(23, 54, 43, 0.1); }
     .store-missing { padding: 48px 24px; text-align: center; }
     .store-missing h1 { margin-top: 0; }
-    @media (max-width: 600px) { body { padding: 180px 12px 32px; } .store-banner { min-height: 180px; } }
+    @media (max-width: 600px) { body { padding: 180px 12px 32px; } .store-banner { min-height: 180px; } .store-product-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -91,7 +108,21 @@
             ${store.address ? `<p class="store-address"><a href="${escapeHTML(store.addressUrl)}" target="_blank" rel="noopener noreferrer">${escapeHTML(store.address)}</a></p>` : ''}
             <a class="store-back" href="/index.html">Back to storefront</a>
           </div>
-        </article>`;
+        </article>
+        ${store.id === 'ubec-gigcase' ? `
+          <section class="store-products" aria-labelledby="store-products-title">
+            <h2 id="store-products-title">Products</h2>
+            <div class="store-product-grid">
+              <a class="store-product-card" href="/pdp.html?id=5">
+                <img src="https://res.cloudinary.com/sjnrfmjm/image/upload/v1788513590/gigcase_bag_1.jpg" alt="Transparent bag">
+                <div class="store-product-card-content"><h3>Transparent bag</h3><p>Pre-order</p></div>
+              </a>
+              <a class="store-product-card" href="/pdp.html?id=6">
+                <img src="https://res.cloudinary.com/sjnrfmjm/image/upload/v1788514705/gigcase_bag_2_1.jpg" alt="Pickle Bag">
+                <div class="store-product-card-content"><h3>Pickle Bag</h3><p>Pre-order</p></div>
+              </a>
+            </div>
+          </section>` : ''}`;
     }
   </script>
 </body>
