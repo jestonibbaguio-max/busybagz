@@ -225,7 +225,7 @@
 
       storePage.innerHTML = `
         <article class="store-hero">
-          <img class="store-banner" src="${escapeHTML(store.image || fallbackImage)}" alt="${escapeHTML(store.name)} banner">
+          <img class="store-banner" src="${escapeHTML(store.bannerImage || store.image || fallbackImage)}" alt="${escapeHTML(store.name)} banner">
           <div class="store-content">
             <p class="store-category">${escapeHTML(store.category || 'BusyBagz store')}</p>
             <h1>${escapeHTML(store.name)}</h1>
