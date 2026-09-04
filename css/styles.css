@@ -123,6 +123,64 @@ body::before {
   background: #1b8f66;
 }
 
+.brand-video-rail {
+  position: fixed;
+  top: 112px;
+  left: clamp(1rem, 2.5vw, 2.5rem);
+  z-index: 5;
+  width: clamp(180px, 15vw, 230px);
+  color: var(--color-text-secondary);
+  text-align: center;
+  pointer-events: none;
+}
+
+.brand-video-frame {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3 / 5;
+  border: 1px solid rgba(0, 174, 155, 0.42);
+  border-radius: var(--radius-lg);
+  background: #d9fff4;
+  box-shadow: 0 16px 30px rgba(41, 67, 154, 0.18), 0 0 28px rgba(0, 174, 155, 0.14);
+}
+
+.brand-video-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 8px solid rgba(255, 255, 255, 0.16);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.brand-video-frame video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.brand-video-label {
+  position: absolute;
+  right: 0.7rem;
+  bottom: 0.7rem;
+  left: 0.7rem;
+  padding: 0.45rem 0.35rem;
+  border-radius: var(--radius-sm);
+  background: rgba(23, 35, 95, 0.78);
+  color: white;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.brand-video-rail p {
+  margin-top: 0.7rem;
+  font-size: 0.72rem;
+  line-height: 1.35;
+}
+
 .nav-logo {
   display: inline-flex;
   align-items: center;
@@ -1100,6 +1158,17 @@ body::before {
   gap: 1rem;
 }
 
+.footer-legal {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.78rem;
+}
+
+.footer-legal a:hover {
+  color: var(--color-accent);
+}
+
 .footer-socials a {
   width: 40px;
   height: 40px;
@@ -1483,6 +1552,10 @@ body::before {
 
 /* ---------- Responsive ---------- */
 @media (max-width: 1024px) {
+  .brand-video-rail {
+    display: none;
+  }
+
   .catalog-layout {
     grid-template-columns: 1fr;
   }
