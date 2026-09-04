@@ -222,11 +222,9 @@ function renderProductGrid(query = '') {
   if (!grid) return;
 
   const normalizedQuery = query.trim().toLowerCase();
-  const products = PRODUCTS.filter(product => [product.name, product.category, product.description]
-    .some(value => value.toLowerCase().includes(normalizedQuery)));
   const stores = getStores().filter(store => [store.name, store.category, store.description]
     .some(value => value.toLowerCase().includes(normalizedQuery)));
-  const results = [...products.map(renderProductCard), ...stores.map(renderStoreCard)];
+  const results = stores.map(renderStoreCard);
 
   grid.innerHTML = results.length
     ? results.join('')
