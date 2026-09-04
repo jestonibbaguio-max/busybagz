@@ -26,50 +26,56 @@
       font-family: Inter, Arial, sans-serif;
     }
 
-    .page-shell { max-width: 920px; margin: 0 auto; }
+    .page-shell { max-width: 1280px; margin: 0 auto; }
 
     .topbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      margin-bottom: 28px;
-      padding: 18px 22px;
-      border-radius: 20px;
-      background: var(--brand);
+      margin: -32px -20px 28px;
+      min-height: 72px;
+      padding: 0.8rem 4vw;
+      border-radius: 0;
+      background: #263b89;
       color: white;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 18px 30px rgba(41, 67, 154, 0.12);
     }
 
-    .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; }
+    .brand { display: flex; align-items: center; gap: 0.55rem; font-weight: 800; }
 
     .brand-mark {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 42px;
-      height: 42px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 12px;
-      color: #f9d77a;
-      font-size: 1rem;
-      font-weight: 900;
+      width: 2.3rem;
+      height: 2.3rem;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 6px;
+      color: #6de3c5;
+      font-size: 0.86rem;
+      font-weight: 800;
       letter-spacing: -0.12em;
     }
 
-    .brand-name { font-size: 1.25rem; }
+    .brand-name { font-size: 1.1rem; font-weight: 700; }
 
     .nav-link {
       color: white;
       text-decoration: none;
-      font-size: 0.9rem;
+      font-size: 0.68rem;
       font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
     }
 
     .content-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 260px;
+      grid-template-columns: minmax(0, 1fr) 280px;
       gap: 24px;
       align-items: start;
+      width: 100%;
     }
 
     main,
@@ -100,10 +106,10 @@
 
     .ad-slot {
       display: grid;
-      min-height: 220px;
+      min-height: 210px;
       place-items: center;
       padding: 18px;
-      border: 1px dashed rgba(255, 107, 87, 0.45);
+      border: 1px solid var(--line);
       border-radius: 14px;
       background: #d9fff4;
       color: var(--muted);
@@ -176,7 +182,7 @@
         <span class="brand-mark">BB</span>
         <span class="brand-name">BusyBagz</span>
       </div>
-      <a class="nav-link" href="/">Back to storefront</a>
+      <a class="nav-link" href="index.html">Back to storefront</a>
     </header>
 
     <div class="content-grid">
@@ -186,7 +192,7 @@
         <p class="intro">Choose a reviewer to begin an interactive question-and-answer assessment.</p>
         <ul>
           <li>
-            <a class="reviewer-link" href="/reviewer/ecommerce-cloud">SAP Commerce Cloud Reviewer</a>
+            <a class="reviewer-link" href="reviewer.html">SAP Commerce Cloud Reviewer</a>
             <span class="status">Current</span>
           </li>
         </ul>

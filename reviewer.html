@@ -47,12 +47,15 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 28px;
-      padding: 18px 22px;
+      gap: 0.55rem;
+      margin: -32px -20px 28px;
+      min-height: 72px;
+      padding: 0.8rem 4vw;
       background: var(--brand);
       color: white;
-      border-radius: 20px;
+      border-radius: 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 18px 30px rgba(41, 67, 154, 0.12);
       box-shadow: var(--shadow);
     }
 
@@ -68,28 +71,32 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
+      width: 2.3rem;
+      height: 2.3rem;
+      border-radius: 6px;
       background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.18);
-      color: #f9d77a;
-      font-size: 1rem;
-      font-weight: 900;
+      border: 1px solid rgba(255,255,255,0.22);
+      color: #6de3c5;
+      font-size: 0.86rem;
+      font-weight: 800;
       letter-spacing: -0.14em;
     }
 
     .brand-name {
-      font-size: 1.25rem;
+      font-size: 1.1rem;
+      font-weight: 700;
     }
 
     .nav-link {
       background: rgba(255,255,255,0.08);
       border: 1px solid rgba(255,255,255,0.18);
       color: white;
-      padding: 10px 16px;
-      border-radius: 999px;
-      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
     }
 
     .layout {
@@ -102,7 +109,7 @@
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 24px;
-      box-shadow: var(--shadow);
+      box-shadow: 0 18px 30px rgba(41, 67, 154, 0.12);
     }
 
     .reviewer-panel {
@@ -333,10 +340,11 @@
 
     .quiz-layout {
       display: grid;
-      grid-template-columns: minmax(0, 900px) 260px;
+      grid-template-columns: minmax(0, 1fr) 280px;
       gap: 24px;
       align-items: start;
       justify-content: center;
+      width: 100%;
     }
 
     .quiz-ad {
@@ -362,7 +370,7 @@
 
     .quiz-ad .adsbygoogle {
       display: block;
-      min-height: 220px;
+      min-height: 210px;
     }
 
     .quiz-header {
@@ -593,7 +601,7 @@
         <span class="brand-mark">BB</span>
         <span class="brand-name">BusyBagz</span>
       </div>
-      <a class="nav-link" href="/">Back to storefront</a>
+      <a class="nav-link" href="index.html">Back to storefront</a>
     </header>
 
     <div class="quiz-layout">
@@ -646,6 +654,7 @@
   </div>
 
   <script>
+    const REVIEW_RESULTS_KEY = 'busybagz-review-results';
     const fallbackQuestions = [
       {
         prompt: 'What is the main purpose of the BusyBagz website?',
@@ -704,6 +713,68 @@
       }
     ];
 
+    function parseCsvLine(line) {
+      const values = [];
+      let current = '';
+      let inQuotes = false;
+
+      for (let i = 0; i < line.length; i += 1) {
+        const char = line[i];
+
+        if (char === '"') {
+          if (inQuotes && line[i + 1] === '"') {
+            current += '"';
+            i += 1;
+          } else {
+            inQuotes = !inQuotes;
+          }
+        } else if (char === ',' && !inQuotes) {
+          values.push(current);
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+
+      values.push(current);
+      return values;
+    }
+
+    function parseQuestionsFromCsv(csvText) {
+      const rows = csvText.trim().split(/\r?\n/).filter(Boolean);
+      if (rows.length < 2) return [];
+
+      const headers = parseCsvLine(rows[0]);
+      return rows.slice(1).map((row) => {
+        const values = parseCsvLine(row);
+        const record = {};
+
+        headers.forEach((header, index) => {
+          record[header] = values[index] || '';
+        });
+
+        const options = [record.option1, record.option2, record.option3, record.option4]
+          .map((option) => option ? option.trim() : '')
+          .filter(Boolean);
+
+        return {
+          prompt: record.question || record.prompt || '',
+          options: options.length ? options : (record.answer ? [record.answer.trim()] : []),
+          correctIndex: Number(record.correctIndex ?? 0),
+          explanation: record.answer || ''
+        };
+      }).filter((question) => question.prompt && question.options.length > 0);
+    }
+
+    function getStoredResults() {
+      try {
+        const results = JSON.parse(localStorage.getItem(REVIEW_RESULTS_KEY) || '[]');
+        return Array.isArray(results) ? results : [];
+      } catch {
+        return [];
+      }
+    }
+
     let questions = [...fallbackQuestions];
 
     const progressLabel = document.getElementById('progressLabel');
@@ -731,6 +802,7 @@
       const percentage = Math.round((score / total) * 100);
       const passed = percentage >= 80;
       const payload = {
+        id: Date.now(),
         reviewerName: 'Quiz taker',
         documentName: 'Q&A assessment',
         documentType: 'Quiz',
@@ -738,14 +810,13 @@
         rating: percentage,
         summary: `Scored ${score}/${total} (${percentage}%). Passing rate is 80%.`,
         tags: 'quiz,assessment,score',
-        pdfText: ''
+        pdfText: '',
+        date: new Date().toISOString()
       };
 
-      fetch('/api/reviewer', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      }).catch(() => {});
+      const existing = getStoredResults();
+      const updated = [payload, ...existing].slice(0, 50);
+      localStorage.setItem(REVIEW_RESULTS_KEY, JSON.stringify(updated));
     }
 
     function formatAnswerText(text) {
@@ -867,18 +938,16 @@
 
     async function loadQuestions() {
       try {
-        const response = await fetch('/api/ecommerce-cloud');
+        const response = await fetch('data/ecommerce-cloud.csv');
         if (!response.ok) {
           throw new Error('Could not load data');
         }
 
-        const payload = await response.json();
-        if (Array.isArray(payload.questions) && payload.questions.length > 0) {
-          questions = payload.questions.map((q) => ({
-            ...q,
-            correctIndex: Number(q.correctIndex ?? 0),
-            options: Array.isArray(q.options) ? q.options : []
-          }));
+        const csvText = await response.text();
+        const parsedQuestions = parseQuestionsFromCsv(csvText);
+
+        if (parsedQuestions.length > 0) {
+          questions = parsedQuestions;
           state.currentIndex = 0;
           state.score = 0;
           state.answered = false;
