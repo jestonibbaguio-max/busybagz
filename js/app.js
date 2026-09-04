@@ -54,6 +54,29 @@ const PRODUCTS = [
     ],
     comments: []
   },
+  {
+    id: 7,
+    name: 'Van for rent',
+    category: 'Travel & Tour',
+    breadcrumbCategory: 'All in the Van',
+    price: 0,
+    priceLabel: 'Available',
+    originalPrice: null,
+    tag: 'Travel & Tour',
+    description: 'Van for rent - Travel and Tour',
+    storeName: 'All in the Van',
+    storeUrl: 'https://www.facebook.com/gabriel.hamo',
+    storePageUrl: 'store/ALL_IN_THE_VAN',
+    reservationUrl: 'https://www.facebook.com/gabriel.hamo',
+    colors: ['#dfeaf5'],
+    rating: 0,
+    reviews: 0,
+    image: 'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788542562/store_van.jpg',
+    images: [
+      'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788542562/store_van.jpg'
+    ],
+    comments: []
+  },
 ];
 
 /* ---------- SVG Icons ---------- */

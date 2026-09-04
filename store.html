@@ -193,10 +193,12 @@
       storePage.innerHTML = '<section class="store-hero store-missing"><h1>Store not found</h1><p>That BusyBagz store is no longer available.</p><a class="store-back" href="/index.html">Back to storefront</a></section>';
     } else {
       document.title = `${store.name} | BusyBagz`;
-      const productOffers = [
-        { name: 'Transparent bag', url: '/pdp.html?id=5', price: 'Pre-order' },
-        { name: 'Pickle Bag', url: '/pdp.html?id=6', price: 'Pre-order' }
-      ];
+      const productOffers = store.id === 'all-in-the-van'
+        ? [{ name: 'Van for rent', url: '/pdp.html?id=7', price: 'Available' }]
+        : [
+            { name: 'Transparent bag', url: '/pdp.html?id=5', price: 'Pre-order' },
+            { name: 'Pickle Bag', url: '/pdp.html?id=6', price: 'Pre-order' }
+          ];
 
       const structuredData = {
         '@context': 'https://schema.org',
@@ -258,6 +260,16 @@
               <a class="store-product-card" href="/pdp.html?id=6">
                 <img src="https://res.cloudinary.com/sjnrfmjm/image/upload/v1788514705/gigcase_bag_2_1.jpg" alt="Pickle Bag">
                 <div class="store-product-card-content"><h3>Pickle Bag</h3><p>Pre-order</p></div>
+              </a>
+            </div>
+          </section>` : ''}
+        ${store.id === 'all-in-the-van' ? `
+          <section class="store-products" aria-labelledby="store-products-title">
+            <h2 id="store-products-title">Products</h2>
+            <div class="store-product-grid">
+              <a class="store-product-card" href="/pdp.html?id=7">
+                <img src="https://res.cloudinary.com/sjnrfmjm/image/upload/v1788542562/store_van.jpg" alt="Van for rent">
+                <div class="store-product-card-content"><h3>Van for rent</h3><p>Travel & Tour</p></div>
               </a>
             </div>
           </section>` : ''}`;
