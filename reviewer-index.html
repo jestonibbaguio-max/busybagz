@@ -8,6 +8,7 @@
   <link rel="canonical" href="https://busybagz.com/reviewer">
   <meta name="robots" content="index, follow">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7446487671504565" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="css/styles.css">
   <style>
     :root {
       --bg: #eef3ff;
@@ -23,13 +24,13 @@
     body {
       margin: 0;
       min-height: 100vh;
-      padding: 32px 20px 72px;
+      padding: 72px 20px 72px;
       background: var(--bg);
       color: var(--ink);
       font-family: Inter, Arial, sans-serif;
     }
 
-    .page-shell { max-width: 1280px; margin: 0 auto; }
+    .page-shell { max-width: 1280px; margin: 0 auto; padding-top: 20px; }
 
     .topbar {
       display: flex;
@@ -73,12 +74,33 @@
       text-transform: uppercase;
     }
 
+    .breadcrumbs {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 32px;
+      margin-bottom: 1rem;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .breadcrumbs a {
+      color: var(--brand);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .breadcrumbs a:hover { color: var(--accent); }
+    .breadcrumbs .separator { opacity: 0.55; }
+    .breadcrumbs .current { color: var(--ink); font-weight: 700; }
+
     .content-grid {
       display: grid;
       grid-template-columns: minmax(0, 1fr) 280px;
       gap: 24px;
       align-items: start;
       width: 100%;
+      margin-top: 40px;
     }
 
     main,
@@ -106,37 +128,6 @@
       letter-spacing: 0.12em;
       text-transform: uppercase;
     }
-
-    .ad-slot {
-      display: grid;
-      min-height: 210px;
-      place-items: center;
-      padding: 18px;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: #d9fff4;
-      color: var(--muted);
-      font-size: 0.86rem;
-      line-height: 1.5;
-    }
-
-    .ad-slot strong {
-      display: block;
-      margin-bottom: 6px;
-      color: var(--ink);
-      font-size: 1rem;
-    }
-
-    .account-link {
-      display: inline-block;
-      margin-top: 16px;
-      color: var(--brand);
-      font-size: 0.86rem;
-      font-weight: 800;
-      text-decoration: none;
-    }
-
-    .account-link:hover { color: var(--accent); }
 
     .eyebrow {
       margin: 0;
@@ -172,9 +163,12 @@
 
     @media (max-width: 620px) {
       .topbar { align-items: flex-start; flex-direction: column; }
-      .content-grid { grid-template-columns: 1fr; }
+      .content-grid { grid-template-columns: minmax(0, 1fr); margin-top: 0; }
       main { padding: 24px 20px; }
       .ads { position: static; }
+      body { padding: 125px 12px 72px; }
+      .page-shell { padding-top: 14px; }
+      .breadcrumbs { margin-top: 90px; }
     }
   </style>
 </head>
@@ -187,6 +181,12 @@
       </div>
       <a class="nav-link" href="index.html">Back to storefront</a>
     </header>
+
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="index.html">Home</a>
+      <span class="separator" aria-hidden="true">/</span>
+      <span class="current" aria-current="page">Reviewer</span>
+    </nav>
 
     <div class="content-grid">
       <main>
@@ -201,9 +201,10 @@
         </ul>
       </main>
 
-      <aside class="ads" aria-label="Advertisement">
-        <span class="ads-label">Advertisement</span>
-        <ins class="adsbygoogle ad-slot"
+      <aside class="ad-rail" aria-label="Sponsored content">
+        <p class="ad-rail-label">Sponsored</p>
+        <ins class="adsbygoogle ad-slot ad-slot-featured"
+          style="display:block"
           data-ad-client="ca-pub-7446487671504565"
           data-ad-slot="9568789244"
           data-ad-format="auto"
@@ -211,9 +212,24 @@
         <script>
           (adsbygoogle = window.adsbygoogle || []).push({});
         </script>
-        <a class="account-link" href="https://example.com/your-account" target="_blank" rel="noopener noreferrer">Visit my account</a>
+        <a class="ad-slot ad-slot-featured" href="#" data-ad-slot="featured">
+          <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=480&h=320&fit=crop&q=80" alt="Travel bag collection">
+          <span class="ad-slot-content">
+            <small>Featured partner</small>
+            <strong>Gear up for your next trip</strong>
+            <span>Promote your brand here</span>
+          </span>
+        </a>
+        <a class="ad-slot ad-slot-secondary" href="#" data-ad-slot="secondary">
+          <span class="ad-slot-content">
+            <small>Sponsored</small>
+            <strong>Reach BusyBagz shoppers</strong>
+            <span>Your campaign could be here</span>
+          </span>
+        </a>
       </aside>
     </div>
   </div>
+  <script src="js/site-shell.js"></script>
 </body>
 </html>
