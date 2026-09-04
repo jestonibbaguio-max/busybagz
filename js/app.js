@@ -104,6 +104,16 @@ const DEFAULT_STORES = [
     services: ['In-store shopping', 'Special Discount', 'Delivery', 'COD around Cebu city'],
     address: 'Sangi gate Barangay, Pajo, Lapu-Lapu City, Philippines, 6015',
     addressUrl: 'https://www.bing.com/maps/default.aspx?v=2&pc=FACEBK&mid=8100&where1=Sangi%20gate%20Barangay%2C%20Pajo%2C%20Lapu-Lapu%20City%2C%20Philippines%2C%206015&FORM=FBKPL1&mkt=en-GB&fbclid=IwcGRvZgFleHRuA2FlbQIxMABicmlkETEwZ08zVkh6Rk1TNVhMM1Flc3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHuh33clNJI1g7nH_k4ggusO327iyq-f4tHzwXUbCvAzK-eiCukeldPHoj9gv_aem_BxufZ66sKpyOwh2ohDdG2A'
+  },
+  {
+    id: 'all-in-the-van',
+    name: 'ALL_IN_THE_VAN',
+    category: 'Travel & Tour',
+    description: 'All in the Van Travel & Tour is a premier, newly established transport and tour provider dedicated to delivering seamless, safe, and comfortable travel experiences. Specializing in private van rentals and customized tour packages, we cater to families, corporate groups, and independent travelers looking to explore the region’s top destinations. DM us to reserve yours today! 📩',
+    image: 'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788542559/store_van_logo.jpg',
+    specialties: ['Private van rentals', 'Customized tour packages', 'Family travel', 'Corporate group transfers'],
+    services: ['Safe and comfortable travel', 'Custom itineraries', 'Private van rental', 'Tour packages'],
+    facebookUrl: 'https://www.facebook.com/gabriel.hamo'
   }
 ];
 
