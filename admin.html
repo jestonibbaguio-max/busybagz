@@ -271,14 +271,6 @@
     const ADMIN_SESSION_KEY = 'busybagz-admin-session';
     const ADMIN_USERNAME = 'admin';
     const ADMIN_PASSWORD = 'iambagzPogi@12';
-    const DEFAULT_STORE = {
-      id: 'busyReviewer',
-      name: 'busyReviewer',
-      category: 'SAP Commerce Cloud Reviewer',
-      description: 'Review and assess SAP Commerce Cloud knowledge with BusyBagz.',
-      image: ''
-    };
-
     const loginView = document.getElementById('loginView');
     const adminView = document.getElementById('adminView');
     const loginForm = document.getElementById('loginForm');
@@ -301,7 +293,7 @@
     function readStores() {
       try {
         const stored = JSON.parse(localStorage.getItem(STORES_STORAGE_KEY) || '[]');
-        return Array.isArray(stored) ? stored : [];
+        return (Array.isArray(stored) ? stored : []).filter(store => store.id !== 'busyReviewer' && store.name !== 'busyReviewer' && store.name.toLowerCase() !== 'gigcase');
       } catch {
         return [];
       }
@@ -312,10 +304,9 @@
     }
 
     function renderStores() {
-      const stores = [DEFAULT_STORE, ...readStores().filter(store => store.id !== DEFAULT_STORE.id)];
+      const stores = readStores();
       storeList.innerHTML = stores.map(store => {
         const image = store.image || 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=240&h=160&fit=crop&q=80';
-        const isDefault = store.id === DEFAULT_STORE.id;
         return `
           <article class="store-row">
             <img src="${escapeHTML(image)}" alt="${escapeHTML(store.name)} banner">
@@ -324,7 +315,7 @@
               <p>${escapeHTML(store.category || 'BusyBagz store')}</p>
               <small>busybagz.com/store/${escapeHTML(encodeURIComponent(store.name))}</small>
             </div>
-            ${isDefault ? '<span>Built-in</span>' : `<button class="store-remove" type="button" data-store-id="${escapeHTML(store.id)}">Remove</button>`}
+            <button class="store-remove" type="button" data-store-id="${escapeHTML(store.id)}">Remove</button>
           </article>`;
       }).join('');
     }

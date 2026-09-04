@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Store | BusyBagz</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="/css/styles.css">
   <style>
     body { padding: 112px 20px 48px; background: #f7f5f0; }
     .store-page { width: min(100%, 980px); margin: 0 auto; }
@@ -14,6 +14,9 @@
     .store-content h1 { margin: 8px 0 10px; font-size: clamp(2rem, 5vw, 3.5rem); }
     .store-category { margin: 0; color: #1b8f66; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.78rem; }
     .store-description { max-width: 650px; color: #53608a; line-height: 1.7; }
+    .store-reservation { margin: 24px 0; font-weight: 700; }
+    .store-reservation a { color: #1b8f66; }
+    .store-reservation a:hover { text-decoration: underline; }
     .store-back { display: inline-flex; margin-top: 20px; padding: 11px 16px; border-radius: 8px; background: #1b8f66; color: white; font-weight: 700; }
     .store-missing { padding: 48px 24px; text-align: center; }
     .store-missing h1 { margin-top: 0; }
@@ -22,23 +25,28 @@
 </head>
 <body>
   <nav class="navbar" id="navbar">
-    <a href="index.html" class="nav-logo" aria-label="BusyBagz home">
+    <a href="/index.html" class="nav-logo" aria-label="BusyBagz home">
       <img src="https://res.cloudinary.com/sjnrfmjm/image/upload/v1788502910/busyBagz.png" alt="BusyBagz logo" class="brand-logo-image">
     </a>
-    <a href="index.html" class="nav-cart" aria-label="Back to storefront">Storefront</a>
+    <a href="/index.html" class="nav-cart" aria-label="Back to storefront">Storefront</a>
   </nav>
 
   <main class="store-page" id="storePage"></main>
 
   <script>
     const STORES_STORAGE_KEY = 'busybagz-stores';
-    const DEFAULT_STORE = {
-      id: 'busyReviewer',
-      name: 'busyReviewer',
-      category: 'SAP Commerce Cloud Reviewer',
-      description: 'Review and assess SAP Commerce Cloud knowledge with BusyBagz.',
-      image: ''
-    };
+    const DEFAULT_STORES = [{
+      id: 'ubec-gigcase',
+      name: 'UBEC Gigcase',
+      category: 'Custom Bags',
+      description: 'Custom bags that are hard to find in malls or stores.',
+      image: 'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788515161/gigcase_logo.jpg',
+      specialties: ['Bike bag', 'Guitar bag', 'Free dive bag', 'Moto bag', 'Custom Pickle Ball bags', 'Other custom bags'],
+      services: ['In-store shopping', 'Special Discount', 'Delivery', 'COD around Cebu city'],
+      facebookUrl: 'https://www.facebook.com/Ubecgigcase',
+      address: 'Sangi gate Barangay, Pajo, Lapu-Lapu City, Philippines, 6015',
+      addressUrl: 'https://www.bing.com/maps/default.aspx?v=2&pc=FACEBK&mid=8100&where1=Sangi%20gate%20Barangay%2C%20Pajo%2C%20Lapu-Lapu%20City%2C%20Philippines%2C%206015&FORM=FBKPL1&mkt=en-GB&fbclid=IwcGRvZgFleHRuA2FlbQIxMABicmlkETEwZ08zVkh6Rk1TNVhMM1Flc3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHuh33clNJI1g7nH_k4ggusO327iyq-f4tHzwXUbCvAzK-eiCukeldPHoj9gv_aem_BxufZ66sKpyOwh2ohDdG2A'
+    }];
     const fallbackImage = 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=1200&h=600&fit=crop&q=80';
     const storePage = document.getElementById('storePage');
 
@@ -55,9 +63,10 @@
     function getStores() {
       try {
         const stored = JSON.parse(localStorage.getItem(STORES_STORAGE_KEY) || '[]');
-        return [DEFAULT_STORE, ...(Array.isArray(stored) ? stored : []).filter(store => store.id !== DEFAULT_STORE.id)];
+        const savedStores = (Array.isArray(stored) ? stored : []).filter(store => store.id !== 'busyReviewer' && store.name !== 'busyReviewer' && store.name.toLowerCase() !== 'gigcase');
+        return [...DEFAULT_STORES, ...savedStores.filter(store => !DEFAULT_STORES.some(defaultStore => defaultStore.name === store.name))];
       } catch {
-        return [DEFAULT_STORE];
+        return DEFAULT_STORES;
       }
     }
 
@@ -66,7 +75,7 @@
 
     if (!store) {
       document.title = 'Store not found | BusyBagz';
-      storePage.innerHTML = '<section class="store-hero store-missing"><h1>Store not found</h1><p>That BusyBagz store is no longer available.</p><a class="store-back" href="index.html">Back to storefront</a></section>';
+      storePage.innerHTML = '<section class="store-hero store-missing"><h1>Store not found</h1><p>That BusyBagz store is no longer available.</p><a class="store-back" href="/index.html">Back to storefront</a></section>';
     } else {
       document.title = `${store.name} | BusyBagz`;
       storePage.innerHTML = `
@@ -76,7 +85,11 @@
             <p class="store-category">${escapeHTML(store.category || 'BusyBagz store')}</p>
             <h1>${escapeHTML(store.name)}</h1>
             <p class="store-description">${escapeHTML(store.description || 'Welcome to this BusyBagz store.')}</p>
-            <a class="store-back" href="index.html">Back to storefront</a>
+            ${store.specialties ? `<h2>Specialties</h2><ul class="store-details-list">${store.specialties.map(item => `<li>${escapeHTML(item)}</li>`).join('')}</ul>` : ''}
+            ${store.services ? `<h2>Store services</h2><ul class="store-details-list">${store.services.map(item => `<li>${escapeHTML(item)}</li>`).join('')}</ul>` : ''}
+            ${store.facebookUrl ? `<p class="store-reservation"><a href="${escapeHTML(store.facebookUrl)}" target="_blank" rel="noopener noreferrer">DM us to reserve yours today! 📩</a></p>` : ''}
+            ${store.address ? `<p class="store-address"><a href="${escapeHTML(store.addressUrl)}" target="_blank" rel="noopener noreferrer">${escapeHTML(store.address)}</a></p>` : ''}
+            <a class="store-back" href="/index.html">Back to storefront</a>
           </div>
         </article>`;
     }

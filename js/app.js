@@ -4,6 +4,57 @@
 
 const PRODUCTS = [
   {
+    id: 6,
+    name: 'Pickle Bag',
+    category: 'UBEC Gigcase',
+    breadcrumbCategory: 'UBEC Gigcase',
+    price: 0,
+    priceLabel: 'Pre-order',
+    originalPrice: null,
+    tag: 'Pre-order',
+    description: 'PRE-ORDERS NOW OPEN! 🎒\nPickle Bag - Approved Standard Size',
+    storeName: 'UBEC Gigcase',
+    storeUrl: 'https://www.facebook.com/Ubecgigcase',
+    storePageUrl: 'store/UBEC%20Gigcase',
+    reservationUrl: 'https://www.facebook.com/Ubecgigcase',
+    colors: ['#d8e5ed'],
+    rating: 0,
+    reviews: 0,
+    image: 'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788514705/gigcase_bag_2_1.jpg',
+    images: [
+      'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788514705/gigcase_bag_2_1.jpg',
+      'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788514705/gigcase_bag_2_2.jpg',
+      'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788514704/gigcase_bag_2_3.jpg'
+    ],
+    comments: []
+  },
+  {
+    id: 5,
+    name: 'UBEC Gigcase',
+    category: 'Transparent Bags',
+    breadcrumbCategory: 'UBEC Gigcase',
+    breadcrumbName: 'Transparent bag',
+    price: 0,
+    priceLabel: 'Pre-order',
+    originalPrice: null,
+    tag: 'Pre-order',
+    description: 'PRE-ORDERS NOW OPEN! 🎒\nTransparent Bag - Approved Standard Size & Model for School ✅\nMade of THICK PLASTIC material ✅',
+    storeName: 'UBEC Gigcase',
+    storeUrl: 'https://www.facebook.com/Ubecgigcase',
+    storePageUrl: 'store/UBEC%20Gigcase',
+    reservationUrl: 'https://www.facebook.com/Ubecgigcase',
+    colors: ['#d8e5ed'],
+    rating: 0,
+    reviews: 0,
+    image: 'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788513590/gigcase_bag_1.jpg',
+    images: [
+      'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788513590/gigcase_bag_1.jpg',
+      'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788514172/gigcase_bag_1_3.jpg',
+      'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788514172/gigcase_bag_1_2.jpg'
+    ],
+    comments: []
+  },
+  {
     id: 1,
     name: 'Voyager Canvas Backpack',
     category: 'Backpacks',
@@ -136,10 +187,15 @@ function generateStars(rating) {
 const STORES_STORAGE_KEY = 'busybagz-stores';
 const DEFAULT_STORES = [
   {
-    id: 'busyReviewer',
-    name: 'busyReviewer',
-    category: 'SAP Commerce Cloud Reviewer',
-    description: 'Review and assess SAP Commerce Cloud knowledge with BusyBagz.'
+    id: 'ubec-gigcase',
+    name: 'UBEC Gigcase',
+    category: 'Custom Bags',
+    description: 'Custom bags that are hard to find in malls or stores.',
+    image: 'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788515161/gigcase_logo.jpg',
+    specialties: ['Bike bag', 'Guitar bag', 'Free dive bag', 'Moto bag', 'Custom Pickle Ball bags', 'Other custom bags'],
+    services: ['In-store shopping', 'Special Discount', 'Delivery', 'COD around Cebu city'],
+    address: 'Sangi gate Barangay, Pajo, Lapu-Lapu City, Philippines, 6015',
+    addressUrl: 'https://www.bing.com/maps/default.aspx?v=2&pc=FACEBK&mid=8100&where1=Sangi%20gate%20Barangay%2C%20Pajo%2C%20Lapu-Lapu%20City%2C%20Philippines%2C%206015&FORM=FBKPL1&mkt=en-GB&fbclid=IwcGRvZgFleHRuA2FlbQIxMABicmlkETEwZ08zVkh6Rk1TNVhMM1Flc3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHuh33clNJI1g7nH_k4ggusO327iyq-f4tHzwXUbCvAzK-eiCukeldPHoj9gv_aem_BxufZ66sKpyOwh2ohDdG2A'
   }
 ];
 
@@ -156,11 +212,8 @@ function escapeHTML(value) {
 function getStores() {
   try {
     const stores = JSON.parse(localStorage.getItem(STORES_STORAGE_KEY) || '[]');
-    const savedStores = Array.isArray(stores) ? stores : [];
-    return [
-      ...DEFAULT_STORES,
-      ...savedStores.filter(store => !DEFAULT_STORES.some(defaultStore => defaultStore.id === store.id))
-    ];
+    const savedStores = (Array.isArray(stores) ? stores : []).filter(store => store.id !== 'busyReviewer' && store.name !== 'busyReviewer' && store.name.toLowerCase() !== 'gigcase');
+    return [...DEFAULT_STORES, ...savedStores.filter(store => !DEFAULT_STORES.some(defaultStore => defaultStore.name === store.name))];
   } catch {
     return DEFAULT_STORES;
   }
@@ -171,8 +224,6 @@ function getStoreUrl(store) {
 }
 
 function renderProductCard(product) {
-  const comments = Array.isArray(product.comments) ? product.comments.slice(0, 3) : [];
-
   return `
     <article class="product-card" id="product-${product.id}">
       <a href="pdp.html?id=${product.id}" class="product-card-link">
@@ -185,25 +236,12 @@ function renderProductCard(product) {
           <h3 class="product-card-name">${escapeHTML(product.name)}</h3>
           <p class="product-card-category">${escapeHTML(product.category)}</p>
           <p class="product-card-price">
-            ${formatPrice(product.price)}
+            ${product.priceLabel || formatPrice(product.price)}
             ${product.originalPrice ? `<span class="original">${formatPrice(product.originalPrice)}</span>` : ''}
           </p>
         </div>
       </a>
 
-      ${comments.length ? `
-        <div class="product-card-comments">
-          ${comments.map(comment => `
-            <div class="product-card-comment">
-              <div class="product-card-comment-head">
-                <span class="product-card-stars">${'★'.repeat(comment.rating)}${'☆'.repeat(5 - comment.rating)}</span>
-                <strong>${escapeHTML(comment.author)}</strong>
-              </div>
-              <p>${escapeHTML(comment.text)}</p>
-            </div>
-          `).join('')}
-        </div>
-      ` : ''}
     </article>`;
 }
 
@@ -240,9 +278,11 @@ function renderProductGrid(query = '') {
   if (!grid) return;
 
   const normalizedQuery = query.trim().toLowerCase();
+  const products = PRODUCTS.filter(product => [5, 6].includes(product.id) && (!normalizedQuery || [product.name, product.category, product.description]
+    .some(value => value.toLowerCase().includes(normalizedQuery))));
   const stores = getStores().filter(store => [store.name, store.category, store.description]
     .some(value => value.toLowerCase().includes(normalizedQuery)));
-  const results = stores.map(renderStoreCard);
+  const results = [...products.map(renderProductCard), ...stores.map(renderStoreCard)];
 
   grid.innerHTML = results.length
     ? results.join('')
@@ -268,7 +308,16 @@ function renderSearchResults(query = '') {
         <span><strong>${escapeHTML(store.name)}</strong><span>${escapeHTML(store.category)}</span></span>
         <span class="search-result-type">Store</span>
       </a>`);
-  const results = stores;
+  const products = PRODUCTS.filter(product => [5, 6].includes(product.id) && [product.name, product.category, product.description]
+    .some(value => value.toLowerCase().includes(normalizedQuery)))
+    .slice(0, 5)
+    .map(product => `
+      <a class="search-result" role="option" href="pdp.html?id=${product.id}">
+        <img src="${product.image}" alt="">
+        <span><strong>${escapeHTML(product.name)}</strong><span>${escapeHTML(product.category)}</span></span>
+        <span class="search-result-type">Product</span>
+      </a>`);
+  const results = [...products, ...stores];
   resultsContainer.innerHTML = results.length
     ? results.join('')
     : '<p class="search-no-results">No stores found.</p>';
@@ -357,9 +406,9 @@ function renderPDP() {
     breadcrumb.innerHTML = `
       <a href="index.html">Home</a>
       <span class="separator">/</span>
-      <a href="index.html">${product.category}</a>
+      <a href="${product.storePageUrl || 'index.html'}">${product.breadcrumbCategory || product.category}</a>
       <span class="separator">/</span>
-      <span class="current">${product.name}</span>`;
+      <span class="current">${product.breadcrumbName || product.name}</span>`;
   }
 
   container.innerHTML = `
@@ -382,18 +431,20 @@ function renderPDP() {
         <p class="pdp-category">${product.category}</p>
         <h1 class="pdp-title">${product.name}</h1>
 
-        <div class="pdp-rating">
+        ${product.reviews ? `<div class="pdp-rating">
           <div class="pdp-stars">${generateStars(product.rating)}</div>
           <span class="pdp-rating-text">${product.rating} (${product.reviews} reviews)</span>
-        </div>
+        </div>` : ''}
 
         <p class="pdp-price">
-          ${formatPrice(product.price)}
+          ${product.priceLabel || formatPrice(product.price)}
           ${product.originalPrice ? `<span class="original">${formatPrice(product.originalPrice)}</span>` : ''}
         </p>
-        <p class="pdp-installment">or 4 interest-free payments of ${formatPrice(product.price / 4)} with Afterpay</p>
+        ${product.priceLabel ? '' : `<p class="pdp-installment">or 4 interest-free payments of ${formatPrice(product.price / 4)} with Afterpay</p>`}
 
-        <p class="pdp-description">${product.description}</p>
+        <p class="pdp-description">${escapeHTML(product.description).replace(/\n/g, '<br>')}</p>
+        ${product.reservationUrl ? `<p class="pdp-reservation"><a href="${product.reservationUrl}" target="_blank" rel="noopener noreferrer">DM us to reserve yours today! 📩</a></p>` : ''}
+        ${product.storeUrl ? `<p class="pdp-seller">Available at <a href="${product.storePageUrl || product.storeUrl}" ${product.storePageUrl ? '' : 'target="_blank" rel="noopener noreferrer"'}>${escapeHTML(product.storeName)}</a></p>` : ''}
 
         <p class="pdp-option-label">Color</p>
         <div class="pdp-colors">
@@ -404,14 +455,6 @@ function renderPDP() {
         </div>
 
         <div class="pdp-actions">
-          <div class="qty-selector">
-            <button class="qty-btn" onclick="changeQty(-1)">−</button>
-            <input class="qty-value" id="qty-input" type="text" value="1" readonly>
-            <button class="qty-btn" onclick="changeQty(1)">+</button>
-          </div>
-          <button class="btn-add-cart" id="btn-add-cart">
-            ${ICONS.cart} Add to Cart
-          </button>
           <button class="btn-wishlist">${ICONS.heart}</button>
         </div>
 
@@ -423,20 +466,6 @@ function renderPDP() {
       </div>
     </div>
 
-    <div class="pdp-comments">
-      <h2>Customer Reviews</h2>
-      <div class="pdp-comments-list">
-        ${(product.comments || []).slice(0, 3).map(comment => `
-          <article class="pdp-comment">
-            <div class="pdp-comment-head">
-              <strong>${escapeHTML(comment.author)}</strong>
-              <span>${'★'.repeat(comment.rating)}${'☆'.repeat(5 - comment.rating)}</span>
-            </div>
-            <p>${escapeHTML(comment.text)}</p>
-          </article>
-        `).join('')}
-      </div>
-    </div>
   `;
 
   // Render related products
@@ -478,7 +507,7 @@ function renderRelated(currentId) {
         <h3 class="product-card-name">${product.name}</h3>
         <p class="product-card-category">${product.category}</p>
         <p class="product-card-price">
-          ${formatPrice(product.price)}
+          ${product.priceLabel || formatPrice(product.price)}
           ${product.originalPrice ? `<span class="original">${formatPrice(product.originalPrice)}</span>` : ''}
         </p>
       </div>
