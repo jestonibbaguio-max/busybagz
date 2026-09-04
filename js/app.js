@@ -63,7 +63,7 @@ const PRODUCTS = [
     priceLabel: 'Available',
     originalPrice: null,
     tag: 'Travel & Tour',
-    description: 'Van for rent - Travel and Tour',
+    description: 'Van for rent travel and tour',
     storeName: 'All in the Van',
     storeUrl: 'https://www.facebook.com/gabriel.hamo',
     storePageUrl: 'store/ALL_IN_THE_VAN',
