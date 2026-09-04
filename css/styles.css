@@ -752,7 +752,7 @@ body::before {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 280px;
   gap: 2.5rem;
-  max-width: 1280px;
+  max-width: 1440px;
   margin: 1.25rem auto 0;
 }
 
@@ -782,6 +782,17 @@ body::before {
   background: var(--color-bg-elevated);
   box-shadow: var(--shadow-card);
   color: var(--color-on-accent);
+}
+
+.ad-rail .adsbygoogle {
+  width: 100% !important;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.ad-rail .adsbygoogle iframe {
+  max-width: 100%;
 }
 
 .ad-slot::after {
@@ -1202,7 +1213,7 @@ body::before {
    ============================================ */
 
 .pdp-container {
-  max-width: 1280px;
+  max-width: 1440px;
   margin: 0 auto;
   padding: 7rem 3rem 4rem;
   position: relative;
@@ -1234,6 +1245,12 @@ body::before {
 
 .pdp-breadcrumb .current {
   color: var(--color-text-secondary);
+}
+
+.home-breadcrumb {
+  max-width: 1440px;
+  margin: 8rem auto 0;
+  padding: 0 3rem;
 }
 
 .pdp-layout {

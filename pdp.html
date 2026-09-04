@@ -19,7 +19,16 @@
 
   <!-- Navigation -->
   <nav class="navbar" id="navbar">
-    <a href="index.html" class="nav-logo">BusyBagz</a>
+    <a href="index.html" class="nav-logo" aria-label="BusyBagz home">
+      <img src="https://res.cloudinary.com/sjnrfmjm/image/upload/v1788502910/busyBagz.png" alt="BusyBagz logo" class="brand-logo-image">
+    </a>
+    <form class="site-search" action="index.html" method="get" role="search">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35m1.35-5.4a6.75 6.75 0 1 1-13.5 0 6.75 6.75 0 0 1 13.5 0Z"/>
+      </svg>
+      <input name="search" type="search" placeholder="Search stores" aria-label="Search stores">
+    </form>
+    <a class="create-store-button" href="index.html#open-store-modal">Create a store</a>
     <a href="#" class="nav-cart" id="nav-cart">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"/>
