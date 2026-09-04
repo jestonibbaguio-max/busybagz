@@ -236,7 +236,7 @@ function renderProductGrid(query = '') {
   if (!grid) return;
 
   const normalizedQuery = query.trim().toLowerCase();
-  const products = PRODUCTS.filter(product => [5, 6].includes(product.id) && (!normalizedQuery || [product.name, product.category, product.description]
+  const products = PRODUCTS.filter(product => [5, 6, 7].includes(product.id) && (!normalizedQuery || [product.name, product.category, product.description]
     .some(value => value.toLowerCase().includes(normalizedQuery))));
   const stores = getStores().filter(store => [store.name, store.category, store.description]
     .some(value => value.toLowerCase().includes(normalizedQuery)));
@@ -266,7 +266,7 @@ function renderSearchResults(query = '') {
         <span><strong>${escapeHTML(store.name)}</strong><span>${escapeHTML(store.category)}</span></span>
         <span class="search-result-type">Store</span>
       </a>`);
-  const products = PRODUCTS.filter(product => [5, 6].includes(product.id) && [product.name, product.category, product.description]
+  const products = PRODUCTS.filter(product => [5, 6, 7].includes(product.id) && [product.name, product.category, product.description]
     .some(value => value.toLowerCase().includes(normalizedQuery)))
     .slice(0, 5)
     .map(product => `
