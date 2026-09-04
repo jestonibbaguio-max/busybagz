@@ -6,27 +6,27 @@
 
 /* ---------- CSS Custom Properties ---------- */
 :root {
-  --color-bg: #fffaf5;
+  --color-bg: #eef3ff;
   --color-bg-elevated: #ffffff;
-  --color-bg-card: #fffefb;
-  --color-bg-card-hover: #fff4ea;
-  --color-surface: #ffe9d7;
-  --color-border: rgba(85, 48, 28, 0.12);
-  --color-border-hover: rgba(255, 107, 87, 0.4);
+  --color-bg-card: #ffffff;
+  --color-bg-card-hover: #e9fffa;
+  --color-surface: #d9fff4;
+  --color-border: rgba(36, 55, 130, 0.16);
+  --color-border-hover: rgba(0, 174, 155, 0.5);
 
-  --color-text: #1d1a2b;
-  --color-text-secondary: #4a4968;
-  --color-text-muted: #7b738f;
+  --color-text: #17235f;
+  --color-text-secondary: #53608a;
+  --color-text-muted: #7883a9;
 
-  --color-accent: #ff6b57;
-  --color-accent-hover: #ff825c;
-  --color-accent-glow: rgba(255, 107, 87, 0.2);
-  --color-on-accent: #fffaf7;
+  --color-accent: #00aE9b;
+  --color-accent-hover: #008f83;
+  --color-accent-glow: rgba(0, 174, 155, 0.2);
+  --color-on-accent: #ffffff;
 
-  --color-gradient-start: #ff8a66;
-  --color-gradient-end: #f7a928;
-  --color-gradient-alt-start: #5d5ce6;
-  --color-gradient-alt-end: #4db7d8;
+  --color-gradient-start: #32d3b0;
+  --color-gradient-end: #29439a;
+  --color-gradient-alt-start: #32d3b0;
+  --color-gradient-alt-end: #29439a;
 
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: 'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -36,8 +36,8 @@
   --radius-lg: 20px;
   --radius-xl: 28px;
 
-  --shadow-card: 0 10px 24px rgba(122, 76, 55, 0.08), 0 2px 8px rgba(122, 76, 55, 0.06);
-  --shadow-card-hover: 0 18px 36px rgba(255, 107, 87, 0.18), 0 8px 16px rgba(108, 99, 255, 0.09);
+  --shadow-card: 0 10px 24px rgba(41, 67, 154, 0.1), 0 2px 8px rgba(41, 67, 154, 0.06);
+  --shadow-card-hover: 0 18px 36px rgba(41, 67, 154, 0.18), 0 8px 16px rgba(0, 174, 155, 0.1);
   --shadow-glow: 0 0 40px var(--color-accent-glow);
 
   --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -62,10 +62,7 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background:
-    radial-gradient(circle at top left, rgba(255, 182, 149, 0.55), transparent 27%),
-    radial-gradient(circle at top right, rgba(108, 99, 255, 0.18), transparent 32%),
-    linear-gradient(180deg, #fffaf5 0%, #fff6ef 32%, #fffaf5 100%);
+  background: var(--color-bg);
   color: var(--color-text);
   line-height: 1.6;
   min-height: 100vh;
@@ -95,8 +92,8 @@ body::before {
   position: fixed;
   inset: 0;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+    linear-gradient(rgba(41, 67, 154, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(41, 67, 154, 0.05) 1px, transparent 1px);
   background-size: 28px 28px;
   mask-image: radial-gradient(circle at center, black 25%, transparent 90%);
   pointer-events: none;
@@ -113,22 +110,23 @@ body::before {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.25rem 3rem;
-  background: #1d1d3a;
+  min-height: 72px;
+  padding: 0.8rem 4vw;
+  background: #263b89;
   border-bottom: 1px solid rgba(255, 255, 255, 0.18);
   box-shadow: 0 18px 30px rgba(75, 56, 179, 0.12);
   transition: var(--transition-smooth);
 }
 
 .navbar.scrolled {
-  padding: 0.8rem 3rem;
-  background: #1d1d3a;
+  padding: 0.65rem 4vw;
+  background: #263b89;
 }
 
 .nav-logo {
   display: inline-flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 0.55rem;
   color: var(--color-on-accent);
 }
 
@@ -136,15 +134,15 @@ body::before {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.9rem;
-  height: 2.9rem;
-  border-radius: 12px;
+  width: 2.3rem;
+  height: 2.3rem;
+  border-radius: 6px;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.22);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  color: #f8d77b;
+  color: #6de3c5;
   font-family: 'Manrope', 'Inter', sans-serif;
-  font-size: 1.08rem;
+  font-size: 0.86rem;
   font-weight: 800;
   letter-spacing: -0.12em;
   line-height: 1;
@@ -154,9 +152,9 @@ body::before {
 
 .brand-name {
   font-family: var(--font-display);
-  font-size: 1.5rem;
-  font-weight: 800;
-  letter-spacing: -0.04em;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0;
   line-height: 1.1;
   text-transform: none;
   font-style: normal;
@@ -166,14 +164,14 @@ body::before {
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1.35rem;
   list-style: none;
 }
 
 .nav-links a {
-  font-size: 0.88rem;
-  font-weight: 500;
-  letter-spacing: 0.06em;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.84);
   transition: color var(--transition-fast);
@@ -238,8 +236,8 @@ body::before {
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  width: min(34vw, 360px);
-  padding: 0.65rem 0.9rem;
+  width: min(24vw, 260px);
+  padding: 0.45rem 0.7rem;
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
   background: var(--color-bg-card);
@@ -476,7 +474,7 @@ body::before {
 .hero-kicker,
 .section-kicker {
   margin-bottom: 1.2rem;
-  color: #ff8a66;
+  color: var(--color-accent);
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.16em;
@@ -498,7 +496,7 @@ body::before {
 }
 
 .hero h1 span {
-  color: #ff8a66;
+  color: var(--color-accent);
 }
 
 .hero-copy {
@@ -514,9 +512,9 @@ body::before {
   align-items: center;
   gap: 0.75rem;
   padding: 0.95rem 1.35rem;
-  border: 1px solid #ff8a66;
+  border: 1px solid var(--color-accent);
   border-radius: 4px;
-  background: #ff8a66;
+  background: var(--color-accent);
   color: #fff;
   font-size: 0.78rem;
   font-weight: 800;
@@ -526,7 +524,7 @@ body::before {
 }
 
 .hero-cta:hover {
-  background: #ff6b57;
+  background: var(--color-accent-hover);
   transform: translateY(-2px);
 }
 
@@ -564,7 +562,7 @@ body::before {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #ff8a66;
+  background: var(--color-accent);
   transform: translateY(-50%);
 }
 
@@ -586,7 +584,7 @@ body::before {
   display: block;
   width: 42px;
   height: 1px;
-  background: #ff8a66;
+  background: var(--color-accent);
 }
 
 /* The editorial spacing makes the catalog read as the next story after the hero. */
@@ -665,7 +663,7 @@ body::before {
 }
 
 .hero h1 .accent {
-  color: #ff8a66;
+  color: var(--color-accent);
 }
 
 @keyframes fadeInUp {
@@ -880,7 +878,7 @@ body::before {
   left: 1rem;
   right: 1rem;
   padding: 0.75rem;
-  background: #ff8a66;
+  background: var(--color-accent);
   color: var(--color-on-accent);
   font-weight: 600;
   font-size: 0.85rem;
