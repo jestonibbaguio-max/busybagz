@@ -1684,6 +1684,14 @@ body.pdp-zoom-open {
     margin-bottom: 0;
   }
 
+  .pdp-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .pdp-ad-rail {
+    position: static;
+  }
+
   .pdp-main {
     grid-template-columns: 1fr;
     gap: 2.5rem;
@@ -1740,6 +1748,14 @@ body.pdp-zoom-open {
 
   .pdp-container {
     padding: 6rem 1.5rem 3rem;
+  }
+
+  .pdp-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .pdp-ad-rail {
+    position: static;
   }
 
   .pdp-main {

@@ -321,6 +321,7 @@ function renderPDP() {
   setMetaContent('meta[property="og:url"]', productUrl);
   setMetaContent('meta[property="og:image"]', product.image);
   setMetaContent('meta[name="description"]', productDescription);
+  injectProductJsonLd(product);
 
   // Breadcrumb
   const breadcrumb = document.getElementById('pdp-breadcrumb');
@@ -393,6 +394,51 @@ function renderPDP() {
   // Render related products
   renderRelated(product.id);
   initPDPImageZoom();
+}
+
+function injectProductJsonLd(product) {
+  const scriptId = 'pdp-product-schema';
+  let schemaScript = document.getElementById(scriptId);
+
+  if (!schemaScript) {
+    schemaScript = document.createElement('script');
+    schemaScript.id = scriptId;
+    schemaScript.type = 'application/ld+json';
+    document.head.appendChild(schemaScript);
+  }
+
+  const productSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    image: product.images || [product.image],
+    description: product.description,
+    sku: String(product.id),
+    category: product.category,
+    brand: {
+      '@type': 'Brand',
+      name: product.storeName || 'BusyBagz'
+    },
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'PHP',
+      price: String(product.price || 0),
+      availability: product.priceLabel && product.priceLabel.toLowerCase().includes('pre-order')
+        ? 'https://schema.org/PreOrder'
+        : 'https://schema.org/InStock',
+      itemCondition: 'https://schema.org/NewCondition'
+    }
+  };
+
+  if (product.rating > 0 && product.reviews > 0) {
+    productSchema.aggregateRating = {
+      '@type': 'AggregateRating',
+      ratingValue: String(product.rating),
+      reviewCount: String(product.reviews)
+    };
+  }
+
+  schemaScript.textContent = JSON.stringify(productSchema);
 }
 
 function initPDPImageZoom() {
