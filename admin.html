@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BusyBagz Admin</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    :root {
+      --admin-bg: #f4f8f3;
+      --admin-panel: #ffffff;
+      --admin-ink: #17362b;
+      --admin-muted: #5d7067;
+      --admin-line: rgba(23, 54, 43, 0.16);
+      --admin-danger: #b83b48;
+    }
+
+    body {
+      min-height: 100vh;
+      padding: 112px 20px 48px;
+      background: var(--admin-bg);
+      color: var(--admin-ink);
+    }
+
+    .admin-shell {
+      width: min(100%, 980px);
+      margin: 0 auto;
+    }
+
+    .admin-panel {
+      padding: clamp(20px, 4vw, 40px);
+      border: 1px solid var(--admin-line);
+      border-radius: 18px;
+      background: var(--admin-panel);
+      box-shadow: 0 18px 38px rgba(23, 54, 43, 0.1);
+    }
+
+    .admin-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .admin-heading h1 {
+      margin: 6px 0 0;
+      color: var(--admin-ink);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      letter-spacing: -0.05em;
+    }
+
+    .admin-heading p:not(.eyebrow) {
+      margin: 8px 0 0;
+      color: var(--admin-muted);
+    }
+
+    .admin-logout,
+    .admin-submit,
+    .store-remove {
+      border: 1px solid transparent;
+      border-radius: 8px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .admin-logout {
+      padding: 9px 13px;
+      background: transparent;
+      border-color: var(--admin-line);
+      color: var(--admin-ink);
+    }
+
+    .admin-form {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) auto;
+      gap: 14px;
+      align-items: end;
+      padding: 18px;
+      border: 1px solid var(--admin-line);
+      border-radius: 12px;
+      background: #f8fbf7;
+    }
+
+    .admin-field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .admin-field label {
+      color: var(--admin-muted);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .admin-field input,
+    .login-card input {
+      width: 100%;
+      border: 1px solid var(--admin-line);
+      border-radius: 8px;
+      padding: 11px 12px;
+      background: white;
+      color: var(--admin-ink);
+      font: inherit;
+    }
+
+    .admin-submit {
+      padding: 11px 16px;
+      background: #1b8f66;
+      color: white;
+    }
+
+    .admin-status {
+      min-height: 20px;
+      margin: 10px 0 22px;
+      color: var(--admin-muted);
+      font-size: 0.88rem;
+    }
+
+    .store-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .store-row {
+      display: grid;
+      grid-template-columns: 72px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 16px;
+      padding: 12px;
+      border: 1px solid var(--admin-line);
+      border-radius: 12px;
+      background: white;
+    }
+
+    .store-row img {
+      width: 72px;
+      height: 56px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #dce9df;
+    }
+
+    .store-row h2 {
+      margin: 0 0 4px;
+      font-size: 1rem;
+    }
+
+    .store-row p {
+      margin: 0;
+      color: var(--admin-muted);
+      font-size: 0.86rem;
+      overflow-wrap: anywhere;
+    }
+
+    .store-row small {
+      display: inline-block;
+      margin-top: 5px;
+      color: var(--admin-muted);
+    }
+
+    .store-remove {
+      padding: 9px 12px;
+      background: #fff3f3;
+      border-color: rgba(184, 59, 72, 0.2);
+      color: var(--admin-danger);
+    }
+
+    .login-view {
+      width: min(100%, 440px);
+      margin: 8vh auto 0;
+    }
+
+    .login-card h1 {
+      margin: 8px 0;
+      color: var(--admin-ink);
+      font-size: 2rem;
+    }
+
+    .login-card p:not(.eyebrow) {
+      margin: 0 0 24px;
+      color: var(--admin-muted);
+      line-height: 1.5;
+    }
+
+    .login-form {
+      display: grid;
+      gap: 14px;
+    }
+
+    .login-form .admin-submit { width: 100%; }
+
+    .login-message {
+      min-height: 20px;
+      margin: 0;
+      color: var(--admin-danger);
+      font-size: 0.88rem;
+    }
+
+    [hidden] { display: none !important; }
+
+    @media (max-width: 700px) {
+      body { padding: 116px 12px 32px; }
+      .admin-heading { flex-direction: column; }
+      .admin-logout { align-self: flex-start; }
+      .admin-form { grid-template-columns: 1fr; }
+      .store-row { grid-template-columns: 56px minmax(0, 1fr); }
+      .store-row img { width: 56px; height: 48px; }
+      .store-remove { grid-column: 2; justify-self: start; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <a href="index.html" class="nav-logo" aria-label="BusyBagz home">
+      <img src="https://res.cloudinary.com/sjnrfmjm/image/upload/v1788502910/busyBagz.png" alt="BusyBagz logo" class="brand-logo-image">
+    </a>
+    <a href="index.html" class="nav-cart" aria-label="Back to storefront">Storefront</a>
+  </nav>
+
+  <main class="admin-shell">
+    <section class="admin-panel login-view" id="loginView">
+      <p class="eyebrow">BusyBagz</p>
+      <h1>Admin login</h1>
+      <p>Sign in to manage the store directory.</p>
+      <form class="login-form" id="loginForm">
+        <div class="admin-field">
+          <label for="username">Username</label>
+          <input id="username" name="username" type="text" autocomplete="username" required>
+        </div>
+        <div class="admin-field">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" required>
+        </div>
+        <button class="admin-submit" type="submit">Log in</button>
+        <p class="login-message" id="loginMessage" role="alert"></p>
+      </form>
+    </section>
+
+    <section class="admin-panel" id="adminView" hidden>
+      <div class="admin-heading">
+        <div>
+          <p class="eyebrow">Store directory</p>
+          <h1>Manage stores</h1>
+          <p>Create stores and update the storefront banner image URL.</p>
+        </div>
+        <button class="admin-logout" id="logoutButton" type="button">Log out</button>
+      </div>
+
+      <form class="admin-form" id="storeForm">
+        <div class="admin-field">
+          <label for="storeName">Store name</label>
+          <input id="storeName" name="name" type="text" maxlength="60" required>
+        </div>
+        <div class="admin-field">
+          <label for="storeImage">Banner image URL</label>
+          <input id="storeImage" name="image" type="url" placeholder="https://example.com/banner.jpg">
+        </div>
+        <button class="admin-submit" type="submit">Create store</button>
+      </form>
+      <p class="admin-status" id="adminStatus" role="status"></p>
+      <div class="store-list" id="storeList"></div>
+    </section>
+  </main>
+
+  <script>
+    const STORES_STORAGE_KEY = 'busybagz-stores';
+    const ADMIN_SESSION_KEY = 'busybagz-admin-session';
+    const ADMIN_USERNAME = 'admin';
+    const ADMIN_PASSWORD = 'iambagzPogi@12';
+    const DEFAULT_STORE = {
+      id: 'busyReviewer',
+      name: 'busyReviewer',
+      category: 'SAP Commerce Cloud Reviewer',
+      description: 'Review and assess SAP Commerce Cloud knowledge with BusyBagz.',
+      image: ''
+    };
+
+    const loginView = document.getElementById('loginView');
+    const adminView = document.getElementById('adminView');
+    const loginForm = document.getElementById('loginForm');
+    const loginMessage = document.getElementById('loginMessage');
+    const logoutButton = document.getElementById('logoutButton');
+    const storeForm = document.getElementById('storeForm');
+    const storeList = document.getElementById('storeList');
+    const adminStatus = document.getElementById('adminStatus');
+
+    function escapeHTML(value) {
+      return String(value).replace(/[&<>'"]/g, character => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+      })[character]);
+    }
+
+    function readStores() {
+      try {
+        const stored = JSON.parse(localStorage.getItem(STORES_STORAGE_KEY) || '[]');
+        return Array.isArray(stored) ? stored : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function writeStores(stores) {
+      localStorage.setItem(STORES_STORAGE_KEY, JSON.stringify(stores));
+    }
+
+    function renderStores() {
+      const stores = [DEFAULT_STORE, ...readStores().filter(store => store.id !== DEFAULT_STORE.id)];
+      storeList.innerHTML = stores.map(store => {
+        const image = store.image || 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=240&h=160&fit=crop&q=80';
+        const isDefault = store.id === DEFAULT_STORE.id;
+        return `
+          <article class="store-row">
+            <img src="${escapeHTML(image)}" alt="${escapeHTML(store.name)} banner">
+            <div>
+              <h2>${escapeHTML(store.name)}</h2>
+              <p>${escapeHTML(store.category || 'BusyBagz store')}</p>
+              <small>busybagz.com/store/${escapeHTML(encodeURIComponent(store.name))}</small>
+            </div>
+            ${isDefault ? '<span>Built-in</span>' : `<button class="store-remove" type="button" data-store-id="${escapeHTML(store.id)}">Remove</button>`}
+          </article>`;
+      }).join('');
+    }
+
+    function showAdmin() {
+      loginView.hidden = true;
+      adminView.hidden = false;
+      renderStores();
+    }
+
+    loginForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const formData = new FormData(loginForm);
+      if (formData.get('username') === ADMIN_USERNAME && formData.get('password') === ADMIN_PASSWORD) {
+        sessionStorage.setItem(ADMIN_SESSION_KEY, 'authenticated');
+        loginMessage.textContent = '';
+        showAdmin();
+        return;
+      }
+      loginMessage.textContent = 'Invalid username or password.';
+    });
+
+    logoutButton.addEventListener('click', () => {
+      sessionStorage.removeItem(ADMIN_SESSION_KEY);
+      adminView.hidden = true;
+      loginView.hidden = false;
+      loginForm.reset();
+    });
+
+    storeForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const formData = new FormData(storeForm);
+      const store = {
+        id: `store-${Date.now()}`,
+        name: String(formData.get('name')).trim(),
+        category: 'BusyBagz store',
+        description: 'A BusyBagz store.',
+        image: String(formData.get('image')).trim()
+      };
+      writeStores([...readStores(), store]);
+      storeForm.reset();
+      adminStatus.textContent = `${store.name} was created.`;
+      renderStores();
+    });
+
+    storeList.addEventListener('click', event => {
+      const button = event.target.closest('[data-store-id]');
+      if (!button) return;
+      const storeId = button.dataset.storeId;
+      const store = readStores().find(item => item.id === storeId);
+      writeStores(readStores().filter(item => item.id !== storeId));
+      adminStatus.textContent = `${store ? store.name : 'Store'} was removed.`;
+      renderStores();
+    });
+
+    if (sessionStorage.getItem(ADMIN_SESSION_KEY) === 'authenticated') {
+      showAdmin();
+    }
+  </script>
+</body>
+</html>

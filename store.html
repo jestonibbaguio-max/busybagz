@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Store | BusyBagz</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    body { padding: 112px 20px 48px; background: #f7f5f0; }
+    .store-page { width: min(100%, 980px); margin: 0 auto; }
+    .store-hero { overflow: hidden; border-radius: 18px; background: white; box-shadow: 0 18px 38px rgba(41, 67, 154, 0.12); }
+    .store-banner { width: 100%; height: min(42vw, 360px); min-height: 220px; object-fit: cover; display: block; }
+    .store-content { padding: clamp(24px, 5vw, 52px); }
+    .store-content h1 { margin: 8px 0 10px; font-size: clamp(2rem, 5vw, 3.5rem); }
+    .store-category { margin: 0; color: #1b8f66; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.78rem; }
+    .store-description { max-width: 650px; color: #53608a; line-height: 1.7; }
+    .store-back { display: inline-flex; margin-top: 20px; padding: 11px 16px; border-radius: 8px; background: #1b8f66; color: white; font-weight: 700; }
+    .store-missing { padding: 48px 24px; text-align: center; }
+    .store-missing h1 { margin-top: 0; }
+    @media (max-width: 600px) { body { padding: 180px 12px 32px; } .store-banner { min-height: 180px; } }
+  </style>
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <a href="index.html" class="nav-logo" aria-label="BusyBagz home">
+      <img src="https://res.cloudinary.com/sjnrfmjm/image/upload/v1788502910/busyBagz.png" alt="BusyBagz logo" class="brand-logo-image">
+    </a>
+    <a href="index.html" class="nav-cart" aria-label="Back to storefront">Storefront</a>
+  </nav>
+
+  <main class="store-page" id="storePage"></main>
+
+  <script>
+    const STORES_STORAGE_KEY = 'busybagz-stores';
+    const DEFAULT_STORE = {
+      id: 'busyReviewer',
+      name: 'busyReviewer',
+      category: 'SAP Commerce Cloud Reviewer',
+      description: 'Review and assess SAP Commerce Cloud knowledge with BusyBagz.',
+      image: ''
+    };
+    const fallbackImage = 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=1200&h=600&fit=crop&q=80';
+    const storePage = document.getElementById('storePage');
+
+    function escapeHTML(value) {
+      return String(value).replace(/[&<>'"]/g, character => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+      })[character]);
+    }
+
+    function getStores() {
+      try {
+        const stored = JSON.parse(localStorage.getItem(STORES_STORAGE_KEY) || '[]');
+        return [DEFAULT_STORE, ...(Array.isArray(stored) ? stored : []).filter(store => store.id !== DEFAULT_STORE.id)];
+      } catch {
+        return [DEFAULT_STORE];
+      }
+    }
+
+    const storeName = decodeURIComponent(window.location.pathname.split('/').filter(Boolean).pop() || '');
+    const store = getStores().find(item => item.name === storeName);
+
+    if (!store) {
+      document.title = 'Store not found | BusyBagz';
+      storePage.innerHTML = '<section class="store-hero store-missing"><h1>Store not found</h1><p>That BusyBagz store is no longer available.</p><a class="store-back" href="index.html">Back to storefront</a></section>';
+    } else {
+      document.title = `${store.name} | BusyBagz`;
+      storePage.innerHTML = `
+        <article class="store-hero">
+          <img class="store-banner" src="${escapeHTML(store.image || fallbackImage)}" alt="${escapeHTML(store.name)} banner">
+          <div class="store-content">
+            <p class="store-category">${escapeHTML(store.category || 'BusyBagz store')}</p>
+            <h1>${escapeHTML(store.name)}</h1>
+            <p class="store-description">${escapeHTML(store.description || 'Welcome to this BusyBagz store.')}</p>
+            <a class="store-back" href="index.html">Back to storefront</a>
+          </div>
+        </article>`;
+    }
+  </script>
+</body>
+</html>

@@ -134,6 +134,14 @@ function generateStars(rating) {
 }
 
 const STORES_STORAGE_KEY = 'busybagz-stores';
+const DEFAULT_STORES = [
+  {
+    id: 'busyReviewer',
+    name: 'busyReviewer',
+    category: 'SAP Commerce Cloud Reviewer',
+    description: 'Review and assess SAP Commerce Cloud knowledge with BusyBagz.'
+  }
+];
 
 function escapeHTML(value) {
   return String(value).replace(/[&<>'"]/g, character => ({
@@ -148,10 +156,18 @@ function escapeHTML(value) {
 function getStores() {
   try {
     const stores = JSON.parse(localStorage.getItem(STORES_STORAGE_KEY) || '[]');
-    return Array.isArray(stores) ? stores : [];
+    const savedStores = Array.isArray(stores) ? stores : [];
+    return [
+      ...DEFAULT_STORES,
+      ...savedStores.filter(store => !DEFAULT_STORES.some(defaultStore => defaultStore.id === store.id))
+    ];
   } catch {
-    return [];
+    return DEFAULT_STORES;
   }
+}
+
+function getStoreUrl(store) {
+  return `store/${encodeURIComponent(store.name)}`;
 }
 
 function renderProductCard(product) {
@@ -195,15 +211,17 @@ function renderStoreCard(store) {
   const image = store.image || PRODUCTS[0].image;
   return `
     <article class="product-card store-card">
-      <div class="product-card-image">
-        <img src="${escapeHTML(image)}" alt="${escapeHTML(store.name)} store" loading="lazy">
-        <span class="product-card-tag">Store</span>
-      </div>
-      <div class="product-card-info">
-        <h3 class="product-card-name">${escapeHTML(store.name)}</h3>
-        <p class="product-card-category">${escapeHTML(store.category)}</p>
-        <p class="store-card-description">${escapeHTML(store.description)}</p>
-      </div>
+      <a href="${getStoreUrl(store)}" class="product-card-link">
+        <div class="product-card-image">
+          <img src="${escapeHTML(image)}" alt="${escapeHTML(store.name)} store" loading="lazy">
+          <span class="product-card-tag">Store</span>
+        </div>
+        <div class="product-card-info">
+          <h3 class="product-card-name">${escapeHTML(store.name)}</h3>
+          <p class="product-card-category">${escapeHTML(store.category)}</p>
+          <p class="store-card-description">${escapeHTML(store.description)}</p>
+        </div>
+      </a>
     </article>`;
 }
 
@@ -228,7 +246,7 @@ function renderProductGrid(query = '') {
 
   grid.innerHTML = results.length
     ? results.join('')
-    : `<p class="empty-search">No products or stores match “${escapeHTML(query)}”.</p>`;
+    : `<p class="empty-search">No stores match “${escapeHTML(query)}”.</p>`;
 }
 
 function renderSearchResults(query = '') {
@@ -241,28 +259,19 @@ function renderSearchResults(query = '') {
     return;
   }
 
-  const products = PRODUCTS.filter(product => [product.name, product.category, product.description]
-    .some(value => value.toLowerCase().includes(normalizedQuery)))
-    .slice(0, 5)
-    .map(product => `
-      <a class="search-result" role="option" href="pdp.html?id=${product.id}">
-        <img src="${product.image}" alt="">
-        <span><strong>${escapeHTML(product.name)}</strong><span>${escapeHTML(product.category)}</span></span>
-        <span class="search-result-type">Product</span>
-      </a>`);
   const stores = getStores().filter(store => [store.name, store.category, store.description]
     .some(value => value.toLowerCase().includes(normalizedQuery)))
     .slice(0, 5)
     .map(store => `
-      <a class="search-result" role="option" href="#collections">
+      <a class="search-result" role="option" href="${getStoreUrl(store)}">
         <img src="${escapeHTML(store.image || PRODUCTS[0].image)}" alt="">
         <span><strong>${escapeHTML(store.name)}</strong><span>${escapeHTML(store.category)}</span></span>
         <span class="search-result-type">Store</span>
       </a>`);
-  const results = [...products, ...stores];
+  const results = stores;
   resultsContainer.innerHTML = results.length
     ? results.join('')
-    : '<p class="search-no-results">No products or stores found.</p>';
+    : '<p class="search-no-results">No stores found.</p>';
 }
 
 function initHomeSearch() {

@@ -244,6 +244,10 @@ const server = http.createServer((req, res) => {
     safePath = '/reviewer-index.html';
   }
 
+  if (/^\/store\/[^/]+\/?$/.test(safePath)) {
+    safePath = '/store.html';
+  }
+
   if (safePath === '/reviewer/ecommerce-cloud' || safePath === '/reviewer/ecommerce-cloud/') {
     safePath = '/reviewer.html';
   }
