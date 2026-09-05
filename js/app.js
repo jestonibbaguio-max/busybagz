@@ -152,6 +152,56 @@ const PRODUCTS = [
     ],
     comments: []
   },
+  {
+    id: 11,
+    name: 'Padded Bike Travel Bag',
+    category: 'UBEC Gigcase',
+    breadcrumbCategory: 'UBEC Gigcase',
+    price: 0,
+    priceLabel: 'Available',
+    originalPrice: null,
+    tag: 'Travel Gear',
+    description: 'A durable padded bike travel bag designed to protect your bicycle during transport and travel. Its cushioned interior helps guard the frame and components from scratches and impact, making it a practical choice for cyclists, tours, races, and storage.',
+    storeName: 'UBEC Gigcase',
+    storeUrl: 'https://www.facebook.com/Ubecgigcase',
+    storePageUrl: 'store/UBEC-Gigcase',
+    reservationUrl: 'https://busybagz.com/store/UBEC-Gigcase',
+    colors: ['#27374d'],
+    rating: 0,
+    reviews: 0,
+    image: 'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788626826/store_2_3_1.jpg',
+    images: [
+      'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788626826/store_2_3_1.jpg',
+      'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788626826/store_2_3_2.jpg',
+      'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788626826/store_2_3_3.jpg'
+    ],
+    comments: []
+  },
+  {
+    id: 12,
+    name: 'Customized Bag',
+    category: 'Custom Bags',
+    breadcrumbCategory: 'UBEC Gigcase',
+    price: 0,
+    priceLabel: 'Available',
+    originalPrice: null,
+    tag: 'Custom Bags',
+    description: 'A personalized custom bag made to match your style, needs, and everyday adventures. Designed with practical storage and durable materials, it is a versatile companion for work, travel, school, and special projects.',
+    storeName: 'UBEC Gigcase',
+    storeUrl: 'https://www.facebook.com/Ubecgigcase',
+    storePageUrl: 'store/UBEC-Gigcase',
+    reservationUrl: 'https://busybagz.com/store/UBEC-Gigcase',
+    colors: ['#486581'],
+    rating: 0,
+    reviews: 0,
+    image: 'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788627118/store_2_4_1.jpg',
+    images: [
+      'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788627118/store_2_4_1.jpg',
+      'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788627118/store_2_4_2.jpg',
+      'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788627118/store_2_4_3.jpg'
+    ],
+    comments: []
+  },
 ];
 
 /* ---------- SVG Icons ---------- */
@@ -325,7 +375,7 @@ function renderProductGrid(query = '') {
   if (!grid) return;
 
   const normalizedQuery = query.trim().toLowerCase();
-  const products = PRODUCTS.filter(product => [5, 6, 7, 8, 9, 10].includes(product.id) && (!normalizedQuery || [product.name, product.category, product.description]
+  const products = PRODUCTS.filter(product => [5, 6, 7, 8, 9, 10, 11, 12].includes(product.id) && (!normalizedQuery || [product.name, product.category, product.description]
     .some(value => value.toLowerCase().includes(normalizedQuery))));
   const stores = getStores().filter(store => [store.name, store.category, store.description]
     .some(value => value.toLowerCase().includes(normalizedQuery)));
@@ -355,7 +405,7 @@ function renderSearchResults(query = '') {
         <span><strong>${escapeHTML(store.name)}</strong><span>${escapeHTML(store.category)}</span></span>
         <span class="search-result-type">Store</span>
       </a>`);
-  const products = PRODUCTS.filter(product => [5, 6, 7, 8, 9, 10].includes(product.id) && [product.name, product.category, product.description]
+  const products = PRODUCTS.filter(product => [5, 6, 7, 8, 9, 10, 11, 12].includes(product.id) && [product.name, product.category, product.description]
     .some(value => value.toLowerCase().includes(normalizedQuery)))
     .slice(0, 5)
     .map(product => `

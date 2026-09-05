@@ -36,7 +36,7 @@
     .store-back { display: inline-flex; margin-top: 20px; padding: 11px 16px; border-radius: 8px; background: #1877f2; color: white; font-weight: 700; }
     .store-products { margin-top: 28px; }
     .store-products h2 { margin: 0 0 14px; color: #17362b; }
-    .store-product-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; max-width: 720px; }
+    .store-product-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; max-width: 900px; }
     .store-product-card { overflow: hidden; border: 1px solid rgba(23, 54, 43, 0.16); border-radius: 12px; background: white; color: #17362b; }
     .store-product-card img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
     .store-product-card-content { padding: 10px 12px 12px; }
@@ -236,7 +236,9 @@
             ]
         : [
             { name: 'Transparent bag', url: '/pdp.html?id=5', price: 'Pre-order' },
-            { name: 'Pickle Bag', url: '/pdp.html?id=6', price: 'Pre-order' }
+            { name: 'Pickle Bag', url: '/pdp.html?id=6', price: 'Pre-order' },
+            { name: 'Padded Bike Travel Bag', url: '/pdp.html?id=11', price: 'Available' },
+            { name: 'Customized Bag', url: '/pdp.html?id=12', price: 'Available' }
           ];
 
       const structuredData = {
@@ -300,6 +302,14 @@
               <a class="store-product-card" href="/pdp.html?id=6">
                 <img src="https://res.cloudinary.com/sjnrfmjm/image/upload/v1788514705/gigcase_bag_2_1.jpg" alt="Pickle Bag">
                 <div class="store-product-card-content"><h3>Pickle Bag</h3><p>Pre-order</p></div>
+              </a>
+              <a class="store-product-card" href="/pdp.html?id=11">
+                <img src="https://res.cloudinary.com/sjnrfmjm/image/upload/v1788626826/store_2_3_1.jpg" alt="Padded Bike Travel Bag">
+                <div class="store-product-card-content"><h3>Padded Bike Travel Bag</h3><p>Travel Gear</p></div>
+              </a>
+              <a class="store-product-card" href="/pdp.html?id=12">
+                <img src="https://res.cloudinary.com/sjnrfmjm/image/upload/v1788627118/store_2_4_1.jpg" alt="Customized Bag">
+                <div class="store-product-card-content"><h3>Customized Bag</h3><p>Custom Bags</p></div>
               </a>
             </div>
           </section>` : ''}
