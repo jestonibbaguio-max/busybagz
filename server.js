@@ -241,7 +241,7 @@ function sendStorePage(res, storeSlug) {
         title: 'All in the Van | BusyBagz',
         description: 'Private van rentals and customized travel and tour packages from All in the Van in Cebu.',
         url: 'https://busybagz.com/store/all-in-the-van',
-        image: 'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788542562/store_van.jpg'
+        image: 'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788542559/store_van_logo.jpg'
       }
     };
     const metadata = metadataBySlug[storeSlug] || null;
