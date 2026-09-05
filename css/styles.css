@@ -9,24 +9,24 @@
   --color-bg: #eef3ff;
   --color-bg-elevated: #ffffff;
   --color-bg-card: #ffffff;
-  --color-bg-card-hover: #e9fffa;
-  --color-surface: #d9fff4;
+  --color-bg-card-hover: #eaf2ff;
+  --color-surface: #e2edff;
   --color-border: rgba(36, 55, 130, 0.16);
-  --color-border-hover: rgba(0, 174, 155, 0.5);
+  --color-border-hover: rgba(24, 119, 242, 0.5);
 
   --color-text: #17235f;
   --color-text-secondary: #53608a;
   --color-text-muted: #7883a9;
 
-  --color-accent: #00aE9b;
-  --color-accent-hover: #008f83;
-  --color-accent-glow: rgba(0, 174, 155, 0.2);
+  --color-accent: #1877f2;
+  --color-accent-hover: #0f5fc4;
+  --color-accent-glow: rgba(24, 119, 242, 0.2);
   --color-on-accent: #ffffff;
 
-  --color-gradient-start: #32d3b0;
-  --color-gradient-end: #29439a;
-  --color-gradient-alt-start: #32d3b0;
-  --color-gradient-alt-end: #29439a;
+  --color-gradient-start: #1877f2;
+  --color-gradient-end: #0f5fc4;
+  --color-gradient-alt-start: #1877f2;
+  --color-gradient-alt-end: #0f5fc4;
 
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: 'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -109,10 +109,11 @@ body::before {
   z-index: 1000;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   min-height: 72px;
   padding: 0.8rem 4vw;
-  background: #075b63;
+  padding-left: 10px;
+  background: #0f5fc4;
   border-bottom: 1px solid rgba(255, 255, 255, 0.18);
   box-shadow: 0 18px 30px rgba(7, 91, 99, 0.2);
   transition: var(--transition-smooth);
@@ -120,7 +121,7 @@ body::before {
 
 .navbar.scrolled {
   padding: 0.65rem 4vw;
-  background: #075b63;
+  background: #0f5fc4;
 }
 
 .brand-video-rail {
@@ -192,6 +193,13 @@ body::before {
   pointer-events: none;
 }
 
+.home-brand-video-rail {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  margin: 0.7rem 0 1.5rem;
+}
+
 .shopee-side-promo {
   display: grid;
   gap: 0.55rem;
@@ -247,10 +255,10 @@ body::before {
   justify-content: space-between;
   gap: 0.75rem;
   padding: 0.85rem 1rem;
-  border: 1px solid rgba(0, 174, 155, 0.35);
+  border: 1px solid rgba(24, 119, 242, 0.35);
   border-radius: var(--radius-md);
   background: rgba(255, 255, 255, 0.94);
-  box-shadow: 0 12px 24px rgba(41, 67, 154, 0.12);
+  box-shadow: 0 12px 24px rgba(15, 95, 196, 0.14);
   color: var(--color-text-secondary);
   font-size: 0.78rem;
   font-weight: 800;
@@ -275,8 +283,8 @@ body::before {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: min(190px, 28vw);
-  height: 80px;
+  width: min(260px, 36vw);
+  height: 96px;
   flex: 0 0 auto;
   color: var(--color-on-accent);
   overflow: visible;
@@ -331,7 +339,7 @@ body::before {
 
 .nav-cart {
   position: relative;
-  display: flex;
+  display: none;
   align-items: center;
   gap: 0.5rem;
   color: rgba(255, 255, 255, 0.9);
@@ -364,11 +372,14 @@ body::before {
 }
 
 .site-search {
-  position: relative;
+  position: absolute;
+  left: 50%;
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  width: min(24vw, 260px);
+  transform: translateX(-50%);
+  margin-left: 0;
+  width: min(36vw, 420px);
   padding: 0.45rem 0.7rem;
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
@@ -1025,7 +1036,7 @@ body::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(7, 54, 57, 0.08), rgba(7, 54, 57, 0.86));
+  background: linear-gradient(180deg, rgba(15, 95, 196, 0.08), rgba(8, 43, 102, 0.86));
 }
 
 .ad-slot img {
@@ -1056,7 +1067,7 @@ body::before {
 
 .ad-slot-content small {
   margin-bottom: 0.35rem;
-  color: #9ff0c0;
+  color: #b9d7ff;
   font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -1077,11 +1088,11 @@ body::before {
 
 .ad-slot-secondary {
   min-height: 150px;
-  background: linear-gradient(145deg, #075b66, #078f7a 60%, #49d68d);
+  background: linear-gradient(145deg, #0f5fc4, #1877f2 60%, #6ea8ff);
 }
 
 .ad-slot-secondary::after {
-  background: linear-gradient(135deg, rgba(7, 91, 102, 0.12), rgba(7, 54, 57, 0.56));
+  background: linear-gradient(135deg, rgba(24, 119, 242, 0.12), rgba(8, 43, 102, 0.56));
 }
 
 .ad-slot-secondary .ad-slot-content {
@@ -1412,19 +1423,6 @@ body::before {
   color: var(--color-accent);
 }
 
-.footer-logo {
-  display: inline-flex;
-  align-items: center;
-  width: 120px;
-}
-
-.footer-logo img {
-  display: block;
-  width: 100%;
-  height: auto;
-  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.12));
-}
-
 /* ============================================
    PDP (Product Detail Page) Styles
    ============================================ */
@@ -1432,14 +1430,14 @@ body::before {
 .pdp-container {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 7rem 3rem 4rem;
+  padding: 9rem 3rem 4rem;
   position: relative;
   z-index: 1;
 }
 
 .pdp-breadcrumb {
   position: sticky;
-  top: 106px;
+  top: 128px;
   z-index: 900;
   display: flex;
   align-items: center;
@@ -1471,7 +1469,7 @@ body::before {
 
 .home-breadcrumb {
   max-width: 1440px;
-  margin: 8rem auto 0;
+  margin: 10rem auto 0;
   padding: 0 3rem;
 }
 
@@ -1981,6 +1979,7 @@ body.pdp-zoom-open {
     flex-wrap: wrap;
     gap: 0.75rem;
     padding: 1rem 1.5rem;
+    padding-left: 10px;
   }
 
   .brand-logo-image {
@@ -1989,12 +1988,16 @@ body.pdp-zoom-open {
   }
 
   .nav-logo {
-    width: 150px;
-    height: 64px;
+    width: 210px;
+    height: 84px;
   }
 
   .site-search {
+    position: relative;
+    left: auto;
     order: 3;
+    margin-left: 0;
+    transform: none;
     width: 100%;
   }
 
@@ -2030,11 +2033,11 @@ body.pdp-zoom-open {
   }
 
   .pdp-container {
-    padding: 10rem 1.5rem 3rem;
+    padding: 11rem 1.5rem 3rem;
   }
 
   .pdp-breadcrumb {
-    top: 146px;
+    top: 160px;
   }
 
   .pdp-layout {

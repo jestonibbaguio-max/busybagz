@@ -2,7 +2,7 @@
   const headerMarkup = `
     <nav class="navbar" id="navbar">
       <a href="/index.html" class="nav-logo" aria-label="BusyBagz home">
-        <img src="https://res.cloudinary.com/sjnrfmjm/image/upload/v1788502910/busyBagz.png" alt="BusyBagz logo" class="brand-logo-image">
+        <img src="https://res.cloudinary.com/sjnrfmjm/image/upload/v1788612756/busyBagz_logo_v2.png" alt="BusyBagz logo" class="brand-logo-image">
       </a>
       <form class="site-search" id="site-search" role="search">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true">
@@ -27,9 +27,6 @@
           <a href="/privacy.html">Privacy Policy</a>
           <a href="/terms.html">Terms and Conditions</a>
         </div>
-        <a class="footer-logo" href="/index.html" aria-label="BusyBagz home">
-          <img src="https://res.cloudinary.com/sjnrfmjm/image/upload/v1788502910/busyBagz.png" alt="BusyBagz logo">
-        </a>
       </div>
     </footer>`;
 
