@@ -852,6 +852,30 @@ body::before {
   margin-top: 0;
 }
 
+.products-section #product-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  max-width: 760px;
+  justify-self: center;
+}
+
+.products-section #product-grid .product-card {
+  max-width: 100%;
+}
+
+.products-section #product-grid .product-card-info {
+  padding: 0.75rem 0.85rem 0.9rem;
+}
+
+.products-section #product-grid .product-card-name {
+  font-size: 0.9rem;
+}
+
+.products-section #product-grid .product-card-category {
+  margin-bottom: 0.45rem;
+  font-size: 0.68rem;
+}
+
 .shopee-promo {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(180px, 320px) auto;
@@ -946,6 +970,14 @@ body::before {
 
 .shopee-promo-compact .shopee-promo-links {
   justify-content: flex-start;
+}
+
+@media (min-width: 1025px) {
+  .products-section .catalog-layout {
+    max-width: none;
+    margin-left: clamp(250px, 20vw, 300px);
+    margin-right: 1rem;
+  }
 }
 
 .ad-rail {
@@ -1297,7 +1329,7 @@ body::before {
 .footer {
   position: relative;
   z-index: 1;
-  padding: 4rem 3rem 2rem;
+  padding: 2rem 3rem 1rem;
   border-top: 1px solid var(--color-border);
   background: var(--color-bg-elevated);
 }
@@ -1352,7 +1384,7 @@ body::before {
 .footer-bottom {
   max-width: 1280px;
   margin: 0 auto;
-  padding-top: 2rem;
+  padding-top: 1rem;
   border-top: 1px solid var(--color-border);
   display: flex;
   align-items: center;
@@ -1906,6 +1938,8 @@ body.pdp-zoom-open {
 
   .catalog-layout {
     grid-template-columns: 1fr;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .ad-rail {
@@ -1977,6 +2011,10 @@ body.pdp-zoom-open {
     padding: 3rem 1.5rem 4rem;
   }
 
+  .products-section #product-grid {
+    gap: 0.75rem;
+  }
+
   .product-grid {
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 1.25rem;
@@ -2034,7 +2072,7 @@ body.pdp-zoom-open {
   }
 
   .footer {
-    padding: 3rem 1.5rem 1.5rem;
+    padding: 1.5rem 1.5rem 1rem;
   }
 
   .footer-top {
