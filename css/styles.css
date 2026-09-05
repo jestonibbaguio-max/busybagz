@@ -2052,6 +2052,7 @@ body.pdp-zoom-open {
     position: relative;
     left: auto;
     order: 3;
+    margin-top: 84px;
     margin-left: 0;
     transform: none;
     width: 100%;
