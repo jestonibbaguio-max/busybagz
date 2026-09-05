@@ -221,6 +221,44 @@ function sendFile(res, filePath) {
   });
 }
 
+function sendStorePage(res, storeSlug) {
+  const filePath = path.join(rootDir, 'store.html');
+  fs.readFile(filePath, 'utf8', (err, html) => {
+    if (err) {
+      res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
+      res.end('Internal Server Error');
+      return;
+    }
+
+    const metadata = storeSlug === 'cebu-camping-hub'
+      ? {
+          title: 'Cebu Camping Hub | BusyBagz',
+          description: "Premium camping gears and equipment's available for sale in Cebu.",
+          url: 'https://busybagz.com/store/cebu-camping-hub',
+          image: 'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788621861/store_3.jpg'
+        }
+      : null;
+
+    if (!metadata) {
+      sendFile(res, filePath);
+      return;
+    }
+
+    const escaped = value => value.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+    const page = html
+      .replace(/<title>[^<]*<\/title>/, `<title>${escaped(metadata.title)}</title>`)
+      .replace(/<meta name="description" content="[^"]*">/, `<meta name="description" content="${escaped(metadata.description)}">`)
+      .replace(/<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${metadata.url}">`)
+      .replace(/<meta property="og:title" content="[^"]*">/, `<meta property="og:title" content="${escaped(metadata.title)}">`)
+      .replace(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="${escaped(metadata.description)}">`)
+      .replace(/<meta property="og:url" content="[^"]*">/, `<meta property="og:url" content="${metadata.url}">`)
+      .replace(/<meta property="og:image" content="[^"]*">/, `<meta property="og:image" content="${metadata.image}">`);
+
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+    res.end(page);
+  });
+}
+
 const server = http.createServer((req, res) => {
   const reqUrl = new URL(req.url, 'http://localhost');
   const pathname = decodeURIComponent(reqUrl.pathname);
@@ -246,7 +284,9 @@ const server = http.createServer((req, res) => {
   }
 
   if (/^\/store\/[^/]+\/?$/.test(safePath)) {
-    safePath = '/store.html';
+    const storeSlug = safePath.split('/').filter(Boolean)[1].toLowerCase();
+    sendStorePage(res, storeSlug);
+    return;
   }
 
   if (safePath === '/reviewer/ecommerce-cloud' || safePath === '/reviewer/ecommerce-cloud/') {

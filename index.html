@@ -12,6 +12,29 @@
   <meta property="og:url" content="https://busybagz.com/">
   <meta property="og:image" content="https://res.cloudinary.com/sjnrfmjm/image/upload/v1788612756/busyBagz_logo_v2.png">
   <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "name": "BusyBagz",
+          "url": "https://busybagz.com/",
+          "logo": "https://res.cloudinary.com/sjnrfmjm/image/upload/v1788612756/busyBagz_logo_v2.png"
+        },
+        {
+          "@type": "WebSite",
+          "name": "BusyBagz",
+          "url": "https://busybagz.com/",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://busybagz.com/index.html?search={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        }
+      ]
+    }
+  </script>
   <script>
     if (window.location.hostname === 'jestonibbaguio-max.github.io' && window.location.pathname === '/busybagz/') {
       window.location.replace(`https://busybagz.com/${window.location.search}`);

@@ -217,6 +217,15 @@
       storePage.innerHTML = '<section class="store-hero store-missing"><h1>Store not found</h1><p>That BusyBagz store is no longer available.</p><a class="store-back" href="/index.html">Back to storefront</a></section>';
     } else {
       document.title = `${store.name} | BusyBagz`;
+      const pageDescription = store.name === 'Cebu Camping Hub'
+        ? "Premium camping gears and equipment's available for sale in Cebu."
+        : store.description;
+      document.querySelector('meta[name="description"]')?.setAttribute('content', pageDescription);
+      document.querySelector('meta[property="og:title"]')?.setAttribute('content', `${store.name} | BusyBagz`);
+      document.querySelector('meta[property="og:description"]')?.setAttribute('content', pageDescription);
+      document.querySelector('meta[property="og:url"]')?.setAttribute('content', `https://busybagz.com/store/${normalizeStoreSlug(store.name)}`);
+      document.querySelector('meta[property="og:image"]')?.setAttribute('content', store.bannerImage || store.image || fallbackImage);
+      document.querySelector('link[rel="canonical"]')?.setAttribute('href', `https://busybagz.com/store/${normalizeStoreSlug(store.name)}`);
       const productOffers = store.id === 'all-in-the-van'
         ? [{ name: 'Van for rent', url: '/pdp.html?id=7', price: 'Available' }]
         : store.id === 'cebu-camping-hub'
