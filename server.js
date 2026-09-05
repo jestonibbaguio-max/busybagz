@@ -230,14 +230,21 @@ function sendStorePage(res, storeSlug) {
       return;
     }
 
-    const metadata = storeSlug === 'cebu-camping-hub'
-      ? {
-          title: 'Cebu Camping Hub | BusyBagz',
-          description: "Premium camping gears and equipment's available for sale in Cebu.",
-          url: 'https://busybagz.com/store/cebu-camping-hub',
-          image: 'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788621861/store_3.jpg'
-        }
-      : null;
+    const metadataBySlug = {
+      'cebu-camping-hub': {
+        title: 'Cebu Camping Hub | BusyBagz',
+        description: "Premium camping gears and equipment's available for sale in Cebu.",
+        url: 'https://busybagz.com/store/cebu-camping-hub',
+        image: 'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788621861/store_3.jpg'
+      },
+      'all-in-the-van': {
+        title: 'All in the Van | BusyBagz',
+        description: 'Private van rentals and customized travel and tour packages from All in the Van in Cebu.',
+        url: 'https://busybagz.com/store/all-in-the-van',
+        image: 'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788542562/store_van.jpg'
+      }
+    };
+    const metadata = metadataBySlug[storeSlug] || null;
 
     if (!metadata) {
       sendFile(res, filePath);
@@ -284,7 +291,7 @@ const server = http.createServer((req, res) => {
   }
 
   if (/^\/store\/[^/]+\/?$/.test(safePath)) {
-    const storeSlug = safePath.split('/').filter(Boolean)[1].toLowerCase();
+    const storeSlug = safePath.split('/').filter(Boolean)[1].toLowerCase().replace(/_/g, '-');
     sendStorePage(res, storeSlug);
     return;
   }
