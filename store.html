@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="/css/styles.css">
   <style>
     body { padding: 112px 48px 48px; background: #f7f5f0; }
-    .store-page { width: min(100%, 1440px); margin: 0 auto; }
+    .store-page { width: min(100%, 1440px); margin: 0 auto; padding-bottom: 3rem; }
     .store-layout { display: grid; grid-template-columns: minmax(0, 980px) 280px; justify-content: space-between; gap: 2rem; align-items: start; }
     .store-column { min-width: 0; }
     .store-hero { overflow: hidden; border-radius: 18px; background: white; box-shadow: 0 18px 38px rgba(41, 67, 154, 0.12); }
@@ -36,7 +36,7 @@
     .store-back { display: inline-flex; margin-top: 20px; padding: 11px 16px; border-radius: 8px; background: #1877f2; color: white; font-weight: 700; }
     .store-products { margin-top: 28px; }
     .store-products h2 { margin: 0 0 14px; color: #17362b; }
-    .store-product-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .store-product-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
     .store-product-card { overflow: hidden; border: 1px solid rgba(23, 54, 43, 0.16); border-radius: 12px; background: white; color: #17362b; }
     .store-product-card img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
     .store-product-card-content { padding: 14px 16px 16px; }
@@ -47,16 +47,17 @@
     .store-missing h1 { margin-top: 0; }
     .store-address { margin-top: 1rem; color: #2c415f; }
     .store-address a { color: #17362b; }
+    .store-page + .footer { margin-top: 1rem; }
     @media (max-width: 1024px) {
       .store-layout { grid-template-columns: 1fr; }
       .store-ad-rail { position: static; }
     }
     @media (max-width: 768px) {
       body { padding: 180px 24px 32px; }
-      .store-page { width: min(100%, 100%); }
+      .store-page { width: min(100%, 100%); padding-bottom: 2rem; }
       .store-content { padding: 1.25rem 1rem 1.5rem; }
       .store-banner { min-height: 180px; }
-      .store-product-grid { grid-template-columns: 1fr; }
+      .store-product-grid { grid-template-columns: 1fr; gap: 18px; }
       .store-hero { border-radius: 14px; }
       .store-ad-rail { margin-top: 1rem; }
     }
@@ -138,9 +139,10 @@
   </footer>
 
   <script src="/js/site-shell.js"></script>
+  <script src="/js/app.js"></script>
   <script>
-    const STORES_STORAGE_KEY = 'busybagz-stores';
-    const DEFAULT_STORES = [{
+    const STORE_PAGE_STORAGE_KEY = 'busybagz-stores';
+    const STORE_PAGE_DEFAULT_STORES = [{
       id: 'ubec-gigcase',
       name: 'UBEC Gigcase',
       category: 'Custom Bags',
@@ -161,6 +163,17 @@
       specialties: ['Private van rentals', 'Customized tour packages', 'Family travel', 'Corporate group transfers'],
       services: ['Safe and comfortable travel', 'Custom itineraries', 'Private van rental', 'Tour packages'],
       facebookUrl: 'https://www.facebook.com/gabriel.hamo'
+    }, {
+      id: 'cebu-camping-hub',
+      name: 'Cebu Camping Hub',
+      category: 'Camping Gear',
+      description: "Premium camping gears and equipment's available for sale in Cebu. Find reliable tents, sleeping gear, outdoor cooking supplies, lighting, and essential accessories for your next adventure.",
+      image: 'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788621861/store_3.jpg',
+      bannerImage: 'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788621861/store_3.jpg',
+      address: 'Purok 3, Cebu City, Philippines, 6000',
+      addressUrl: 'https://www.google.com/maps/search/?api=1&query=Purok%203%2C%20Cebu%20City%2C%20Philippines%2C%206000',
+      contactNumber: '+63 993 783 6991',
+      facebookUrl: 'https://www.facebook.com/CebuCampingHub'
     }];
     const fallbackImage = 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=1200&h=600&fit=crop&q=80';
     const storePage = document.getElementById('storePage');
@@ -188,11 +201,11 @@
 
     function getStores() {
       try {
-        const stored = JSON.parse(localStorage.getItem(STORES_STORAGE_KEY) || '[]');
+        const stored = JSON.parse(localStorage.getItem(STORE_PAGE_STORAGE_KEY) || '[]');
         const savedStores = (Array.isArray(stored) ? stored : []).filter(store => store.id !== 'busyReviewer' && store.name !== 'busyReviewer' && store.name.toLowerCase() !== 'gigcase');
-        return [...DEFAULT_STORES, ...savedStores.filter(store => !DEFAULT_STORES.some(defaultStore => defaultStore.name === store.name))];
+        return [...STORE_PAGE_DEFAULT_STORES, ...savedStores.filter(store => !STORE_PAGE_DEFAULT_STORES.some(defaultStore => defaultStore.name === store.name))];
       } catch {
-        return DEFAULT_STORES;
+        return STORE_PAGE_DEFAULT_STORES;
       }
     }
 
@@ -206,6 +219,12 @@
       document.title = `${store.name} | BusyBagz`;
       const productOffers = store.id === 'all-in-the-van'
         ? [{ name: 'Van for rent', url: '/pdp.html?id=7', price: 'Available' }]
+        : store.id === 'cebu-camping-hub'
+          ? [
+              { name: 'Camping Table', url: '/pdp.html?id=8', price: 'Available' },
+              { name: 'Camping Tent', url: '/pdp.html?id=9', price: 'Available' },
+              { name: 'Camping Solar Panel', url: '/pdp.html?id=10', price: 'Available' }
+            ]
         : [
             { name: 'Transparent bag', url: '/pdp.html?id=5', price: 'Pre-order' },
             { name: 'Pickle Bag', url: '/pdp.html?id=6', price: 'Pre-order' }
@@ -256,6 +275,7 @@
             ${store.specialties ? `<h2>Specialties</h2><ul class="store-details-list">${store.specialties.map(item => `<li>${escapeHTML(item)}</li>`).join('')}</ul>` : ''}
             ${store.services ? `<h2>Store services</h2><ul class="store-details-list">${store.services.map(item => `<li>${escapeHTML(item)}</li>`).join('')}</ul>` : ''}
             ${store.facebookUrl ? `<p class="store-reservation"><a href="${escapeHTML(store.facebookUrl)}" target="_blank" rel="noopener noreferrer">DM us to reserve yours today! 📩</a></p>` : ''}
+            ${store.contactNumber ? `<p class="store-contact">Contact number: <a href="tel:${escapeHTML(store.contactNumber.replace(/\s+/g, ''))}">${escapeHTML(store.contactNumber)}</a></p>` : ''}
             ${store.address ? `<p class="store-address"><a href="${escapeHTML(store.addressUrl)}" target="_blank" rel="noopener noreferrer">${escapeHTML(store.address)}</a></p>` : ''}
             <a class="store-back" href="/index.html">Back to storefront</a>
           </div>
@@ -271,6 +291,24 @@
               <a class="store-product-card" href="/pdp.html?id=6">
                 <img src="https://res.cloudinary.com/sjnrfmjm/image/upload/v1788514705/gigcase_bag_2_1.jpg" alt="Pickle Bag">
                 <div class="store-product-card-content"><h3>Pickle Bag</h3><p>Pre-order</p></div>
+              </a>
+            </div>
+          </section>` : ''}
+        ${store.id === 'cebu-camping-hub' ? `
+          <section class="store-products" aria-labelledby="store-products-title">
+            <h2 id="store-products-title">Products</h2>
+            <div class="store-product-grid">
+              <a class="store-product-card" href="/pdp.html?id=8">
+                <img src="https://res.cloudinary.com/sjnrfmjm/image/upload/v1788621860/store_3_1_1.jpg" alt="Camping Table">
+                <div class="store-product-card-content"><h3>Camping Table</h3><p>Camping Gear</p></div>
+              </a>
+              <a class="store-product-card" href="/pdp.html?id=9">
+                <img src="https://res.cloudinary.com/sjnrfmjm/image/upload/v1788623149/store_3_2_1.jpg" alt="Camping Tent">
+                <div class="store-product-card-content"><h3>Camping Tent</h3><p>Camping Gear</p></div>
+              </a>
+              <a class="store-product-card" href="/pdp.html?id=10">
+                <img src="https://res.cloudinary.com/sjnrfmjm/image/upload/v1788623600/store_3_3_2.jpg" alt="Camping Solar Panel">
+                <div class="store-product-card-content"><h3>Camping Solar Panel</h3><p>Camping Gear</p></div>
               </a>
             </div>
           </section>` : ''}

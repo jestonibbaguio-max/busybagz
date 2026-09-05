@@ -77,6 +77,81 @@ const PRODUCTS = [
     ],
     comments: []
   },
+  {
+    id: 8,
+    name: 'Camping Table',
+    category: 'Camping Gear',
+    breadcrumbCategory: 'Cebu Camping Hub',
+    price: 0,
+    priceLabel: 'Available',
+    originalPrice: null,
+    tag: 'Camping Gear',
+    description: 'A sturdy and portable camping table designed for outdoor meals, cooking, and campsite essentials. Its practical setup makes it a reliable companion for camping trips, picnics, and family adventures in Cebu.',
+    storeName: 'Cebu Camping Hub',
+    storeUrl: 'https://www.facebook.com/CebuCampingHub',
+    storePageUrl: 'store/cebu-camping-hub',
+    reservationUrl: 'https://www.facebook.com/CebuCampingHub',
+    colors: ['#d9c7a5'],
+    rating: 0,
+    reviews: 0,
+    image: 'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788621860/store_3_1_1.jpg',
+    images: [
+      'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788621860/store_3_1_1.jpg',
+      'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788621861/store_3_1_3.jpg',
+      'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788621860/store_3_1_2.jpg'
+    ],
+    comments: []
+  },
+  {
+    id: 9,
+    name: 'Camping Tent',
+    category: 'Camping Gear',
+    breadcrumbCategory: 'Cebu Camping Hub',
+    price: 0,
+    priceLabel: 'Available',
+    originalPrice: null,
+    tag: 'Camping Gear',
+    description: 'A comfortable and dependable camping tent that gives you a practical shelter for restful nights outdoors. Designed for camping trips, weekend getaways, and family adventures, it offers a welcoming space to stay protected while enjoying the outdoors.',
+    storeName: 'Cebu Camping Hub',
+    storeUrl: 'https://www.facebook.com/CebuCampingHub',
+    storePageUrl: 'store/cebu-camping-hub',
+    reservationUrl: 'https://www.facebook.com/CebuCampingHub',
+    colors: ['#7f9b72'],
+    rating: 0,
+    reviews: 0,
+    image: 'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788623149/store_3_2_1.jpg',
+    images: [
+      'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788623149/store_3_2_1.jpg',
+      'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788623149/store_3_2_3.jpg',
+      'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788623149/store_3_2_2.jpg'
+    ],
+    comments: []
+  },
+  {
+    id: 10,
+    name: 'Camping Solar Panel',
+    category: 'Camping Gear',
+    breadcrumbCategory: 'Cebu Camping Hub',
+    price: 0,
+    priceLabel: 'Available',
+    originalPrice: null,
+    tag: 'Camping Gear',
+    description: 'A practical portable solar panel for keeping your essential devices charged during camping trips and outdoor adventures. Enjoy dependable renewable power for phones, lights, power banks, and other campsite gear while exploring away from the grid.',
+    storeName: 'Cebu Camping Hub',
+    storeUrl: 'https://www.facebook.com/CebuCampingHub',
+    storePageUrl: 'store/cebu-camping-hub',
+    reservationUrl: 'https://www.facebook.com/CebuCampingHub',
+    colors: ['#d6b95f'],
+    rating: 0,
+    reviews: 0,
+    image: 'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788623600/store_3_3_2.jpg',
+    images: [
+      'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788623600/store_3_3_2.jpg',
+      'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788623661/store_3_3_1.jpg',
+      'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788623600/store_3_3_3.jpg'
+    ],
+    comments: []
+  },
 ];
 
 /* ---------- SVG Icons ---------- */
@@ -138,6 +213,19 @@ const DEFAULT_STORES = [
     specialties: ['Private van rentals', 'Customized tour packages', 'Family travel', 'Corporate group transfers'],
     services: ['Safe and comfortable travel', 'Custom itineraries', 'Private van rental', 'Tour packages'],
     facebookUrl: 'https://www.facebook.com/gabriel.hamo'
+  },
+  {
+    id: 'cebu-camping-hub',
+    name: 'Cebu Camping Hub',
+    category: 'Camping Gear',
+    description: "Premium camping gears and equipment's available for sale in Cebu. Find reliable tents, sleeping gear, outdoor cooking supplies, lighting, and essential accessories for your next adventure.",
+    shortDescription: "Premium camping gears and equipment's available for sale in Cebu.",
+    image: 'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788621861/store_3.jpg',
+    bannerImage: 'https://res.cloudinary.com/sjnrfmjm/image/upload/v1788621861/store_3.jpg',
+    address: 'Purok 3, Cebu City, Philippines, 6000',
+    addressUrl: 'https://www.google.com/maps/search/?api=1&query=Purok%203%2C%20Cebu%20City%2C%20Philippines%2C%206000',
+    contactNumber: '+63 993 783 6991',
+    facebookUrl: 'https://www.facebook.com/CebuCampingHub'
   }
 ];
 
@@ -205,6 +293,7 @@ function renderProductCard(product) {
 
 function renderStoreCard(store) {
   const image = store.image || PRODUCTS[0].image;
+  const cardDescription = store.shortDescription || store.description;
   return `
     <article class="product-card store-card">
       <a href="${getStoreUrl(store)}" class="product-card-link">
@@ -215,7 +304,7 @@ function renderStoreCard(store) {
         <div class="product-card-info">
           <h3 class="product-card-name">${escapeHTML(store.name)}</h3>
           <p class="product-card-category">${escapeHTML(store.category)}</p>
-          <p class="store-card-description">${escapeHTML(store.description)}</p>
+          <p class="store-card-description">${escapeHTML(cardDescription)}</p>
         </div>
       </a>
     </article>`;
@@ -236,7 +325,7 @@ function renderProductGrid(query = '') {
   if (!grid) return;
 
   const normalizedQuery = query.trim().toLowerCase();
-  const products = PRODUCTS.filter(product => [5, 6, 7].includes(product.id) && (!normalizedQuery || [product.name, product.category, product.description]
+  const products = PRODUCTS.filter(product => [5, 6, 7, 8, 9, 10].includes(product.id) && (!normalizedQuery || [product.name, product.category, product.description]
     .some(value => value.toLowerCase().includes(normalizedQuery))));
   const stores = getStores().filter(store => [store.name, store.category, store.description]
     .some(value => value.toLowerCase().includes(normalizedQuery)));
@@ -266,7 +355,7 @@ function renderSearchResults(query = '') {
         <span><strong>${escapeHTML(store.name)}</strong><span>${escapeHTML(store.category)}</span></span>
         <span class="search-result-type">Store</span>
       </a>`);
-  const products = PRODUCTS.filter(product => [5, 6, 7].includes(product.id) && [product.name, product.category, product.description]
+  const products = PRODUCTS.filter(product => [5, 6, 7, 8, 9, 10].includes(product.id) && [product.name, product.category, product.description]
     .some(value => value.toLowerCase().includes(normalizedQuery)))
     .slice(0, 5)
     .map(product => `
