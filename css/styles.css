@@ -2040,10 +2040,10 @@ body.pdp-zoom-open {
 
   .nav-logo {
     position: absolute;
-    top: 1rem;
+    top: 0.75rem;
     left: 50%;
-    width: 210px;
-    height: 84px;
+    width: 190px;
+    height: 72px;
     margin: 0;
     transform: translateX(-50%);
   }
@@ -2052,7 +2052,7 @@ body.pdp-zoom-open {
     position: relative;
     left: auto;
     order: 3;
-    margin-top: 84px;
+    margin-top: 92px;
     margin-left: 0;
     transform: none;
     width: 100%;
