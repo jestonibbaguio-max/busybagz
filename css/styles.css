@@ -771,7 +771,7 @@ body::before {
 /* ---------- Product Grid ---------- */
 .products-section {
   position: relative;
-  padding: 0 3rem 6rem;
+  padding: 8rem 3rem 6rem;
   z-index: 1;
 }
 
@@ -1726,6 +1726,10 @@ body.pdp-zoom-open {
     flex-wrap: wrap;
     width: auto;
     margin: 1rem 1.5rem 1rem;
+  }
+
+  .products-section {
+    padding-top: 2rem;
   }
 
   .home-link-button {

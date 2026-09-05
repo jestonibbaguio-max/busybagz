@@ -53,4 +53,27 @@
       window.location.href = '/index.html#open-store-modal';
     });
   }
+
+  function initializeAdsWhenContentExists() {
+    const contentSelectors = ['#product-grid', '#pdp-content', '#storePage', '.quiz-card', '.content-grid main'];
+    const hasPublisherContent = contentSelectors.some((selector) => {
+      const content = document.querySelector(selector);
+      return content && content.textContent.trim().length > 0;
+    });
+
+    if (!hasPublisherContent) return;
+
+    window.adsbygoogle = window.adsbygoogle || [];
+
+    document.querySelectorAll('.adsbygoogle:not([data-ads-initialized])').forEach((ad) => {
+      ad.dataset.adsInitialized = 'true';
+      window.adsbygoogle.push({});
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => setTimeout(initializeAdsWhenContentExists, 0));
+  } else {
+    setTimeout(initializeAdsWhenContentExists, 0);
+  }
 })();
