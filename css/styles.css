@@ -192,6 +192,54 @@ body::before {
   pointer-events: none;
 }
 
+.shopee-side-promo {
+  display: grid;
+  gap: 0.55rem;
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 0.7rem;
+  padding: 0.55rem;
+  border: 1px solid rgba(238, 77, 45, 0.28);
+  border-radius: var(--radius-md);
+  background: #fffaf2;
+  box-shadow: 0 12px 24px rgba(41, 67, 154, 0.12);
+  pointer-events: auto;
+}
+
+.shopee-side-promo .shopee-promo-image {
+  display: block;
+}
+
+.shopee-side-promo .shopee-promo-image img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+}
+
+.shopee-side-promo-link {
+  padding: 0.5rem 0.55rem;
+  border-radius: var(--radius-sm);
+  background: #ee4d2d;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1.25;
+  text-align: center;
+}
+
+.shopee-side-promo small {
+  color: #8b6b64;
+  font-size: 0.6rem;
+  text-align: center;
+}
+
+.quiz-ad .shopee-side-promo {
+  margin-top: 1rem;
+}
+
 .home-link-button {
   pointer-events: auto;
   display: flex;
@@ -207,6 +255,13 @@ body::before {
   font-size: 0.78rem;
   font-weight: 800;
   transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.home-brand-video {
+  width: 100%;
+  min-height: 210px;
+  margin-bottom: 0;
+  pointer-events: auto;
 }
 
 .home-link-button:hover,
@@ -795,6 +850,102 @@ body::before {
 
 .products-section .catalog-layout {
   margin-top: 0;
+}
+
+.shopee-promo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(180px, 320px) auto;
+  gap: 1rem 1.5rem;
+  align-items: center;
+  max-width: 1440px;
+  margin: 0 auto 2rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid rgba(238, 77, 45, 0.28);
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, #fff5f1, #fffaf2);
+}
+
+.shopee-promo-kicker {
+  margin: 0 0 0.3rem;
+  color: #ee4d2d;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.shopee-promo h2 {
+  margin: 0;
+  color: #59251b;
+  font-size: clamp(1.1rem, 2vw, 1.45rem);
+}
+
+.shopee-promo p:not(.shopee-promo-kicker) {
+  margin: 0.4rem 0 0;
+  color: #714d45;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.shopee-promo-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.shopee-promo-image {
+  display: block;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+}
+
+.shopee-promo-image img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  object-fit: cover;
+}
+
+.shopee-promo-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid rgba(238, 77, 45, 0.3);
+  border-radius: var(--radius-sm);
+  color: #c43b22;
+  font-size: 0.75rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.shopee-promo-links a:hover,
+.shopee-promo-links a:focus-visible {
+  border-color: #ee4d2d;
+  background: #fff;
+}
+
+.shopee-promo-links .shopee-promo-primary {
+  border-color: #ee4d2d;
+  background: #ee4d2d;
+  color: white;
+}
+
+.shopee-promo small {
+  grid-column: 1 / -1;
+  color: #8b6b64;
+  font-size: 0.68rem;
+}
+
+.shopee-promo-compact {
+  grid-template-columns: 1fr;
+  margin: 1.5rem 0;
+  padding: 1rem;
+}
+
+.shopee-promo-compact .shopee-promo-links {
+  justify-content: flex-start;
 }
 
 .ad-rail {
@@ -1725,11 +1876,28 @@ body.pdp-zoom-open {
     display: flex;
     flex-wrap: wrap;
     width: auto;
-    margin: 1rem 1.5rem 1rem;
+    margin: 6rem 1.5rem 1rem;
+  }
+
+  .shopee-side-promo {
+    width: min(100%, 320px);
+  }
+
+  .ad-rail .shopee-side-promo {
+    grid-column: 1 / -1;
+    width: 100%;
   }
 
   .products-section {
     padding-top: 2rem;
+  }
+
+  .shopee-promo {
+    grid-template-columns: 1fr;
+  }
+
+  .shopee-promo-links {
+    justify-content: flex-start;
   }
 
   .home-link-button {
@@ -1857,8 +2025,7 @@ body.pdp-zoom-open {
   }
 
   .home-link-rail {
-    margin-right: 1rem;
-    margin-left: 1rem;
+    margin: 9rem 1rem 1rem;
   }
 
   .products-section {

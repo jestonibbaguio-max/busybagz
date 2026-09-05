@@ -412,6 +412,20 @@ function renderPDP() {
 
         <p class="pdp-description">${escapeHTML(product.description).replace(/\n/g, '<br>')}</p>
         ${product.reservationUrl ? `<p class="pdp-reservation"><a href="${product.reservationUrl}" target="_blank" rel="noopener noreferrer">DM us to reserve yours today! 📩</a></p>` : ''}
+        <aside class="shopee-promo shopee-promo-compact" aria-label="Shopee affiliate promotion">
+          <div>
+            <p class="shopee-promo-kicker">Shopee picks</p>
+            <h2>Check flash sales, vouchers, and campaigns</h2>
+            <p>Find more bag and travel deals through our selected Shopee links. Promotions and prices may change.</p>
+          </div>
+          <a class="shopee-promo-image" href="https://shopee.ph/m/brandchoice-video-aff" target="_blank" rel="sponsored noopener noreferrer">
+            <img src="https://down-ph.img.susercontent.com/file/ph-11134258-820l6-msaxjhz9tn9ma2@resize_w1920_nl.webp" alt="Shopee campaign banner">
+          </a>
+          <div class="shopee-promo-links">
+            <a class="shopee-promo-primary" href="https://shopee.ph/m/brandchoice-video-aff" target="_blank" rel="sponsored noopener noreferrer">Shop campaigns</a>
+          </div>
+          <small>Affiliate links: BusyBagz may earn a commission from qualifying purchases.</small>
+        </aside>
         ${product.storeUrl ? `<p class="pdp-seller">Available at <a href="${product.storePageUrl || product.storeUrl}" ${product.storePageUrl ? '' : 'target="_blank" rel="noopener noreferrer"'}>${escapeHTML(product.storeName)}</a></p>` : ''}
 
         <p class="pdp-option-label">Color</p>
