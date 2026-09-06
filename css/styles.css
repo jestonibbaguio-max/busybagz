@@ -204,10 +204,84 @@ body::before {
   padding: 0.55rem;
   border: 1px solid rgba(238, 77, 45, 0.28);
   border-radius: var(--radius-md);
-  background: linear-gradient(145deg, #fffaf2 0%, #fff 58%, #fff1e8 100%);
-  box-shadow: 0 12px 24px rgba(41, 67, 154, 0.12);
+  background: rgba(255, 255, 255, 0.58);
+  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+  backdrop-filter: blur(18px) saturate(1.15);
+  box-shadow: 0 14px 30px rgba(41, 67, 154, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.7);
   pointer-events: auto;
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+  transition: opacity 0.22s ease, filter 0.22s ease, transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+.shopee-side-promo:not(.is-active) {
+  opacity: 0;
+}
+
+.shopee-side-promo.is-transitioning {
+  filter: blur(8px);
+}
+
+.shopee-side-promo.is-active {
+  opacity: 1;
+}
+
+.shopee-side-promo-carousel {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.shopee-side-promo-slides {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.pdp-shopee-carousel {
+  width: 100%;
+  margin: 0 0 1.5rem;
+}
+
+.pdp-shopee-carousel .shopee-side-promo {
+  width: 100%;
+}
+
+.shopee-side-promo-carousel.shopee-side-product-slides .shopee-promo-image img {
+  height: 300px !important;
+}
+
+.shopee-side-promo-slides > .shopee-side-promo[hidden] {
+  display: none;
+}
+
+.shopee-side-promo-carousel .shopee-side-promo {
+  margin-bottom: 0;
+}
+
+.shopee-carousel-control {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid rgba(238, 77, 45, 0.35);
+  border-radius: 50%;
+  background: #fff;
+  color: #ee4d2d;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.shopee-carousel-control:hover,
+.shopee-carousel-control:focus-visible {
+  background: #ee4d2d;
+  color: #fff;
+}
+
+.shopee-carousel-status {
+  grid-column: 1 / -1;
+  color: var(--color-text-muted);
+  font-size: 0.62rem;
+  text-align: center;
 }
 
 .shopee-side-promo:hover {
@@ -224,39 +298,17 @@ body::before {
 
 .shopee-side-promo .shopee-promo-image img {
   display: block;
-  width: 100%;
+  width: 400px;
   max-width: 100%;
-  aspect-ratio: 16 / 9;
+  height: 108px;
   object-fit: cover;
+  border-radius: 2px;
   transition: transform var(--transition-smooth), filter var(--transition-smooth);
 }
 
 .shopee-side-promo:hover .shopee-promo-image img {
   transform: scale(1.05);
   filter: saturate(1.1) contrast(1.03);
-}
-
-.shopee-side-promo-link {
-  position: relative;
-  overflow: hidden;
-  padding: 0.5rem 0.55rem;
-  border-radius: var(--radius-sm);
-  background: linear-gradient(100deg, #ee4d2d, #ff6b35 52%, #ee4d2d);
-  background-size: 200% 100%;
-  color: white;
-  font-size: 0.7rem;
-  font-weight: 800;
-  line-height: 1.25;
-  text-align: center;
-  box-shadow: 0 6px 14px rgba(238, 77, 45, 0.2);
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-position var(--transition-smooth);
-}
-
-.shopee-side-promo-link:hover,
-.shopee-side-promo-link:focus-visible {
-  transform: translateY(-1px);
-  background-position: 100% 0;
-  box-shadow: 0 9px 18px rgba(238, 77, 45, 0.3);
 }
 
 .shopee-side-promo small {
@@ -268,10 +320,6 @@ body::before {
 @media (prefers-reduced-motion: reduce) {
   .shopee-side-promo,
   .shopee-side-promo .shopee-promo-image img,
-  .shopee-side-promo-link {
-    transition: none;
-  }
-
   .shopee-side-promo:hover {
     transform: none;
   }
@@ -458,6 +506,10 @@ body::before {
 
 .site-search:focus-within .search-results:not(:empty) {
   display: block;
+}
+
+.site-search:not(:focus-within) .search-results {
+  display: none;
 }
 
 .search-result {
@@ -918,6 +970,72 @@ body::before {
   font-size: 0.68rem;
 }
 
+.product-category {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.products-section #product-grid {
+  display: block;
+  max-width: none;
+}
+
+.product-category-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+}
+
+.product-category-title {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.product-category-controls {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.product-category-arrow {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--color-accent);
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: #fff;
+  font-weight: 800;
+  box-shadow: 0 5px 12px rgba(0, 174, 155, 0.28);
+}
+
+.product-category-arrow:hover,
+.product-category-arrow:focus-visible {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.product-category-track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - 3.75rem) / 4);
+  gap: 1.25rem;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+}
+
+.product-category-track::-webkit-scrollbar {
+  display: none;
+}
+
+.product-category-track .product-card {
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
 .shopee-promo {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(180px, 320px) auto;
@@ -928,7 +1046,10 @@ body::before {
   padding: 1.25rem 1.5rem;
   border: 1px solid rgba(238, 77, 45, 0.28);
   border-radius: var(--radius-md);
-  background: linear-gradient(135deg, #fff5f1, #fffaf2);
+  background: rgba(255, 255, 255, 0.58);
+  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+  backdrop-filter: blur(18px) saturate(1.15);
+  box-shadow: 0 14px 30px rgba(41, 67, 154, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
 .shopee-promo-kicker {
@@ -1017,7 +1138,7 @@ body::before {
 @media (min-width: 1025px) {
   .products-section .catalog-layout {
     max-width: none;
-    margin-left: clamp(250px, 20vw, 300px);
+    margin-left: clamp(360px, 25vw, 400px);
     margin-right: 1rem;
   }
 
@@ -1026,7 +1147,7 @@ body::before {
     top: 9.5rem;
     left: clamp(1rem, 2.5vw, 2.5rem);
     z-index: 5;
-    width: 280px;
+    width: 350px;
   }
 }
 
@@ -2127,6 +2248,11 @@ body.pdp-zoom-open {
     gap: 0.75rem;
   }
 
+  .product-category-track {
+    grid-auto-columns: calc((100% - 0.75rem) / 2);
+    gap: 0.75rem;
+  }
+
   .product-grid {
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 1.25rem;
@@ -2134,7 +2260,7 @@ body.pdp-zoom-open {
 
   .ad-rail {
     grid-template-columns: 1fr;
-    width: min(100%, 280px);
+    width: min(100%, 350px);
     margin-right: auto;
     margin-left: auto;
   }

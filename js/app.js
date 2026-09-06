@@ -377,13 +377,56 @@ function renderProductGrid(query = '') {
   const normalizedQuery = query.trim().toLowerCase();
   const products = PRODUCTS.filter(product => [5, 6, 7, 8, 9, 10, 11, 12].includes(product.id) && (!normalizedQuery || [product.name, product.category, product.description]
     .some(value => value.toLowerCase().includes(normalizedQuery))));
+  const categories = [
+    { name: 'Bags', ids: [5, 6, 11, 12] },
+    { name: 'Van', ids: [7] },
+    { name: 'Camping', ids: [8, 9, 10] }
+  ];
+  const categoryMarkup = categories.map(category => {
+    const categoryProducts = products.filter(product => category.ids.includes(product.id));
+    if (!categoryProducts.length) return '';
+    return `
+      <section class="product-category" aria-labelledby="category-${category.name.toLowerCase()}">
+        <div class="product-category-header">
+          <h2 id="category-${category.name.toLowerCase()}" class="product-category-title">${category.name}</h2>
+          <div class="product-category-controls">
+            <button class="product-category-arrow" type="button" data-category-direction="-1" aria-label="Previous ${category.name} products">&#8592;</button>
+            <button class="product-category-arrow" type="button" data-category-direction="1" aria-label="Next ${category.name} products">&#8594;</button>
+          </div>
+        </div>
+        <div class="product-category-track">
+          ${categoryProducts.map(renderProductCard).join('')}
+        </div>
+      </section>`;
+  }).join('');
   const stores = getStores().filter(store => [store.name, store.category, store.description]
     .some(value => value.toLowerCase().includes(normalizedQuery)));
-  const results = [...products.map(renderProductCard), ...stores.map(renderStoreCard)];
+  const storeMarkup = stores.length ? `
+    <section class="product-category" aria-labelledby="category-stores">
+      <div class="product-category-header">
+        <h2 id="category-stores" class="product-category-title">Stores</h2>
+        <div class="product-category-controls">
+          <button class="product-category-arrow" type="button" data-category-direction="-1" aria-label="Previous stores">&#8592;</button>
+          <button class="product-category-arrow" type="button" data-category-direction="1" aria-label="Next stores">&#8594;</button>
+        </div>
+      </div>
+      <div class="product-category-track">
+        ${stores.map(renderStoreCard).join('')}
+      </div>
+    </section>` : '';
 
-  grid.innerHTML = results.length
-    ? results.join('')
+  grid.innerHTML = categoryMarkup || storeMarkup
+    ? categoryMarkup + storeMarkup
     : `<p class="empty-search">No stores match “${escapeHTML(query)}”.</p>`;
+
+  grid.querySelectorAll('.product-category').forEach(category => {
+    const track = category.querySelector('.product-category-track');
+    category.querySelectorAll('[data-category-direction]').forEach(button => {
+      button.addEventListener('click', () => {
+        track.scrollBy({ left: Number(button.dataset.categoryDirection) * track.clientWidth, behavior: 'smooth' });
+      });
+    });
+  });
 }
 
 function renderSearchResults(query = '') {
@@ -425,10 +468,20 @@ function initHomeSearch() {
   const input = document.getElementById('search-input');
   if (!search || !input) return;
 
-  search.addEventListener('submit', event => event.preventDefault());
+  search.addEventListener('submit', event => {
+    event.preventDefault();
+    renderSearchResults('');
+    input.blur();
+  });
   input.addEventListener('input', event => {
     renderProductGrid(event.target.value);
     renderSearchResults(event.target.value);
+  });
+  input.addEventListener('keydown', event => {
+    if (event.key !== 'Enter') return;
+    event.preventDefault();
+    renderSearchResults('');
+    input.blur();
   });
 }
 
@@ -559,22 +612,35 @@ function renderPDP() {
 
         <p class="pdp-description">${escapeHTML(product.description).replace(/\n/g, '<br>')}</p>
         ${product.reservationUrl ? `<p class="pdp-reservation"><a href="${product.reservationUrl}" target="_blank" rel="noopener noreferrer">DM us to reserve yours today! 📩</a></p>` : ''}
-        <aside class="shopee-promo shopee-promo-compact" aria-label="Shopee affiliate promotion">
-          <div>
-            <p class="shopee-promo-kicker">Shopee picks</p>
-            <h2>Check flash sales, vouchers, and campaigns</h2>
-            <p>Find more bag and travel deals through our selected Shopee links. Promotions and prices may change.</p>
+        <aside class="shopee-side-promo-carousel pdp-shopee-carousel" data-carousel="shopee-promos" aria-label="Shopee campaigns">
+          <div class="shopee-side-promo-slides">
+            <div class="shopee-side-promo">
+              <a class="shopee-promo-image" href="https://shopee.ph/m/brandchoice-video-aff" target="_blank" rel="sponsored noopener noreferrer">
+                <img src="https://down-ph.img.susercontent.com/file/ph-11134258-820l6-msaxjhz9tn9ma2@resize_w1920_nl.webp" alt="Shopee campaign banner">
+              </a>
+            </div>
+            <div class="shopee-side-promo">
+              <a class="shopee-promo-image" href="https://shopee.ph/m/choiceglobal-ls-aff" target="_blank" rel="sponsored noopener noreferrer">
+                <img src="https://down-zl-ph.img.susercontent.com/ph-11134294-820lf-msco5nji87wga2.webp" alt="Shopee Choice Global campaign banner">
+              </a>
+            </div>
+            <div class="shopee-side-promo">
+              <a class="shopee-promo-image" href="https://shopee.ph/m/campaign-detail" target="_blank" rel="sponsored noopener noreferrer">
+                <img src="https://down-zl-ph.img.susercontent.com/ph-11134294-820lf-msjqgey4dukh4b.webp" alt="Shopee campaign detail banner">
+              </a>
+            </div>
           </div>
-          <a class="shopee-promo-image" href="https://shopee.ph/m/brandchoice-video-aff" target="_blank" rel="sponsored noopener noreferrer">
-            <img src="https://down-ph.img.susercontent.com/file/ph-11134258-820l6-msaxjhz9tn9ma2@resize_w1920_nl.webp" alt="Shopee campaign banner">
-          </a>
-          <div class="shopee-promo-links">
-            <a class="shopee-promo-primary" href="https://shopee.ph/m/brandchoice-video-aff" target="_blank" rel="sponsored noopener noreferrer">Shop campaigns</a>
-          </div>
-          <small>Affiliate links: BusyBagz may earn a commission from qualifying purchases.</small>
+          <div class="shopee-carousel-status" aria-live="polite">1 / 3</div>
         </aside>
-        ${product.storeUrl ? `<p class="pdp-seller">Available at <a href="${product.storePageUrl || product.storeUrl}" ${product.storePageUrl ? '' : 'target="_blank" rel="noopener noreferrer"'}>${escapeHTML(product.storeName)}</a></p>` : ''}
-
+        <div class="shopee-side-promo-carousel shopee-side-product-slides" data-carousel="shopee-products" aria-label="Shopee product deals">
+          <div class="shopee-side-promo-slides">
+            <div class="shopee-side-promo"><a class="shopee-promo-image" href="https://s.shopee.ph/9fKfl5wjh8" target="_blank" rel="sponsored noopener noreferrer"><img src="https://cf.shopee.sg/file/2e9bfe13ce9cecfbfad8010b843651f6" alt="Shopee product deal banner 1"></a></div>
+            <div class="shopee-side-promo"><a class="shopee-promo-image" href="https://s.shopee.ph/4AzjD2d4zw" target="_blank" rel="sponsored noopener noreferrer"><img src="https://cf.shopee.sg/file/372cf1ccdb799772760d819408df35ba" alt="Shopee product deal banner 2"></a></div>
+            <div class="shopee-side-promo"><a class="shopee-promo-image" href="https://s.shopee.ph/4VcZbh6Yab" target="_blank" rel="sponsored noopener noreferrer"><img src="https://cf.shopee.sg/file/a3db43790bd5a473e606076fa4bc6717" alt="Shopee product deal banner 3"></a></div>
+            <div class="shopee-side-promo"><a class="shopee-promo-image" href="https://s.shopee.ph/1qboQpF92P" target="_blank" rel="sponsored noopener noreferrer"><img src="https://cf.shopee.sg/file/f88a53eadc71460a50ba49316235a5a5" alt="Shopee product deal banner 4"></a></div>
+          </div>
+          <div class="shopee-carousel-status" aria-live="polite">1 / 4</div>
+        </div>
       </div>
     </div>
 
@@ -583,6 +649,7 @@ function renderPDP() {
   // Render related products
   renderRelated(product.id);
   initPDPImageZoom();
+  window.dispatchEvent(new Event('shopee-carousels-ready'));
 }
 
 function injectProductJsonLd(product) {

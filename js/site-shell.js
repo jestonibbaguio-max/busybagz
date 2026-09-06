@@ -44,6 +44,67 @@
     document.body.insertAdjacentHTML('beforeend', footerMarkup);
   }
 
+  const initializeShopeeCarousels = () => document.querySelectorAll('[data-carousel="shopee-promos"], [data-carousel="shopee-products"]').forEach((carousel) => {
+    if (carousel.dataset.carouselInitialized === 'true') return;
+    carousel.dataset.carouselInitialized = 'true';
+    const slides = [...carousel.querySelectorAll('.shopee-side-promo')];
+    const status = carousel.querySelector('.shopee-carousel-status');
+    let activeIndex = 0;
+    let transitionTimer;
+
+    const showSlide = (index, immediate = false) => {
+      const nextIndex = (index + slides.length) % slides.length;
+      const currentSlide = slides[activeIndex];
+      const nextSlide = slides[nextIndex];
+      activeIndex = nextIndex;
+      clearTimeout(transitionTimer);
+
+      const activateNextSlide = () => {
+        slides.forEach((slide, slideIndex) => {
+          slide.hidden = slideIndex !== activeIndex;
+          slide.classList.toggle('is-active', slideIndex === activeIndex);
+          slide.classList.remove('is-transitioning');
+        });
+      };
+
+      if (immediate || !currentSlide || currentSlide.hidden || currentSlide === nextSlide) {
+        activateNextSlide();
+      } else {
+        currentSlide.classList.remove('is-active');
+        currentSlide.classList.add('is-transitioning');
+        transitionTimer = setTimeout(activateNextSlide, 220);
+      }
+
+      if (status) status.textContent = `${activeIndex + 1} / ${slides.length}`;
+    };
+
+    carousel.querySelector('.shopee-carousel-prev')?.addEventListener('click', () => showSlide(activeIndex - 1));
+    carousel.querySelector('.shopee-carousel-next')?.addEventListener('click', () => showSlide(activeIndex + 1));
+    showSlide(0, true);
+
+    let autoAdvance;
+    const startAutoAdvance = () => {
+      clearInterval(autoAdvance);
+      autoAdvance = setInterval(() => showSlide(activeIndex + 1), 5000);
+    };
+
+    carousel.addEventListener('mouseenter', () => clearInterval(autoAdvance));
+    carousel.addEventListener('mouseleave', startAutoAdvance);
+    carousel.addEventListener('focusin', () => clearInterval(autoAdvance));
+    carousel.addEventListener('focusout', startAutoAdvance);
+    startAutoAdvance();
+  });
+
+  initializeShopeeCarousels();
+  window.addEventListener('shopee-carousels-ready', initializeShopeeCarousels);
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Enter' || event.target.id !== 'search-input') return;
+    const results = document.getElementById('search-results');
+    if (results) results.innerHTML = '';
+    event.target.blur();
+  });
+
   const createStoreButton = document.getElementById('open-store-modal');
   if (createStoreButton && !document.getElementById('store-modal')) {
     createStoreButton.addEventListener('click', () => {
