@@ -330,7 +330,6 @@ function renderProductCard(product) {
         </div>
         <div class="product-card-info">
           <h3 class="product-card-name">${escapeHTML(product.name)}</h3>
-          <p class="product-card-category">${escapeHTML(product.category)}</p>
           <p class="product-card-price">
             ${product.priceLabel || formatPrice(product.price)}
             ${product.originalPrice ? `<span class="original">${formatPrice(product.originalPrice)}</span>` : ''}
@@ -353,7 +352,6 @@ function renderStoreCard(store) {
         </div>
         <div class="product-card-info">
           <h3 class="product-card-name">${escapeHTML(store.name)}</h3>
-          <p class="product-card-category">${escapeHTML(store.category)}</p>
           <p class="store-card-description">${escapeHTML(cardDescription)}</p>
         </div>
       </a>

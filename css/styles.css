@@ -1035,8 +1035,13 @@ body::before {
 
 .product-category-track .product-card {
   min-width: 0;
-  height: 247px;
+  height: 300px;
   scroll-snap-align: start;
+}
+
+.product-category-track .product-card-image {
+  height: 190px;
+  aspect-ratio: auto;
 }
 
 .product-category-track .product-card-info {
@@ -1048,7 +1053,7 @@ body::before {
   display: -webkit-box;
   overflow: hidden;
   min-height: 2.2em;
-  font-size: 0.82rem;
+  font-size: 0.72rem;
   line-height: 1.1;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -1057,14 +1062,14 @@ body::before {
 .product-category-track .product-card-category {
   overflow: hidden;
   margin-bottom: 0.4rem;
-  font-size: 0.6rem;
+  font-size: 0.54rem;
   line-height: 1.15;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .product-category-track .product-card-price {
-  font-size: 0.75rem;
+  font-size: 0.68rem;
 }
 
 .shopee-promo {
