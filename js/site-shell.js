@@ -66,6 +66,19 @@
       ad.dataset.adsInitialized = 'true';
       window.adsbygoogle.push({});
     });
+
+    if (window.matchMedia('(max-width: 768px)').matches) {
+      const limitMobileAds = () => {
+        document.querySelectorAll('.ad-rail .adsbygoogle').forEach((ad) => {
+          ad.style.setProperty('height', '180px', 'important');
+          ad.style.setProperty('min-height', '180px', 'important');
+          ad.style.setProperty('max-height', '180px', 'important');
+        });
+      };
+
+      limitMobileAds();
+      setTimeout(limitMobileAds, 1000);
+    }
   }
 
   if (document.readyState === 'loading') {

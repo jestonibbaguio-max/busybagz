@@ -12,7 +12,7 @@ const PRODUCTS = [
     priceLabel: 'Pre-order',
     originalPrice: null,
     tag: 'Pre-order',
-    description: 'PRE-ORDERS NOW OPEN! 🎒\nPickle Bag - Approved Standard Size',
+    description: 'PRE-ORDERS NOW OPEN! 🎒\nPickle Bag - Approved Standard Size\nA practical standard-size bag designed to keep your pickleball essentials organized and easy to carry. Ideal for training sessions, games, and everyday travel.',
     storeName: 'UBEC Gigcase',
     storeUrl: 'https://www.facebook.com/Ubecgigcase',
     storePageUrl: 'store/UBEC-Gigcase',
@@ -531,6 +531,14 @@ function renderPDP() {
               <img src="${img}" alt="${product.name} view ${i + 1}">
             </div>`).join('')}
         </div>
+        <section class="related-section pdp-related-section">
+          <div class="section-header">
+            <h2>You May Also Like</h2>
+          </div>
+          <div class="product-grid" id="related-grid">
+            <!-- Rendered by JS -->
+          </div>
+        </section>
       </div>
 
       <!-- Details -->
@@ -567,23 +575,6 @@ function renderPDP() {
         </aside>
         ${product.storeUrl ? `<p class="pdp-seller">Available at <a href="${product.storePageUrl || product.storeUrl}" ${product.storePageUrl ? '' : 'target="_blank" rel="noopener noreferrer"'}>${escapeHTML(product.storeName)}</a></p>` : ''}
 
-        <p class="pdp-option-label">Color</p>
-        <div class="pdp-colors">
-          ${product.colors.map((color, i) => `
-            <div class="color-swatch ${i === 0 ? 'active' : ''}"
-                 style="background:${color}"
-                 onclick="selectColor(this)"></div>`).join('')}
-        </div>
-
-        <div class="pdp-actions">
-          <button class="btn-wishlist">${ICONS.heart}</button>
-        </div>
-
-        <div class="pdp-features">
-          <div class="pdp-feature">${ICONS.truck} <span>Free Shipping</span></div>
-          <div class="pdp-feature">${ICONS.shield} <span>2-Year Warranty</span></div>
-          <div class="pdp-feature">${ICONS.refresh} <span>30-Day Returns</span></div>
-        </div>
       </div>
     </div>
 
