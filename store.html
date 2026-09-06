@@ -47,6 +47,9 @@
     .store-missing h1 { margin-top: 0; }
     .store-address { margin-top: 1rem; color: #2c415f; }
     .store-address a { color: #17362b; }
+    .store-map-wrap { position: relative; margin-top: 10px; }
+    .store-map { display: block; width: 100%; height: 260px; border: 0; border-radius: 10px; background: #e8eef2; }
+    .store-map-fallback { display: block; margin-top: -56px; position: relative; z-index: 1; width: max-content; max-width: calc(100% - 24px); margin-left: 12px; padding: 10px 14px; border-radius: 7px; background: rgba(24, 119, 242, 0.94); color: white !important; font-weight: 700; }
     .store-page + .footer { margin-top: 1rem; }
     @media (max-width: 1024px) {
       .store-layout { grid-template-columns: 1fr; }
@@ -57,6 +60,7 @@
       .store-page { width: min(100%, 100%); padding-bottom: 2rem; }
       .store-content { padding: 1.25rem 1rem 1.5rem; }
       .store-banner { min-height: 180px; }
+      .store-map { height: 220px; }
       .store-product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
       .store-hero { border-radius: 14px; }
       .store-ad-rail { margin-top: 1rem; }
@@ -162,7 +166,7 @@
       services: ['In-store shopping', 'Special Discount', 'Delivery', 'COD around Cebu city'],
       facebookUrl: 'https://www.facebook.com/Ubecgigcase',
       address: 'Sangi gate Barangay, Pajo, Lapu-Lapu City, Philippines, 6015',
-      addressUrl: 'https://www.bing.com/maps/default.aspx?v=2&pc=FACEBK&mid=8100&where1=Sangi%20gate%20Barangay%2C%20Pajo%2C%20Lapu-Lapu%20City%2C%20Philippines%2C%206015&FORM=FBKPL1&mkt=en-GB&fbclid=IwcGRvZgFleHRuA2FlbQIxMABicmlkETEwZ08zVkh6Rk1TNVhMM1Flc3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHuh33clNJI1g7nH_k4ggusO327iyq-f4tHzwXUbCvAzK-eiCukeldPHoj9gv_aem_BxufZ66sKpyOwh2ohDdG2A'
+      addressUrl: 'https://www.google.com/maps/search/?api=1&query=Sangi%20gate%20Barangay%2C%20Pajo%2C%20Lapu-Lapu%20City%2C%20Philippines%2C%206015'
     }, {
       id: 'all-in-the-van',
       name: 'All in the Van',
@@ -207,6 +211,10 @@
         .replace(/[^a-z0-9-]/g, '-')
         .replace(/-+/g, '-')
         .replace(/^-|-$/g, '');
+    }
+
+    function getGoogleMapsUrl(address) {
+      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
     }
 
     function getStores() {
@@ -297,7 +305,7 @@
             ${store.services ? `<h2>Store services</h2><ul class="store-details-list">${store.services.map(item => `<li>${escapeHTML(item)}</li>`).join('')}</ul>` : ''}
             ${store.facebookUrl ? `<p class="store-reservation"><a href="${escapeHTML(store.facebookUrl)}" target="_blank" rel="noopener noreferrer">DM us to reserve yours today! 📩</a></p>` : ''}
             ${store.contactNumber ? `<p class="store-contact">Contact number: <a href="tel:${escapeHTML(store.contactNumber.replace(/\s+/g, ''))}">${escapeHTML(store.contactNumber)}</a></p>` : ''}
-            ${store.address ? `<p class="store-address"><a href="${escapeHTML(store.addressUrl)}" target="_blank" rel="noopener noreferrer">${escapeHTML(store.address)}</a></p>` : ''}
+            ${store.address ? `<p class="store-address"><a href="${getGoogleMapsUrl(store.address)}" target="_blank" rel="noopener noreferrer">${escapeHTML(store.address)}</a></p><div class="store-map-wrap"><iframe class="store-map" src="https://maps.google.com/maps?q=${encodeURIComponent(store.address)}&z=16&output=embed" title="Map for ${escapeHTML(store.name)}" loading="eager" allowfullscreen></iframe><a class="store-map-fallback" href="${getGoogleMapsUrl(store.address)}" target="_blank" rel="noopener noreferrer">Open in Google Maps</a></div>` : ''}
             <a class="store-back" href="/index.html">Back to storefront</a>
           </div>
         </article>
