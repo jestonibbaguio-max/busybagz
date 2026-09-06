@@ -217,6 +217,7 @@ body::before {
 }
 
 .shopee-side-promo.is-transitioning {
+  opacity: 0;
   filter: blur(8px);
 }
 
@@ -233,8 +234,21 @@ body::before {
 }
 
 .shopee-side-promo-slides {
+  position: relative;
   min-width: 0;
+  height: 127px;
   overflow: hidden;
+}
+
+.shopee-side-promo-carousel.shopee-side-product-slides .shopee-side-promo-slides {
+  height: 319px;
+}
+
+.shopee-side-promo.is-crossfade-entering {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  opacity: 0;
 }
 
 .pdp-shopee-carousel {

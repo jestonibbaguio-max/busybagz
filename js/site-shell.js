@@ -60,19 +60,26 @@
       clearTimeout(transitionTimer);
 
       const activateNextSlide = () => {
+        slides.forEach((slide) => {
+          slide.hidden = true;
+          slide.classList.remove('is-active', 'is-transitioning', 'is-crossfade-entering');
+        });
+        nextSlide.hidden = false;
+        nextSlide.classList.add('is-active');
         slides.forEach((slide, slideIndex) => {
-          slide.hidden = slideIndex !== activeIndex;
-          slide.classList.toggle('is-active', slideIndex === activeIndex);
-          slide.classList.remove('is-transitioning');
+          if (slideIndex === activeIndex) return;
+          slide.classList.remove('is-transitioning', 'is-crossfade-entering');
         });
       };
 
       if (immediate || !currentSlide || currentSlide.hidden || currentSlide === nextSlide) {
         activateNextSlide();
       } else {
-        currentSlide.classList.remove('is-active');
         currentSlide.classList.add('is-transitioning');
-        transitionTimer = setTimeout(activateNextSlide, 220);
+        nextSlide.hidden = false;
+        nextSlide.classList.add('is-active', 'is-crossfade-entering');
+        requestAnimationFrame(() => nextSlide.classList.remove('is-crossfade-entering'));
+        transitionTimer = setTimeout(activateNextSlide, 320);
       }
 
       if (status) status.textContent = `${activeIndex + 1} / ${slides.length}`;
