@@ -383,10 +383,15 @@ function renderProductGrid(query = '') {
   const categoryMarkup = categories.map(category => {
     const categoryProducts = products.filter(product => category.ids.includes(product.id));
     if (!categoryProducts.length) return '';
+    const categorySlug = category.name.toLowerCase();
     return `
-      <section class="product-category" aria-labelledby="category-${category.name.toLowerCase()}">
+      <section class="product-category category-${categorySlug}" aria-labelledby="category-${categorySlug}">
         <div class="product-category-header">
-          <h2 id="category-${category.name.toLowerCase()}" class="product-category-title">${category.name}</h2>
+          <div>
+            <p class="product-category-kicker">Featured collection</p>
+            <h2 id="category-${categorySlug}" class="product-category-title">${category.name}</h2>
+          </div>
+          <span class="product-category-count">${categoryProducts.length} items</span>
         </div>
         <div class="product-category-track">
           ${categoryProducts.map(renderProductCard).join('')}
@@ -396,9 +401,13 @@ function renderProductGrid(query = '') {
   const stores = getStores().filter(store => [store.name, store.category, store.description]
     .some(value => value.toLowerCase().includes(normalizedQuery)));
   const storeMarkup = stores.length ? `
-    <section class="product-category" aria-labelledby="category-stores">
+    <section class="product-category category-stores" aria-labelledby="category-stores">
       <div class="product-category-header">
-        <h2 id="category-stores" class="product-category-title">Stores</h2>
+        <div>
+          <p class="product-category-kicker">Browse local makers</p>
+          <h2 id="category-stores" class="product-category-title">Stores</h2>
+        </div>
+        <span class="product-category-count">${stores.length} stores</span>
       </div>
       <div class="product-category-track">
         ${stores.map(renderStoreCard).join('')}
