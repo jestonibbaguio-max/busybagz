@@ -1017,8 +1017,8 @@ body::before {
 }
 
 .product-category.category-bags {
-  --category-accent: #e06b35;
-  --category-soft: #fff1e8;
+  --category-accent: #1877f2;
+  --category-soft: #eaf2ff;
 }
 
 .product-category.category-van {
@@ -1027,13 +1027,13 @@ body::before {
 }
 
 .product-category.category-camping {
-  --category-accent: #2f8f5b;
-  --category-soft: #e8f6ed;
+  --category-accent: #1877f2;
+  --category-soft: #eaf2ff;
 }
 
 .product-category.category-stores {
-  --category-accent: #8b5cf6;
-  --category-soft: #f1ebff;
+  --category-accent: #1877f2;
+  --category-soft: #eaf2ff;
 }
 
 .products-section #product-grid {
