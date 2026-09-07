@@ -1034,23 +1034,13 @@ body::before {
 
 .product-category-track {
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: calc((100% - 3.75rem) / 4);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1.25rem;
-  overflow-x: auto;
-  overscroll-behavior-inline: contain;
-  scrollbar-width: none;
-  scroll-snap-type: x mandatory;
-}
-
-.product-category-track::-webkit-scrollbar {
-  display: none;
 }
 
 .product-category-track .product-card {
   min-width: 0;
   height: 300px;
-  scroll-snap-align: start;
 }
 
 .product-category-track .product-card-image {
@@ -1428,7 +1418,7 @@ body::before {
 
 .store-card-description {
   color: var(--color-text-secondary);
-  font-size: 0.88rem;
+  font-size: 12px;
   line-height: 1.5;
 }
 
@@ -2306,7 +2296,7 @@ body.pdp-zoom-open {
   }
 
   .product-category-track {
-    grid-auto-columns: calc((100% - 0.75rem) / 2);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.75rem;
   }
 

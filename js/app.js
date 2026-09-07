@@ -387,10 +387,6 @@ function renderProductGrid(query = '') {
       <section class="product-category" aria-labelledby="category-${category.name.toLowerCase()}">
         <div class="product-category-header">
           <h2 id="category-${category.name.toLowerCase()}" class="product-category-title">${category.name}</h2>
-          <div class="product-category-controls">
-            <button class="product-category-arrow" type="button" data-category-direction="-1" aria-label="Previous ${category.name} products">&#8592;</button>
-            <button class="product-category-arrow" type="button" data-category-direction="1" aria-label="Next ${category.name} products">&#8594;</button>
-          </div>
         </div>
         <div class="product-category-track">
           ${categoryProducts.map(renderProductCard).join('')}
@@ -403,10 +399,6 @@ function renderProductGrid(query = '') {
     <section class="product-category" aria-labelledby="category-stores">
       <div class="product-category-header">
         <h2 id="category-stores" class="product-category-title">Stores</h2>
-        <div class="product-category-controls">
-          <button class="product-category-arrow" type="button" data-category-direction="-1" aria-label="Previous stores">&#8592;</button>
-          <button class="product-category-arrow" type="button" data-category-direction="1" aria-label="Next stores">&#8594;</button>
-        </div>
       </div>
       <div class="product-category-track">
         ${stores.map(renderStoreCard).join('')}
@@ -417,14 +409,6 @@ function renderProductGrid(query = '') {
     ? categoryMarkup + storeMarkup
     : `<p class="empty-search">No stores match “${escapeHTML(query)}”.</p>`;
 
-  grid.querySelectorAll('.product-category').forEach(category => {
-    const track = category.querySelector('.product-category-track');
-    category.querySelectorAll('[data-category-direction]').forEach(button => {
-      button.addEventListener('click', () => {
-        track.scrollBy({ left: Number(button.dataset.categoryDirection) * track.clientWidth, behavior: 'smooth' });
-      });
-    });
-  });
 }
 
 function renderSearchResults(query = '') {
