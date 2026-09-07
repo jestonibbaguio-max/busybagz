@@ -559,7 +559,8 @@ function renderPDP() {
       <span class="separator">/</span>
       <a href="${product.storePageUrl || 'index.html'}">${product.breadcrumbCategory || product.category}</a>
       <span class="separator">/</span>
-      <span class="current">${product.breadcrumbName || product.name}</span>`;
+        <span class="current">${product.breadcrumbName || product.name}</span>
+        <a class="pdp-breadcrumb-back" href="index.html" aria-label="Back to home page" title="Back to home page">&#8592; Back to home page</a>`;
   }
 
   container.innerHTML = `

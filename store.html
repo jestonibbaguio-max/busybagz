@@ -17,6 +17,7 @@
   <style>
     body { padding: 112px 48px 48px; background: #f7f5f0; }
     .store-page { width: min(100%, 1440px); margin: 0 auto; padding-bottom: 3rem; }
+    .store-page > .pdp-breadcrumb { margin-bottom: 1rem; }
     .store-layout { display: grid; grid-template-columns: minmax(0, 980px) 280px; justify-content: space-between; gap: 2rem; align-items: start; }
     .store-column { min-width: 0; }
     .store-hero { overflow: hidden; border-radius: 18px; background: white; box-shadow: 0 18px 38px rgba(41, 67, 154, 0.12); }
@@ -56,8 +57,9 @@
       .store-ad-rail { position: static; }
     }
     @media (max-width: 768px) {
-      body { padding: 180px 24px 32px; }
+      body { padding: 100px 24px 32px; }
       .store-page { width: min(100%, 100%); padding-bottom: 2rem; }
+      .store-page > .pdp-breadcrumb { margin-bottom: 0; }
       .store-content { padding: 1.25rem 1rem 1.5rem; }
       .store-banner { min-height: 180px; }
       .store-map { height: 220px; }
@@ -92,6 +94,7 @@
       <a href="/index.html">Home</a>
       <span class="separator" aria-hidden="true">/</span>
       <span class="current" aria-current="page">STORE</span>
+      <a class="pdp-breadcrumb-back" href="/index.html" aria-label="Back to home page" title="Back to home page">&#8592; Back to home page</a>
     </nav>
     <div class="store-layout">
       <div class="store-column" id="storePage"></div>
@@ -306,7 +309,6 @@
             ${store.facebookUrl ? `<p class="store-reservation"><a href="${escapeHTML(store.facebookUrl)}" target="_blank" rel="noopener noreferrer">DM us to reserve yours today! 📩</a></p>` : ''}
             ${store.contactNumber ? `<p class="store-contact">Contact number: <a href="tel:${escapeHTML(store.contactNumber.replace(/\s+/g, ''))}">${escapeHTML(store.contactNumber)}</a></p>` : ''}
             ${store.address ? `<p class="store-address"><a href="${getGoogleMapsUrl(store.address)}" target="_blank" rel="noopener noreferrer">${escapeHTML(store.address)}</a></p><div class="store-map-wrap"><iframe class="store-map" src="https://maps.google.com/maps?q=${encodeURIComponent(store.address)}&z=16&output=embed" title="Map for ${escapeHTML(store.name)}" loading="eager" allowfullscreen></iframe><a class="store-map-fallback" href="${getGoogleMapsUrl(store.address)}" target="_blank" rel="noopener noreferrer">Open in Google Maps</a></div>` : ''}
-            <a class="store-back" href="/index.html">Back to storefront</a>
           </div>
         </article>
         ${store.id === 'ubec-gigcase' ? `
