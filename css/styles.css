@@ -2116,12 +2116,43 @@ body.pdp-zoom-open {
   font-weight: 700;
 }
 
-.pdp-reservation a,
+.pdp-reservation a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid var(--color-accent);
+  border-radius: 8px;
+  background: #eaf2ff;
+  box-shadow: 0 3px 8px rgba(24, 119, 242, 0.16);
+  color: var(--color-text);
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.pdp-reservation-icon {
+  width: 1.35rem;
+  height: 1.35rem;
+  padding: 0.12rem;
+  border-radius: 4px;
+  background: #1877f2;
+  fill: #fff;
+  flex: 0 0 auto;
+}
+
+.pdp-reservation a:hover,
+.pdp-reservation a:focus-visible {
+  border-color: var(--color-accent-hover);
+  background: #d8e8ff;
+  color: var(--color-accent-hover);
+}
+
 .pdp-seller a {
   color: var(--color-accent);
 }
 
-.pdp-reservation a:hover,
 .pdp-seller a:hover {
   text-decoration: underline;
 }

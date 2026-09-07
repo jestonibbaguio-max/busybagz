@@ -33,8 +33,8 @@
     .store-description { max-width: 650px; color: #53608a; line-height: 1.7; }
     .store-details-list { margin: 0; padding-left: 1.2rem; color: #2c415f; line-height: 1.8; }
     .store-reservation { margin: 24px 0; font-weight: 700; }
-    .store-reservation a { color: #1877f2; }
-    .store-reservation a:hover { text-decoration: underline; }
+    .store-reservation a { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 0.8rem; border: 1px solid #1877f2; border-radius: 8px; background: #eaf2ff; box-shadow: 0 3px 8px rgba(24, 119, 242, 0.16); color: #17235f; font-size: 0.78rem; font-weight: 800; line-height: 1; white-space: nowrap; }
+    .store-reservation a:hover, .store-reservation a:focus-visible { border-color: #0f5fc4; background: #d8e8ff; color: #0f5fc4; }
     .store-back { display: inline-flex; margin-top: 20px; padding: 11px 16px; border-radius: 8px; background: #1877f2; color: white; font-weight: 700; }
     .store-products { margin-top: 28px; }
     .store-products h2 { margin: 0 0 14px; color: #17362b; }
@@ -303,7 +303,7 @@
             <p class="store-description">${escapeHTML(store.description || 'Welcome to this BusyBagz store.')}</p>
             ${store.specialties ? `<h2>Specialties</h2><ul class="store-details-list">${store.specialties.map(item => `<li>${escapeHTML(item)}</li>`).join('')}</ul>` : ''}
             ${store.services ? `<h2>Store services</h2><ul class="store-details-list">${store.services.map(item => `<li>${escapeHTML(item)}</li>`).join('')}</ul>` : ''}
-            ${store.facebookUrl ? `<p class="store-reservation"><a href="${escapeHTML(store.facebookUrl)}" target="_blank" rel="noopener noreferrer">DM us to reserve yours today! 📩</a></p>` : ''}
+            ${store.facebookUrl ? `<p class="store-reservation"><a href="${escapeHTML(store.facebookUrl)}" target="_blank" rel="noopener noreferrer"><svg class="pdp-reservation-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-3.3 0-5 1.9-5 5v3H6v4h3v8h4v-8h3l1-4h-4V9c0-.7.3-1 1-1Z"/></svg>DM us to reserve yours today!</a></p>` : ''}
             ${store.contactNumber ? `<p class="store-contact">Contact number: <a href="tel:${escapeHTML(store.contactNumber.replace(/\s+/g, ''))}">${escapeHTML(store.contactNumber)}</a></p>` : ''}
             ${store.address ? `<h2 class="store-address-label">Store Address</h2><p class="store-address"><a href="${getGoogleMapsUrl(store.address)}" target="_blank" rel="noopener noreferrer">${escapeHTML(store.address)}</a></p><div class="store-map-wrap"><iframe class="store-map" src="https://maps.google.com/maps?q=${encodeURIComponent(store.address)}&z=16&output=embed" title="Map for ${escapeHTML(store.name)}" loading="eager" allowfullscreen></iframe><a class="store-map-fallback" href="${getGoogleMapsUrl(store.address)}" target="_blank" rel="noopener noreferrer">Open in Google Maps</a></div>` : ''}
           </div>
