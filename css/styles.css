@@ -391,7 +391,27 @@ body::before {
   max-height: none;
   object-fit: contain;
   filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
-  transform: translateY(1px);
+  transform-style: preserve-3d;
+  animation: logo-flip 2s ease-in-out infinite;
+}
+
+@keyframes logo-flip {
+  0%,
+  68%,
+  100% {
+    transform: translateY(1px) rotateY(0deg);
+  }
+
+  84% {
+    transform: translateY(1px) rotateY(180deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-logo-image {
+    animation: none;
+    transform: translateY(1px);
+  }
 }
 
 .nav-links {
