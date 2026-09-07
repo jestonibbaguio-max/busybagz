@@ -260,6 +260,12 @@ body::before {
   width: 100%;
 }
 
+.pdp-shopee-carousel .shopee-promo-image img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
 .shopee-side-promo-carousel.shopee-side-product-slides .shopee-promo-image img {
   height: 300px !important;
 }
@@ -2002,13 +2008,41 @@ body.pdp-zoom-open {
   padding-top: 1rem;
 }
 
+.pdp-image-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 0.25rem;
+}
+
+.pdp-image-actions .pdp-category {
+  margin-bottom: 0;
+}
+
 .pdp-category {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: fit-content;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid var(--color-accent);
+  border-radius: 8px;
+  background: #eaf2ff;
+  box-shadow: 0 3px 8px rgba(24, 119, 242, 0.16);
+  color: var(--color-text);
   font-size: 0.78rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--color-accent);
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
   margin-bottom: 0.75rem;
+}
+
+.pdp-category:hover,
+.pdp-category:focus-visible {
+  border-color: var(--color-accent-hover);
+  background: #d8e8ff;
+  color: var(--color-accent-hover);
 }
 
 .pdp-title {
@@ -2499,6 +2533,29 @@ body.pdp-zoom-open {
 
   .pdp-image-main {
     aspect-ratio: 4 / 3;
+  }
+
+  .pdp-image-actions {
+    width: 100%;
+    margin-bottom: 0.25rem;
+  }
+
+  .pdp-shopee-carousel,
+  .pdp-shopee-carousel .shopee-side-promo,
+  .pdp-shopee-carousel .shopee-promo-image,
+  .pdp-shopee-carousel .shopee-promo-image img {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .pdp-shopee-carousel .shopee-promo-image img {
+    height: auto !important;
+    object-fit: contain;
+  }
+
+  .pdp-shopee-carousel .shopee-side-promo-slides {
+    height: auto;
+    overflow: visible;
   }
 
   .pdp-actions {

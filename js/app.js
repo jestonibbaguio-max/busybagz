@@ -551,22 +551,14 @@ function renderPDP() {
   setMetaContent('meta[name="description"]', productDescription);
   injectProductJsonLd(product);
 
-  // Breadcrumb
-  const breadcrumb = document.getElementById('pdp-breadcrumb');
-  if (breadcrumb) {
-    breadcrumb.innerHTML = `
-      <a href="index.html">Home</a>
-      <span class="separator">/</span>
-      <a href="${product.storePageUrl || 'index.html'}">${product.breadcrumbCategory || product.category}</a>
-      <span class="separator">/</span>
-        <span class="current">${product.breadcrumbName || product.name}</span>
-        <a class="pdp-breadcrumb-back" href="index.html" aria-label="Back to home page" title="Back to home page">&#8592; Back to home page</a>`;
-  }
-
   container.innerHTML = `
     <div class="pdp-main">
       <!-- Gallery -->
       <div class="pdp-gallery">
+        <div class="pdp-image-actions">
+          <a class="pdp-breadcrumb-back" href="index.html" aria-label="Back to home page" title="Back to home page">&#8592; Back to home page</a>
+          <a class="pdp-category" href="${product.storePageUrl || 'index.html'}">${product.storeName || product.category}</a>
+        </div>
         <div class="pdp-image-main">
           <img id="pdp-main-img" src="${product.images[0]}" alt="${product.name}">
         </div>
@@ -588,7 +580,6 @@ function renderPDP() {
 
       <!-- Details -->
       <div class="pdp-details">
-        <p class="pdp-category">${product.category}</p>
         <h1 class="pdp-title">${product.name}</h1>
 
         ${product.reviews ? `<div class="pdp-rating">
