@@ -322,7 +322,12 @@ function getMessengerUrl(profileUrl, productName = '') {
 
     if (isFacebookProfile && profileName && profileName !== 'profile.php') {
       const initialMessage = `Hello, this message is from www.busybagz.com. We would like to inquire about your product: ${productName}`;
-      return `https://www.facebook.com/messages/t/${encodeURIComponent(profileName)}?text=${encodeURIComponent(initialMessage)}`;
+      const isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)
+        || (navigator.maxTouchPoints > 1 && /Macintosh/i.test(navigator.userAgent));
+      const messengerBaseUrl = isMobileDevice
+        ? `https://m.me/${encodeURIComponent(profileName)}`
+        : `https://www.facebook.com/messages/t/${encodeURIComponent(profileName)}`;
+      return `${messengerBaseUrl}?text=${encodeURIComponent(initialMessage)}`;
     }
   } catch {
     return profileUrl;
