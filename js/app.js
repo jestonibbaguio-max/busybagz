@@ -314,6 +314,23 @@ function getStoreUrl(store) {
   return `store/${normalizeStoreSlug(store?.name || '')}`;
 }
 
+function getMessengerUrl(profileUrl, productName = '') {
+  try {
+    const url = new URL(profileUrl);
+    const isFacebookProfile = /(^|\.)facebook\.com$/i.test(url.hostname);
+    const profileName = url.pathname.split('/').filter(Boolean)[0];
+
+    if (isFacebookProfile && profileName && profileName !== 'profile.php') {
+      const initialMessage = `Hello, this message is from www.busybagz.com. We would like to inquire about your product: ${productName}`;
+      return `https://www.facebook.com/messages/t/${encodeURIComponent(profileName)}?text=${encodeURIComponent(initialMessage)}`;
+    }
+  } catch {
+    return profileUrl;
+  }
+
+  return profileUrl;
+}
+
 function setMetaContent(selector, content) {
   const element = document.querySelector(selector);
   if (element) element.setAttribute('content', content);
@@ -594,7 +611,7 @@ function renderPDP() {
         ${product.priceLabel ? '' : `<p class="pdp-installment">or 4 interest-free payments of ${formatPrice(product.price / 4)} with Afterpay</p>`}
 
         <p class="pdp-description">${escapeHTML(product.description).replace(/\n/g, '<br>')}</p>
-        ${product.reservationUrl ? `<p class="pdp-reservation"><a href="${product.reservationUrl}" target="_blank" rel="noopener noreferrer"><svg class="pdp-reservation-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-3.3 0-5 1.9-5 5v3H6v4h3v8h4v-8h3l1-4h-4V9c0-.7.3-1 1-1Z"/></svg>DM us to reserve yours today!</a></p>` : ''}
+        ${product.storeUrl ? `<p class="pdp-reservation"><a href="${escapeHTML(getMessengerUrl(product.storeUrl, product.name))}" target="_blank" rel="noopener noreferrer"><svg class="pdp-reservation-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-3.3 0-5 1.9-5 5v3H6v4h3v8h4v-8h3l1-4h-4V9c0-.7.3-1 1-1Z"/></svg>DM us to reserve yours today!</a></p>` : ''}
         <aside class="shopee-side-promo-carousel pdp-shopee-carousel" data-carousel="shopee-promos" aria-label="Shopee campaigns">
           <div class="shopee-side-promo-slides">
             <div class="shopee-side-promo">
