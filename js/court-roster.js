@@ -8,12 +8,14 @@ const qrDialog = document.getElementById('qr-dialog');
 const qrCode = document.getElementById('qr-code');
 const qrCodeError = document.getElementById('qr-code-error');
 const qrUpload = document.getElementById('qr-upload');
+const qrAlert = document.getElementById('qr-alert');
 const qrDialogTitle = document.getElementById('qr-dialog-title');
 const qrDialogCopy = document.getElementById('qr-dialog-copy');
 let saveTimer;
 let isSaving = false;
 let qrUpdateCode = '';
 let qrAction = 'change';
+let courtsReserved = false;
 
 function setStatus(message, state = '') {
   status.textContent = message;
@@ -26,12 +28,14 @@ function renderCourts(courts) {
     const card = template.content.cloneNode(true);
     card.querySelector('.court-number').textContent = `Court 0${courtIndex + 1}`;
     card.querySelector('h2').textContent = court.name;
+    card.querySelector('.reserved-badge').hidden = !courtsReserved;
     const list = card.querySelector('.player-list');
     court.players.forEach((player, playerIndex) => {
       const field = document.createElement('div');
       const safeName = player.name.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
-      field.className = `player-field${player.receipt ? ' is-locked' : ''}`;
-      field.innerHTML = `<span>${String(playerIndex + 1).padStart(2, '0')}</span><input type="text" maxlength="60" placeholder="Add player name" value="${safeName}"${player.receipt ? ' readonly aria-label="Player name locked after GCash receipt upload"' : ''}><label class="receipt-upload">${player.receipt ? `<a href="${player.receipt}" target="_blank" rel="noopener">Receipt locked</a>` : 'Upload GCash<input type="file" accept="image/png,image/jpeg,image/webp" aria-label="Upload GCash transaction for player ' + (playerIndex + 1) + '">'}</label>`;
+      const playerLocked = courtsReserved || Boolean(player.receipt);
+      field.className = `player-field${playerLocked ? ' is-locked' : ''}`;
+      field.innerHTML = `<span>${String(playerIndex + 1).padStart(2, '0')}</span><input type="text" maxlength="60" placeholder="Add player name" value="${safeName}"${playerLocked ? ' readonly aria-label="Player name locked"' : ''}><label class="receipt-upload">${player.receipt ? `<a href="${player.receipt}" target="_blank" rel="noopener">Receipt locked</a>` : courtsReserved ? 'Court locked' : 'Upload GCash<input type="file" accept="image/png,image/jpeg,image/webp" aria-label="Upload GCash transaction for player ' + (playerIndex + 1) + '">'}</label>`;
       const input = field.querySelector('input[type="text"]');
       input.addEventListener('input', () => scheduleSave());
       const upload = field.querySelector('input[type="file"]');
@@ -55,6 +59,8 @@ async function loadRoster(showLoading = true) {
   const response = await fetch('/api/courts/haniyyah');
   if (!response.ok) throw new Error('Unable to load roster.');
   const data = await response.json();
+  courtsReserved = Boolean(data.courtsReserved);
+  document.getElementById('lock-courts-button').textContent = courtsReserved ? 'Unlock courts' : 'Lock courts';
   renderCourts(data.courts);
   setStatus(`Updated ${new Intl.DateTimeFormat('en-PH', { hour: 'numeric', minute: '2-digit' }).format(new Date(data.updatedAt))}`, 'is-saved');
 }
@@ -69,7 +75,13 @@ async function loadQrCode() {
     qrDownload.download = data.qr.split('/').pop();
     qrDownload.hidden = false;
     qrEmpty.hidden = true;
+  } else {
+    showQrAlert();
   }
+}
+
+function showQrAlert() {
+  qrAlert.hidden = false;
 }
 
 function readFileAsDataUrl(file) {
@@ -138,8 +150,8 @@ function openQrDialog(action) {
   qrAction = action;
   qrCode.value = '';
   qrCodeError.textContent = '';
-  qrDialogTitle.textContent = action === 'reset' ? 'Reset all data' : action === 'empty' ? 'Empty QR code' : 'Enter update code';
-  qrDialogCopy.textContent = action === 'reset' ? 'Enter the authorized code to permanently clear all player names, receipts, and GCash QR images.' : action === 'empty' ? 'Enter the authorized code to remove the active GCash QR image.' : 'Enter the authorized code to select a new GCash QR image.';
+  qrDialogTitle.textContent = action === 'reset' ? 'Reset all data' : action === 'unlock' ? 'Unlock all courts' : action === 'lock' ? 'Lock all courts' : action === 'empty' ? 'Empty QR code' : 'Enter update code';
+  qrDialogCopy.textContent = action === 'reset' ? 'Enter the authorized code to permanently clear all player names, receipts, and GCash QR images.' : action === 'unlock' ? 'Enter the authorized code to make all unpaid court fields available again.' : action === 'lock' ? 'Enter the authorized code to mark every court as reserved and lock all fields.' : action === 'empty' ? 'Enter the authorized code to remove the active GCash QR image.' : 'Enter the authorized code to select a new GCash QR image.';
   qrDialog.hidden = false;
   qrCode.focus();
 }
@@ -150,9 +162,12 @@ document.getElementById('change-qr-button').addEventListener('click', () => {
 
 document.getElementById('empty-qr-button').addEventListener('click', () => { openQrDialog('empty'); });
 
+document.getElementById('lock-courts-button').addEventListener('click', () => { openQrDialog(courtsReserved ? 'unlock' : 'lock'); });
+
 document.getElementById('reset-button').addEventListener('click', () => { openQrDialog('reset'); });
 
 document.getElementById('qr-cancel').addEventListener('click', () => { qrDialog.hidden = true; });
+document.getElementById('qr-alert-close').addEventListener('click', () => { qrAlert.hidden = true; });
 
 document.getElementById('qr-code-form').addEventListener('submit', (event) => {
   event.preventDefault();
@@ -170,8 +185,34 @@ document.getElementById('qr-code-form').addEventListener('submit', (event) => {
     resetRoster();
     return;
   }
+  if (qrAction === 'lock') {
+    setCourtsReserved(true);
+    return;
+  }
+  if (qrAction === 'unlock') {
+    setCourtsReserved(false);
+    return;
+  }
   qrUpload.click();
 });
+
+async function setCourtsReserved(reserved) {
+  setStatus(reserved ? 'Locking all courts...' : 'Unlocking courts...', 'is-saving');
+  try {
+    const endpoint = reserved ? '/api/courts/haniyyah/lock' : '/api/courts/haniyyah/unlock';
+    const response = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code: qrUpdateCode }) });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message);
+    courtsReserved = reserved;
+    document.getElementById('lock-courts-button').textContent = reserved ? 'Unlock courts' : 'Lock courts';
+    await loadRoster(false);
+    setStatus(reserved ? 'All courts are marked reserved.' : 'Courts unlocked. Unpaid fields are available.', 'is-saved');
+  } catch (error) {
+    setStatus(error.message || 'Could not lock courts.');
+  } finally {
+    qrUpdateCode = '';
+  }
+}
 
 function clearQrDisplay() {
   qrImage.removeAttribute('src');
@@ -187,6 +228,7 @@ async function emptyQrCode() {
     const data = await response.json();
     if (!response.ok) throw new Error(data.message);
     clearQrDisplay();
+    showQrAlert();
     setStatus('GCash QR emptied.', 'is-saved');
   } catch (error) {
     setStatus(error.message || 'Could not empty GCash QR.');
@@ -202,6 +244,7 @@ async function resetRoster() {
     const data = await response.json();
     if (!response.ok) throw new Error(data.message);
     clearQrDisplay();
+    showQrAlert();
     await loadRoster(false);
     setStatus('Roster, receipts, and QR images have been reset.', 'is-saved');
   } catch (error) {

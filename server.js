@@ -235,7 +235,7 @@ function writeHaniyyahCourtRecords(records) {
 
 function handleHaniyyahCourtsApi(req, res) {
   if (req.method === 'GET') {
-    sendJson(res, 200, { courts: readHaniyyahCourts(), updatedAt: fs.statSync(haniyyahCourtsCsvPath).mtime.toISOString() });
+    sendJson(res, 200, { courts: readHaniyyahCourts(), courtsReserved: Boolean(readHaniyyahQr().courtsReserved), updatedAt: fs.statSync(haniyyahCourtsCsvPath).mtime.toISOString() });
     return;
   }
   if (req.method !== 'POST') {
@@ -247,6 +247,7 @@ function handleHaniyyahCourtsApi(req, res) {
   req.on('end', () => {
     try {
       const payload = JSON.parse(body || '{}');
+      if (readHaniyyahQr().courtsReserved) throw new Error('Courts are locked.');
       const allowedCourts = ['Court 1', 'Court 2', 'Court 3'];
       if (!Array.isArray(payload.courts) || payload.courts.length !== 3) throw new Error('Invalid court roster.');
       const previousRecords = getHaniyyahCourtRecords();
@@ -279,6 +280,7 @@ function handleHaniyyahReceiptApi(req, res) {
   req.on('end', () => {
     try {
       const { court, slot, dataUrl } = JSON.parse(body || '{}');
+      if (readHaniyyahQr().courtsReserved) throw new Error('Courts are locked.');
       if (!['Court 1', 'Court 2', 'Court 3'].includes(court) || !Number.isInteger(slot) || slot < 1 || slot > 8) throw new Error('Invalid court slot.');
       const imageMatch = /^data:(image\/(?:png|jpeg|webp));base64,([A-Za-z0-9+/=]+)$/.exec(dataUrl || '');
       if (!imageMatch) throw new Error('Only PNG, JPG, and WebP images are accepted.');
@@ -376,10 +378,54 @@ function handleHaniyyahResetApi(req, res) {
       writeHaniyyahCourtRecords(records);
       fs.rmSync(haniyyahReceiptsDir, { recursive: true, force: true });
       fs.rmSync(haniyyahQrDir, { recursive: true, force: true });
-      fs.writeFileSync(haniyyahQrConfigPath, JSON.stringify({ qr: '', updatedAt }, null, 2), 'utf8');
+      fs.writeFileSync(haniyyahQrConfigPath, JSON.stringify({ qr: '', courtsReserved: false, updatedAt }, null, 2), 'utf8');
       sendJson(res, 200, { success: true, updatedAt });
     } catch (error) {
       sendJson(res, 400, { success: false, message: error.message || 'Could not reset roster.' });
+    }
+  });
+}
+
+function handleHaniyyahLockApi(req, res) {
+  if (req.method !== 'POST') {
+    sendJson(res, 405, { success: false, message: 'Method not allowed.' });
+    return;
+  }
+  let body = '';
+  req.on('data', (chunk) => { body += chunk; });
+  req.on('end', () => {
+    try {
+      const { code } = JSON.parse(body || '{}');
+      if (code !== '676767') throw new Error('Incorrect update code.');
+      const config = readHaniyyahQr();
+      config.courtsReserved = true;
+      config.updatedAt = new Date().toISOString();
+      fs.writeFileSync(haniyyahQrConfigPath, JSON.stringify(config, null, 2), 'utf8');
+      sendJson(res, 200, { success: true, courtsReserved: true });
+    } catch (error) {
+      sendJson(res, 400, { success: false, message: error.message || 'Could not lock courts.' });
+    }
+  });
+}
+
+function handleHaniyyahUnlockApi(req, res) {
+  if (req.method !== 'POST') {
+    sendJson(res, 405, { success: false, message: 'Method not allowed.' });
+    return;
+  }
+  let body = '';
+  req.on('data', (chunk) => { body += chunk; });
+  req.on('end', () => {
+    try {
+      const { code } = JSON.parse(body || '{}');
+      if (code !== '676767') throw new Error('Incorrect update code.');
+      const config = readHaniyyahQr();
+      config.courtsReserved = false;
+      config.updatedAt = new Date().toISOString();
+      fs.writeFileSync(haniyyahQrConfigPath, JSON.stringify(config, null, 2), 'utf8');
+      sendJson(res, 200, { success: true, courtsReserved: false });
+    } catch (error) {
+      sendJson(res, 400, { success: false, message: error.message || 'Could not unlock courts.' });
     }
   });
 }
@@ -476,6 +522,16 @@ const server = http.createServer((req, res) => {
 
   if (pathname === '/api/courts/haniyyah/reset') {
     handleHaniyyahResetApi(req, res);
+    return;
+  }
+
+  if (pathname === '/api/courts/haniyyah/lock') {
+    handleHaniyyahLockApi(req, res);
+    return;
+  }
+
+  if (pathname === '/api/courts/haniyyah/unlock') {
+    handleHaniyyahUnlockApi(req, res);
     return;
   }
 
