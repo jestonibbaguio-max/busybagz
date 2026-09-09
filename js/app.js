@@ -4,6 +4,28 @@
 
 const PRODUCTS = [
   {
+    id: 13,
+    name: 'Haniyyah Courts',
+    category: 'Reservation',
+    breadcrumbCategory: 'Reservation',
+    price: 0,
+    priceLabel: 'Reserve a court',
+    originalPrice: null,
+    tag: 'Reservation',
+    description: 'Located within Haniyyah Subdivision, these courts provide a welcoming space for residents and guests to enjoy the fast-growing sport of pickleball. The area is designed for both casual play and friendly competition, offering a clean, safe, and community-oriented environment. With easy access inside the subdivision, the courts have become a hub for recreation, fitness, and social connection among neighbors.',
+    storeName: 'Haniyyah Courts',
+    storeUrl: '/reservation/court/haniyyah',
+    storePageUrl: '/reservation/court/haniyyah',
+    reservationUrl: '/reservation/court/haniyyah',
+    destination: '/reservation/court/haniyyah',
+    colors: ['#0b7468'],
+    rating: 0,
+    reviews: 0,
+    image: 'assets/pickleball-paddle.svg',
+    images: ['assets/pickleball-paddle.svg'],
+    comments: []
+  },
+  {
     id: 6,
     name: 'Pickle Bag',
     category: 'UBEC Gigcase',
@@ -344,7 +366,7 @@ function setMetaContent(selector, content) {
 function renderProductCard(product) {
   return `
     <article class="product-card" id="product-${product.id}">
-      <a href="pdp.html?id=${product.id}" class="product-card-link">
+      <a href="${product.destination || `pdp.html?id=${product.id}`}" class="product-card-link">
         <div class="product-card-image">
           <img src="${product.image}" alt="${escapeHTML(product.name)}" loading="lazy">
           ${product.tag ? `<span class="product-card-tag">${escapeHTML(product.tag)}</span>` : ''}
@@ -395,12 +417,13 @@ function renderProductGrid(query = '') {
   if (!grid) return;
 
   const normalizedQuery = query.trim().toLowerCase();
-  const products = PRODUCTS.filter(product => [5, 6, 7, 8, 9, 10, 11, 12].includes(product.id) && (!normalizedQuery || [product.name, product.category, product.description]
+  const products = PRODUCTS.filter(product => [5, 6, 7, 8, 9, 10, 11, 12, 13].includes(product.id) && (!normalizedQuery || [product.name, product.category, product.description]
     .some(value => value.toLowerCase().includes(normalizedQuery))));
   const categories = [
     { name: 'Bags', ids: [5, 6, 11, 12] },
     { name: 'Van', ids: [7] },
-    { name: 'Camping', ids: [8, 9, 10] }
+    { name: 'Camping', ids: [8, 9, 10] },
+    { name: 'Reservation', ids: [13] }
   ];
   const categoryMarkup = categories.map(category => {
     const categoryProducts = products.filter(product => category.ids.includes(product.id));
@@ -461,11 +484,11 @@ function renderSearchResults(query = '') {
         <span><strong>${escapeHTML(store.name)}</strong><span>${escapeHTML(store.category)}</span></span>
         <span class="search-result-type">Store</span>
       </a>`);
-  const products = PRODUCTS.filter(product => [5, 6, 7, 8, 9, 10, 11, 12].includes(product.id) && [product.name, product.category, product.description]
+  const products = PRODUCTS.filter(product => [5, 6, 7, 8, 9, 10, 11, 12, 13].includes(product.id) && [product.name, product.category, product.description]
     .some(value => value.toLowerCase().includes(normalizedQuery)))
     .slice(0, 5)
     .map(product => `
-      <a class="search-result" role="option" href="pdp.html?id=${product.id}">
+      <a class="search-result" role="option" href="${product.destination || `pdp.html?id=${product.id}`}">
         <img src="${product.image}" alt="">
         <span><strong>${escapeHTML(product.name)}</strong><span>${escapeHTML(product.category)}</span></span>
         <span class="search-result-type">Product</span>
