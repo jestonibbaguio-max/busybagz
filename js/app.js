@@ -30,7 +30,7 @@ const PRODUCTS = [
   },
   {
     id: 5,
-    name: 'UBEC Gigcase',
+    name: 'Transparent Bag',
     category: 'Transparent Bags',
     breadcrumbCategory: 'UBEC Gigcase',
     breadcrumbName: 'Transparent bag',
