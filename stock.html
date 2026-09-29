@@ -136,6 +136,11 @@
           </div>
           <p class="entry-help">Start only on a breakout with volume at least 1.5× the 20-bar average. Stop = 1× ATR; target = 2× ATR.</p>
           <p class="entry-help">Example: if Yahoo shows XAU at US$4,000 but Exness shows US$4,002, use the current Exness quote and recalculate the entry, stop loss, and target before placing the order.</p>
+          <div class="trade-direction" role="group" aria-label="Trade direction">
+            <span>Direction</span>
+            <button type="button" data-direction="buy" aria-pressed="true">Buy</button>
+            <button type="button" data-direction="sell" aria-pressed="false">Sell</button>
+          </div>
           <div class="manual-price-panel">
             <label for="exness-price">Current Exness XAUUSD price</label>
             <div class="manual-price-controls">

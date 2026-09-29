@@ -11,7 +11,7 @@
   const exnessCountdown = document.getElementById('exness-countdown');
   const numberFormat = new Intl.NumberFormat('en-AU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const compactFormat = new Intl.NumberFormat('en-AU', { notation: 'compact', maximumFractionDigits: 1 });
-  const state = { symbol: 'GC=F', payload: null, range: '3m', loading: false, currentSetup: null, exitRefreshPending: false, manualPrice: null, manualPriceReady: false, recalculationAt: null };
+  const state = { symbol: 'GC=F', direction: 'buy', payload: null, range: '3m', loading: false, currentSetup: null, exitRefreshPending: false, manualPrice: null, manualPriceReady: false, recalculationAt: null };
   const quoteCache = new Map();
   const pendingQuotes = new Map();
   let trackedPositions = {};
@@ -86,7 +86,8 @@
     if (volumes.length < 15) return null;
 
     return {
-      trigger: Math.max(...previousSessions.map((bar) => bar.high)),
+      triggerHigh: Math.max(...previousSessions.map((bar) => bar.high)),
+      triggerLow: Math.min(...previousSessions.map((bar) => bar.low)),
       averageVolume: volumes.reduce((sum, volume) => sum + volume, 0) / volumes.length
     };
   }
@@ -184,7 +185,10 @@
       ? state.manualPrice
       : (Number.isFinite(state.payload.price) ? state.payload.price : bars.at(-1)?.close);
     const latestVolume = bars.at(-1)?.volume;
-    const entry = state.manualPriceReady && Number.isFinite(state.manualPrice) ? state.manualPrice : breakout?.trigger;
+    const isSell = state.direction === 'sell';
+    const entry = state.manualPriceReady && Number.isFinite(state.manualPrice)
+      ? state.manualPrice
+      : (isSell ? breakout?.triggerLow : breakout?.triggerHigh);
     const stopElement = document.getElementById('stop-price');
     const targetElement = document.getElementById('target-price');
     const stopDistance = document.getElementById('stop-distance');
@@ -208,20 +212,20 @@
       return;
     }
 
-    const calculatedStop = Math.max(0, entry - atr);
-    const calculatedTarget = entry + (atr * 2);
+    const calculatedStop = isSell ? entry + atr : Math.max(0, entry - atr);
+    const calculatedTarget = isSell ? Math.max(0, entry - (atr * 2)) : entry + (atr * 2);
     const planEntry = activePosition?.entry ?? entry;
     const stop = activePosition?.stop ?? calculatedStop;
     const target = activePosition?.target ?? calculatedTarget;
-    const stopRisk = ((planEntry - stop) / planEntry) * 100;
-    const targetReward = ((target - planEntry) / planEntry) * 100;
+    const stopRisk = (Math.abs(planEntry - stop) / planEntry) * 100;
+    const targetReward = (Math.abs(target - planEntry) / planEntry) * 100;
     document.getElementById('start-price').textContent = levelMoney(planEntry);
     stopElement.textContent = levelMoney(stop);
     targetElement.textContent = levelMoney(target);
-    stopDistance.textContent = `${stopRisk.toFixed(2)}% below entry · 1× ATR`;
-    targetDistance.textContent = `${targetReward.toFixed(2)}% above entry · 2× ATR`;
+    stopDistance.textContent = `${stopRisk.toFixed(2)}% ${isSell ? 'above' : 'below'} entry · 1× ATR`;
+    targetDistance.textContent = `${targetReward.toFixed(2)}% ${isSell ? 'below' : 'above'} entry · 2× ATR`;
     const volumeRatio = Number.isFinite(latestVolume) ? latestVolume / breakout.averageVolume : 0;
-    state.currentSetup = { entry, stop: calculatedStop, target: calculatedTarget };
+    state.currentSetup = { entry, stop: calculatedStop, target: calculatedTarget, direction: state.direction };
 
     if (state.recalculationAt) {
       planStatus.textContent = `EXNESS PRICE CAPTURED · Using ${levelMoney(state.manualPrice)} as the entry basis.`;
@@ -230,34 +234,37 @@
 
     if (activePosition) {
       clearPositionButton.hidden = false;
-      if (activePosition.status === 'stop' || current <= activePosition.stop) {
+      const positionIsSell = activePosition.direction === 'sell';
+      const stopHit = positionIsSell ? current >= activePosition.stop : current <= activePosition.stop;
+      const targetHit = positionIsSell ? current <= activePosition.target : current >= activePosition.target;
+      if (activePosition.status === 'stop' || stopHit) {
         activePosition.status = 'stop';
-        planStatus.textContent = `STOP LOSS HIT · Price is at or below ${money(activePosition.stop)}. The tracked setup is closed.`;
+        planStatus.textContent = `STOP LOSS HIT · Price is ${positionIsSell ? 'at or above' : 'at or below'} ${money(activePosition.stop)}. The tracked setup is closed.`;
         planStatus.classList.add('is-alert');
         saveTrackedPositions();
         refreshSetupAfterExit();
-      } else if (activePosition.status === 'target' || current >= activePosition.target) {
+      } else if (activePosition.status === 'target' || targetHit) {
         activePosition.status = 'target';
-        planStatus.textContent = `TAKE-PROFIT HIT · Price is at or above ${money(activePosition.target)}. The tracked setup reached its target.`;
+        planStatus.textContent = `TAKE-PROFIT HIT · Price is ${positionIsSell ? 'at or below' : 'at or above'} ${money(activePosition.target)}. The tracked setup reached its target.`;
         planStatus.classList.add('is-target');
         saveTrackedPositions();
         refreshSetupAfterExit();
       } else {
-        planStatus.textContent = `POSITION ACTIVE · Current ${money(current)}. Stop ${money(activePosition.stop)}; take-profit ${money(activePosition.target)}.`;
+        planStatus.textContent = `${positionIsSell ? 'SELL' : 'BUY'} POSITION ACTIVE · Current ${money(current)}. Stop ${money(activePosition.stop)}; take-profit ${money(activePosition.target)}.`;
       }
-    } else if (current >= target) {
-      planStatus.textContent = `TARGET PASSED · Price is already at or above ${money(target)}. Avoid chasing this breakout setup.`;
+    } else if ((!isSell && current >= target) || (isSell && current <= target)) {
+      planStatus.textContent = `TARGET PASSED · Price is already ${isSell ? 'at or below' : 'at or above'} ${money(target)}. Avoid chasing this breakout setup.`;
       planStatus.classList.add('is-alert');
-    } else if (current < entry) {
-      planStatus.textContent = `WAIT · Breakout is not active. Start above ${money(entry)} only with 1.5× average volume; after entry, stop at ${money(stop)} and target ${money(target)}.`;
-    } else if (current >= entry && volumeRatio >= 1.5) {
-      planStatus.textContent = `START SIGNAL · Breakout is above ${money(entry)} with ${volumeRatio.toFixed(2)}× average volume. Planned stop ${money(stop)}; target ${money(target)}.`;
+    } else if ((!isSell && current < entry) || (isSell && current > entry)) {
+      planStatus.textContent = `WAIT · Breakout is not active. ${isSell ? 'Sell below' : 'Start above'} ${money(entry)} only with 1.5× average volume; after entry, stop at ${money(stop)} and target ${money(target)}.`;
+    } else if (((!isSell && current >= entry) || (isSell && current <= entry)) && volumeRatio >= 1.5) {
+      planStatus.textContent = `${isSell ? 'SELL' : 'START'} SIGNAL · Breakout is ${isSell ? 'below' : 'above'} ${money(entry)} with ${volumeRatio.toFixed(2)}× average volume. Planned stop ${money(stop)}; target ${money(target)}.`;
       planStatus.classList.add('is-target');
       markEntryButton.hidden = false;
-    } else if (current >= entry) {
-      planStatus.textContent = `WAIT FOR VOLUME · Price is above ${money(entry)}, but volume is ${volumeRatio.toFixed(2)}× the 20-session average; trigger requires 1.5×.`;
+    } else if ((!isSell && current >= entry) || (isSell && current <= entry)) {
+      planStatus.textContent = `WAIT FOR VOLUME · Price is ${isSell ? 'below' : 'above'} ${money(entry)}, but volume is ${volumeRatio.toFixed(2)}× the 20-bar average; trigger requires 1.5×.`;
     } else {
-      planStatus.textContent = `WAIT · Start only above ${money(entry)} with volume at least 1.5× the 20-session average. Current ${money(current)}.`;
+      planStatus.textContent = `WAIT · ${isSell ? 'Sell below' : 'Start above'} ${money(entry)} with volume at least 1.5× the 20-bar average. Current ${money(current)}.`;
     }
   }
 
@@ -362,6 +369,13 @@
     loadStock(button.dataset.symbol);
   });
   refreshButton.addEventListener('click', () => loadStock(state.symbol, true));
+  document.querySelector('.trade-direction').addEventListener('click', (event) => {
+    const button = event.target.closest('[data-direction]');
+    if (!button) return;
+    state.direction = button.dataset.direction;
+    document.querySelectorAll('[data-direction]').forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+    if (state.payload) renderQuote(state.payload);
+  });
   calculateExnessButton.addEventListener('click', () => {
     const price = Number(exnessPriceInput.value);
     if (!Number.isFinite(price) || price <= 0) {

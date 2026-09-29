@@ -104,6 +104,9 @@ body.stock-page::before { display: none; }
 .plan-status.is-alert { color: var(--stock-red); font-weight: 800; }
 .plan-status.is-target { color: var(--stock-green); font-weight: 800; }
 .manual-price-panel { display: grid; gap: 7px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--stock-line); }
+.trade-direction { display: flex; align-items: center; gap: 6px; margin-top: 14px; color: var(--stock-muted); font-size: 0.7rem; font-weight: 800; }
+.trade-direction button { min-height: 30px; padding: 0 12px; border: 1px solid var(--stock-line); border-radius: 4px; color: var(--stock-ink); font-size: 0.7rem; font-weight: 800; }
+.trade-direction button[aria-pressed="true"] { border-color: var(--stock-green); background: var(--stock-green); color: white; }
 .manual-price-panel label { color: var(--stock-ink); font-size: 0.7rem; font-weight: 800; }
 .manual-price-controls { display: flex; flex-wrap: wrap; gap: 8px; }
 .manual-price-controls input { width: 150px; min-height: 34px; padding: 0 9px; border: 1px solid var(--stock-line); border-radius: 4px; color: var(--stock-ink); font: inherit; font-size: 0.75rem; }
