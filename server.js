@@ -11,9 +11,6 @@ const haniyyahCourtsCsvPath = path.join(dataDir, 'court-haniyyah.csv');
 const haniyyahReceiptsDir = path.join(rootDir, 'uploads', 'haniyyah-receipts');
 const haniyyahQrDir = path.join(rootDir, 'uploads', 'haniyyah-qr');
 const haniyyahQrConfigPath = path.join(dataDir, 'court-haniyyah-qr.json');
-const oandaApiUrl = process.env.OANDA_API_URL || 'https://api-fxpractice.oanda.com';
-const oandaApiToken = process.env.OANDA_API_TOKEN;
-const oandaAccountId = process.env.OANDA_ACCOUNT_ID;
 
 const mimeTypes = {
   '.html': 'text/html; charset=utf-8',
@@ -158,49 +155,6 @@ function sendJson(res, statusCode, payload) {
   res.end(JSON.stringify(payload));
 }
 
-async function fetchOandaQuote() {
-  if (!oandaApiToken) {
-    throw new Error('Set OANDA_API_TOKEN before starting the server.');
-  }
-
-  const headers = { Authorization: `Bearer ${oandaApiToken}` };
-  const candleResponse = await fetch(`${oandaApiUrl}/v3/instruments/XAU_USD/candles?granularity=M5&count=120&price=M`, {
-    headers,
-    signal: AbortSignal.timeout(10000)
-  });
-  const candlePayload = await candleResponse.json();
-  if (!candleResponse.ok || !Array.isArray(candlePayload.candles)) {
-    throw new Error(candlePayload.errorMessage || 'OANDA did not return XAU/USD candles.');
-  }
-
-  const candles = candlePayload.candles.filter((candle) => candle.complete && candle.mid).map((candle) => ({
-    time: Date.parse(candle.time),
-    open: Number(candle.mid.o),
-    high: Number(candle.mid.h),
-    low: Number(candle.mid.l),
-    close: Number(candle.mid.c),
-    volume: Number(candle.volume)
-  }));
-  if (candles.length < 21) throw new Error('OANDA returned insufficient XAU/USD candle history.');
-
-  let price = candles.at(-1).close;
-  let marketTime = candles.at(-1).time;
-  if (oandaAccountId) {
-    const pricingResponse = await fetch(`${oandaApiUrl}/v3/accounts/${encodeURIComponent(oandaAccountId)}/pricing?instruments=XAU_USD`, {
-      headers,
-      signal: AbortSignal.timeout(10000)
-    });
-    const pricingPayload = await pricingResponse.json();
-    const priceData = pricingPayload.prices?.[0];
-    if (pricingResponse.ok && priceData) {
-      price = (Number(priceData.bids?.[0]?.price || price) + Number(priceData.asks?.[0]?.price || price)) / 2;
-      marketTime = Date.parse(priceData.time) || marketTime;
-    }
-  }
-
-  return { price, previousClose: candles.at(-2).close, marketTime, bars: candles };
-}
-
 async function handleStockApi(req, res, reqUrl) {
   if (req.method !== 'GET') {
     sendJson(res, 405, { success: false, message: 'Method not allowed.' });
@@ -223,23 +177,6 @@ async function handleStockApi(req, res, reqUrl) {
   }
 
   try {
-    if (symbol === 'GC=F') {
-      const oandaQuote = await fetchOandaQuote();
-      sendJson(res, 200, {
-        success: true,
-        symbol: 'XAU',
-        name: stocks[symbol],
-        currency: 'USD',
-        exchange: 'OANDA',
-        price: oandaQuote.price,
-        previousClose: oandaQuote.previousClose,
-        marketTime: oandaQuote.marketTime,
-        bars: oandaQuote.bars,
-        source: 'OANDA XAU/USD feed'
-      });
-      return;
-    }
-
     const upstreamUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?range=5d&interval=5m`;
     const upstream = await fetch(upstreamUrl, {
       headers: { 'User-Agent': 'Mozilla/5.0 BusyBagzStockDashboard/1.0' },
@@ -284,9 +221,7 @@ async function handleStockApi(req, res, reqUrl) {
   } catch (error) {
     sendJson(res, 502, {
       success: false,
-      message: symbol === 'GC=F'
-        ? `OANDA feed unavailable: ${error.message}`
-        : error.name === 'TimeoutError'
+      message: error.name === 'TimeoutError'
         ? 'The free quote source took too long to respond.'
         : 'Could not load market data. Please try again shortly.'
     });
