@@ -258,7 +258,7 @@
     document.getElementById('quote-volume').textContent = latest?.volume ? compactFormat.format(latest.volume) : '--';
     chartEmpty.hidden = true;
     chart.hidden = false;
-    chart.setAttribute('aria-label', `${payload.name} daily closing prices over ${state.range === '1m' ? 'one month' : 'three months'}`);
+    chart.setAttribute('aria-label', `${payload.name} five-minute closing prices over the latest trading sessions`);
     drawChart();
     renderPlan();
   }
@@ -350,6 +350,9 @@
   });
   window.addEventListener('resize', drawChart);
   if ('ResizeObserver' in window) new ResizeObserver(drawChart).observe(chart.parentElement);
+  window.setInterval(() => {
+    if (!state.loading) loadStock(state.symbol, true);
+  }, 300000);
 
   loadStock();
   watchList.querySelectorAll('[data-symbol]').forEach((item) => {

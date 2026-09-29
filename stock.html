@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ASX Gold Stocks | BusyBagz</title>
-  <meta name="description" content="Track selected ASX gold stocks with free delayed market data and transparent ATR-based take-profit and stop levels.">
+  <meta name="description" content="Track selected markets with free delayed five-minute data and transparent ATR-based take-profit and stop levels.">
   <link rel="canonical" href="https://busybagz.com/stock">
   <meta name="robots" content="index, follow">
   <link rel="stylesheet" href="css/styles.css">
@@ -91,10 +91,10 @@
           </div>
 
           <div class="chart-toolbar">
-            <div class="chart-legend"><span aria-hidden="true"></span> Daily close</div>
+            <div class="chart-legend"><span aria-hidden="true"></span> 5-minute close</div>
             <div class="range-tabs" role="group" aria-label="Chart period">
-              <button type="button" data-range="1m" aria-pressed="false">1M</button>
-              <button type="button" data-range="3m" aria-pressed="true">3M</button>
+              <button type="button" data-range="1m" aria-pressed="false">22 bars</button>
+              <button type="button" data-range="3m" aria-pressed="true">5 days</button>
             </div>
           </div>
           <div class="chart-wrap">
@@ -102,9 +102,9 @@
             <p class="chart-empty" id="chart-empty" hidden></p>
           </div>
           <div class="quote-stats" aria-label="Recent trading statistics">
-            <div><span>14-day ATR</span><strong id="atr-value">--</strong></div>
+            <div><span>14-bar ATR</span><strong id="atr-value">--</strong></div>
             <div><span>Period low</span><strong id="period-low">--</strong></div>
-            <div><span>20-session breakout</span><strong id="breakout-value">--</strong></div>
+            <div><span>20-bar breakout</span><strong id="breakout-value">--</strong></div>
             <div><span>Volume</span><strong id="quote-volume">--</strong></div>
           </div>
         </section>
@@ -115,13 +115,13 @@
               <p class="panel-kicker">Aggressive setup</p>
               <h2 id="plan-title">Momentum breakout plan</h2>
             </div>
-            <span class="plan-method">20-session breakout</span>
+            <span class="plan-method">20-bar breakout · 5m</span>
           </div>
           <div class="plan-levels">
             <article class="level level-entry">
               <span class="level-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 17 17 5M7 5h10v10"/></svg></span>
               <div><span class="level-label">Start / entry trigger</span><strong id="start-price">--</strong></div>
-              <small>Break above prior 20-session high</small>
+              <small>Break above prior 20-bar high</small>
             </article>
             <article class="level level-stop">
               <span class="level-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 7h14M5 12h9M5 17h4"/><path d="m17 14 3 3-3 3"/></svg></span>
@@ -134,7 +134,7 @@
               <small id="target-distance">2× ATR above entry</small>
             </article>
           </div>
-          <p class="entry-help">Start only on a breakout with session volume at least 1.5× the 20-session average. Stop = 1× ATR; target = 2× ATR.</p>
+          <p class="entry-help">Start only on a breakout with volume at least 1.5× the 20-bar average. Stop = 1× ATR; target = 2× ATR.</p>
           <p class="plan-status" id="plan-status" role="status">Loading breakout conditions...</p>
           <div class="plan-actions">
             <button class="plan-action plan-action-primary" id="mark-entry" type="button" hidden>Mark entry taken</button>
