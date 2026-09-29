@@ -157,9 +157,14 @@ function sendJson(res, statusCode, payload) {
 }
 
 async function fetchMt5Quote() {
-  const response = await fetch(`${mt5BridgeUrl}/quote?symbol=XAUUSD`, {
-    signal: AbortSignal.timeout(5000)
-  });
+  let response;
+  try {
+    response = await fetch(`${mt5BridgeUrl}/quote?symbol=XAUUSD`, {
+      signal: AbortSignal.timeout(5000)
+    });
+  } catch {
+    throw new Error('Start the Exness MT5 bridge first: install Python, then run "python mt5-bridge.py".');
+  }
   const payload = await response.json();
   if (!response.ok || !payload.success) {
     throw new Error(payload.message || 'The Exness MT5 bridge is unavailable.');
