@@ -8,7 +8,7 @@
   const chartEmpty = document.getElementById('chart-empty');
   const numberFormat = new Intl.NumberFormat('en-AU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const compactFormat = new Intl.NumberFormat('en-AU', { notation: 'compact', maximumFractionDigits: 1 });
-  const state = { symbol: 'NST.AX', payload: null, range: '3m', loading: false, currentSetup: null };
+  const state = { symbol: 'NST.AX', payload: null, range: '3m', loading: false, currentSetup: null, exitRefreshPending: false };
   const quoteCache = new Map();
   const pendingQuotes = new Map();
   let trackedPositions = {};
@@ -25,6 +25,17 @@
     } catch {
       return;
     }
+  }
+
+  function refreshSetupAfterExit() {
+    if (state.exitRefreshPending) return;
+    state.exitRefreshPending = true;
+    delete trackedPositions[state.symbol];
+    saveTrackedPositions();
+    window.setTimeout(() => {
+      state.exitRefreshPending = false;
+      loadStock(state.symbol, true);
+    }, 0);
   }
 
   const money = (value) => Number.isFinite(value) ? `A$${numberFormat.format(value)}` : '--';
@@ -189,11 +200,13 @@
         planStatus.textContent = `STOP LOSS HIT · Price is at or below ${money(activePosition.stop)}. The tracked setup is closed.`;
         planStatus.classList.add('is-alert');
         saveTrackedPositions();
+        refreshSetupAfterExit();
       } else if (activePosition.status === 'target' || current >= activePosition.target) {
         activePosition.status = 'target';
         planStatus.textContent = `TAKE-PROFIT HIT · Price is at or above ${money(activePosition.target)}. The tracked setup reached its target.`;
         planStatus.classList.add('is-target');
         saveTrackedPositions();
+        refreshSetupAfterExit();
       } else {
         planStatus.textContent = `POSITION ACTIVE · Current ${money(current)}. Stop ${money(activePosition.stop)}; take-profit ${money(activePosition.target)}.`;
       }
