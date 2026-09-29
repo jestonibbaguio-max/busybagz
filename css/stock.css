@@ -115,6 +115,7 @@ body.stock-page::before { display: none; }
 .manual-price-panel label { color: var(--stock-ink); font-size: 0.7rem; font-weight: 800; }
 .manual-price-controls { display: flex; flex-wrap: wrap; gap: 8px; }
 .manual-price-controls input { width: 150px; min-height: 34px; padding: 0 9px; border: 1px solid var(--stock-line); border-radius: 4px; color: var(--stock-ink); font: inherit; font-size: 0.75rem; }
+.manual-price-controls select { min-height: 34px; padding: 0 8px; border: 1px solid var(--stock-line); border-radius: 4px; background: white; color: var(--stock-ink); font: inherit; font-size: 0.75rem; }
 .manual-price-panel small { color: var(--stock-muted); font-size: 0.65rem; }
 .plan-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 .plan-action { min-height: 34px; padding: 0 11px; border: 1px solid var(--stock-line); border-radius: 4px; color: var(--stock-ink); font-size: 0.7rem; font-weight: 800; }

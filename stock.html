@@ -145,6 +145,14 @@
             <label for="exness-price">Current Exness XAUUSD price</label>
             <div class="manual-price-controls">
               <input id="exness-price" type="number" min="0" step="0.001" inputmode="decimal" placeholder="4155.895">
+              <select id="recalculation-minutes" aria-label="Recalculation delay">
+                <option value="5" selected>5 min</option>
+                <option value="10">10 min</option>
+                <option value="15">15 min</option>
+                <option value="20">20 min</option>
+                <option value="25">25 min</option>
+                <option value="30">30 min</option>
+              </select>
               <button class="plan-action plan-action-primary" id="calculate-exness" type="button">Calculate in 5 min</button>
             </div>
             <small id="exness-countdown" role="status">Enter the current Exness price to begin.</small>

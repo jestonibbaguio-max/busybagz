@@ -8,10 +8,11 @@
   const chartEmpty = document.getElementById('chart-empty');
   const exnessPriceInput = document.getElementById('exness-price');
   const calculateExnessButton = document.getElementById('calculate-exness');
+  const recalculationMinutesSelect = document.getElementById('recalculation-minutes');
   const exnessCountdown = document.getElementById('exness-countdown');
   const numberFormat = new Intl.NumberFormat('en-AU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const compactFormat = new Intl.NumberFormat('en-AU', { notation: 'compact', maximumFractionDigits: 1 });
-  const state = { symbol: 'GC=F', direction: 'buy', payload: null, range: '3m', loading: false, currentSetup: null, exitRefreshPending: false, manualPrice: null, manualPriceReady: false, recalculationAt: null };
+  const state = { symbol: 'GC=F', direction: 'buy', range: '3m', loading: false, currentSetup: null, exitRefreshPending: false, manualPrice: null, manualPriceReady: false, recalculationAt: null, recalculationMinutes: 5 };
   const quoteCache = new Map();
   const pendingQuotes = new Map();
   let trackedPositions = {};
@@ -405,6 +406,10 @@
     loadStock(button.dataset.symbol);
   });
   refreshButton.addEventListener('click', () => loadStock(state.symbol, true));
+  recalculationMinutesSelect.addEventListener('change', () => {
+    state.recalculationMinutes = Number(recalculationMinutesSelect.value);
+    calculateExnessButton.textContent = `Calculate in ${state.recalculationMinutes} min`;
+  });
   document.querySelectorAll('.level-price').forEach((button) => {
     button.addEventListener('click', () => copyLevelPrice(button));
   });
@@ -424,7 +429,7 @@
     }
     state.manualPrice = price;
     state.manualPriceReady = false;
-    state.recalculationAt = Date.now() + 300000;
+    state.recalculationAt = Date.now() + (state.recalculationMinutes * 60000);
     calculateExnessButton.disabled = true;
     updateExnessCountdown();
   });
