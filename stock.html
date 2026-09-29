@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASX Gold Stocks | BusyBagz</title>
+  <meta name="description" content="Track selected ASX gold stocks with free delayed market data and transparent ATR-based take-profit and stop levels.">
+  <link rel="canonical" href="https://busybagz.com/stock">
+  <meta name="robots" content="index, follow">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/stock.css">
+</head>
+<body class="stock-page">
+  <main class="stock-shell">
+    <nav class="stock-breadcrumb" aria-label="Breadcrumb">
+      <a href="/">BusyBagz</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">ASX gold stocks</span>
+    </nav>
+
+    <header class="stock-heading">
+      <div>
+        <p class="stock-eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span> ASX / GOLD</p>
+        <h1>Gold stocks,<br><span>with a plan.</span></h1>
+        <p class="stock-intro">Track Australian gold miners and map risk levels from recent price movement.</p>
+      </div>
+      <div class="market-stamp" aria-label="Data source and market">
+        <span class="stamp-dot" aria-hidden="true"></span>
+        <span>ASX market data</span>
+        <span class="stamp-divider" aria-hidden="true"></span>
+        <span>Delayed</span>
+      </div>
+    </header>
+
+    <section class="stock-workspace" aria-label="Australian gold stock dashboard">
+      <aside class="watch-panel" aria-labelledby="watch-title">
+        <div class="panel-heading">
+          <div>
+            <p class="panel-kicker">Coverage</p>
+            <h2 id="watch-title">Gold watch</h2>
+          </div>
+          <span class="watch-count">05</span>
+        </div>
+        <div class="watch-list" id="watch-list" role="list" aria-label="ASX gold stocks">
+          <button class="watch-item is-selected" type="button" data-symbol="NST.AX" aria-pressed="true">
+            <span class="watch-company"><strong>NST</strong><small>Northern Star</small></span>
+            <span class="watch-quote"><strong data-watch-price>--</strong><small data-watch-change>Loading</small></span>
+          </button>
+          <button class="watch-item" type="button" data-symbol="EVN.AX" aria-pressed="false">
+            <span class="watch-company"><strong>EVN</strong><small>Evolution Mining</small></span>
+            <span class="watch-quote"><strong data-watch-price>--</strong><small data-watch-change>--</small></span>
+          </button>
+          <button class="watch-item" type="button" data-symbol="WGX.AX" aria-pressed="false">
+            <span class="watch-company"><strong>WGX</strong><small>Westgold Resources</small></span>
+            <span class="watch-quote"><strong data-watch-price>--</strong><small data-watch-change>--</small></span>
+          </button>
+          <button class="watch-item" type="button" data-symbol="BGL.AX" aria-pressed="false">
+            <span class="watch-company"><strong>BGL</strong><small>Bellevue Gold</small></span>
+            <span class="watch-quote"><strong data-watch-price>--</strong><small data-watch-change>--</small></span>
+          </button>
+          <button class="watch-item" type="button" data-symbol="NEM.AX" aria-pressed="false">
+            <span class="watch-company"><strong>NEM</strong><small>Newmont</small></span>
+            <span class="watch-quote"><strong data-watch-price>--</strong><small data-watch-change>--</small></span>
+          </button>
+        </div>
+        <p class="watch-footnote">ASX-listed producers · Prices in AUD</p>
+      </aside>
+
+      <div class="stock-main-column">
+        <section class="quote-panel" aria-labelledby="quote-name">
+          <div class="quote-topline">
+            <div>
+              <p class="panel-kicker" id="quote-symbol">NST.AX <span>· ASX</span></p>
+              <h2 id="quote-name">Northern Star Resources</h2>
+            </div>
+            <button class="refresh-button" id="refresh-stock" type="button" aria-label="Refresh market data" title="Refresh market data">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5.7 9A7 7 0 0 1 18 6.5L20 12M4 12l2 5.5A7 7 0 0 0 18.3 15"/></svg>
+            </button>
+          </div>
+          <div class="price-line">
+            <p class="quote-price" id="quote-price" aria-live="polite">--</p>
+            <span class="quote-change" id="quote-change">Waiting for quote</span>
+          </div>
+          <div class="quote-meta">
+            <span id="market-time">Loading market data...</span>
+            <span>Source: <a href="https://finance.yahoo.com/" target="_blank" rel="noopener noreferrer">Yahoo Finance</a></span>
+          </div>
+
+          <div class="chart-toolbar">
+            <div class="chart-legend"><span aria-hidden="true"></span> Daily close</div>
+            <div class="range-tabs" role="group" aria-label="Chart period">
+              <button type="button" data-range="1m" aria-pressed="false">1M</button>
+              <button type="button" data-range="3m" aria-pressed="true">3M</button>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="price-chart" role="img" aria-label="Daily closing price chart"></canvas>
+            <p class="chart-empty" id="chart-empty" hidden></p>
+          </div>
+          <div class="quote-stats" aria-label="Recent trading statistics">
+            <div><span>14-day ATR</span><strong id="atr-value">--</strong></div>
+            <div><span>Period low</span><strong id="period-low">--</strong></div>
+            <div><span>20-session breakout</span><strong id="breakout-value">--</strong></div>
+            <div><span>Volume</span><strong id="quote-volume">--</strong></div>
+          </div>
+        </section>
+
+        <section class="plan-panel" aria-labelledby="plan-title">
+          <div class="plan-heading">
+            <div>
+              <p class="panel-kicker">Aggressive setup</p>
+              <h2 id="plan-title">Momentum breakout plan</h2>
+            </div>
+            <span class="plan-method">20-session breakout</span>
+          </div>
+          <div class="plan-levels">
+            <article class="level level-entry">
+              <span class="level-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 17 17 5M7 5h10v10"/></svg></span>
+              <div><span class="level-label">Start / entry trigger</span><strong id="start-price">--</strong></div>
+              <small>Break above prior 20-session high</small>
+            </article>
+            <article class="level level-stop">
+              <span class="level-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 7h14M5 12h9M5 17h4"/><path d="m17 14 3 3-3 3"/></svg></span>
+              <div><span class="level-label">Stop loss</span><strong id="stop-price">--</strong></div>
+              <small id="stop-distance">1× ATR below entry</small>
+            </article>
+            <article class="level level-target">
+              <span class="level-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 17h14M5 12h9M5 7h4"/><path d="m17 4 3 3-3 3"/></svg></span>
+              <div><span class="level-label">Take-profit target</span><strong id="target-price">--</strong></div>
+              <small id="target-distance">2× ATR above entry</small>
+            </article>
+          </div>
+          <p class="entry-help">Start only on a breakout with session volume at least 1.5× the 20-session average. Stop = 1× ATR; target = 2× ATR.</p>
+          <p class="plan-status" id="plan-status" role="status">Loading breakout conditions...</p>
+          <div class="plan-actions">
+            <button class="plan-action plan-action-primary" id="mark-entry" type="button" hidden>Mark entry taken</button>
+            <button class="plan-action" id="clear-position" type="button" hidden>Clear tracked position</button>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <footer class="stock-disclaimer">
+      <strong>Market data can be delayed.</strong> Levels are illustrative calculations from historical volatility, not personalized investment advice or a recommendation to buy or sell. Prices can move through stops, and losses may exceed the planned risk. Verify quotes and consider your own circumstances before trading.
+    </footer>
+  </main>
+  <script src="js/site-shell.js"></script>
+  <script src="js/stock.js"></script>
+</body>
+</html>

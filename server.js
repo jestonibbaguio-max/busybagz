@@ -155,6 +155,78 @@ function sendJson(res, statusCode, payload) {
   res.end(JSON.stringify(payload));
 }
 
+async function handleStockApi(req, res, reqUrl) {
+  if (req.method !== 'GET') {
+    sendJson(res, 405, { success: false, message: 'Method not allowed.' });
+    return;
+  }
+
+  const stocks = {
+    'NST.AX': 'Northern Star Resources',
+    'EVN.AX': 'Evolution Mining',
+    'WGX.AX': 'Westgold Resources',
+    'BGL.AX': 'Bellevue Gold',
+    'NEM.AX': 'Newmont Corporation'
+  };
+  const symbol = reqUrl.searchParams.get('symbol') || 'NST.AX';
+
+  if (!Object.hasOwn(stocks, symbol)) {
+    sendJson(res, 400, { success: false, message: 'Choose a supported ASX gold stock.' });
+    return;
+  }
+
+  try {
+    const upstreamUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?range=3mo&interval=1d`;
+    const upstream = await fetch(upstreamUrl, {
+      headers: { 'User-Agent': 'Mozilla/5.0 BusyBagzStockDashboard/1.0' },
+      signal: AbortSignal.timeout(10000)
+    });
+
+    if (!upstream.ok) {
+      sendJson(res, 502, { success: false, message: 'The free quote source is temporarily unavailable.' });
+      return;
+    }
+
+    const payload = await upstream.json();
+    const result = payload.chart?.result?.[0];
+    const quote = result?.indicators?.quote?.[0];
+
+    if (!result || !quote) {
+      sendJson(res, 502, { success: false, message: 'No market data was returned for this ticker.' });
+      return;
+    }
+
+    const bars = result.timestamp.map((time, index) => ({
+      time: time * 1000,
+      open: quote.open[index],
+      high: quote.high[index],
+      low: quote.low[index],
+      close: quote.close[index],
+      volume: quote.volume[index]
+    })).filter((bar) => Number.isFinite(bar.close) && Number.isFinite(bar.high) && Number.isFinite(bar.low));
+
+    sendJson(res, 200, {
+      success: true,
+      symbol,
+      name: stocks[symbol],
+      currency: result.meta.currency || 'AUD',
+      exchange: result.meta.exchangeName || 'ASX',
+      price: result.meta.regularMarketPrice,
+      previousClose: result.meta.chartPreviousClose,
+      marketTime: result.meta.regularMarketTime ? result.meta.regularMarketTime * 1000 : null,
+      bars,
+      source: 'Yahoo Finance chart data'
+    });
+  } catch (error) {
+    sendJson(res, 502, {
+      success: false,
+      message: error.name === 'TimeoutError'
+        ? 'The free quote source took too long to respond.'
+        : 'Could not load market data. Please try again shortly.'
+    });
+  }
+}
+
 function handleReviewerApi(req, res) {
   if (req.method === 'GET') {
     const reviews = readReviews().sort((a, b) => Number(b.id) - Number(a.id));
@@ -505,6 +577,11 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  if (pathname === '/api/stock') {
+    handleStockApi(req, res, reqUrl);
+    return;
+  }
+
   if (pathname === '/api/courts/haniyyah') {
     handleHaniyyahCourtsApi(req, res);
     return;
@@ -539,6 +616,10 @@ const server = http.createServer((req, res) => {
 
   if (safePath === '/') {
     safePath = '/index.html';
+  }
+
+  if (safePath === '/stock' || safePath === '/stock/') {
+    safePath = '/stock.html';
   }
 
   if (safePath === '/reviewer' || safePath === '/reviewer/') {
