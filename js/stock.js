@@ -6,9 +6,12 @@
   const chart = document.getElementById('price-chart');
   const context = chart.getContext('2d');
   const chartEmpty = document.getElementById('chart-empty');
+  const exnessPriceInput = document.getElementById('exness-price');
+  const calculateExnessButton = document.getElementById('calculate-exness');
+  const exnessCountdown = document.getElementById('exness-countdown');
   const numberFormat = new Intl.NumberFormat('en-AU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const compactFormat = new Intl.NumberFormat('en-AU', { notation: 'compact', maximumFractionDigits: 1 });
-  const state = { symbol: 'GC=F', payload: null, range: '3m', loading: false, currentSetup: null, exitRefreshPending: false };
+  const state = { symbol: 'GC=F', payload: null, range: '3m', loading: false, currentSetup: null, exitRefreshPending: false, manualPrice: null, manualPriceReady: false, recalculationAt: null };
   const quoteCache = new Map();
   const pendingQuotes = new Map();
   let trackedPositions = {};
@@ -47,6 +50,24 @@
     return `${currency === 'USD' ? 'US$' : 'A$'}${value.toFixed(2)}`;
   };
   const pct = (value) => `${value > 0 ? '+' : ''}${value.toFixed(2)}%`;
+
+  function updateExnessCountdown() {
+    if (!state.recalculationAt) return;
+    const remaining = Math.max(0, state.recalculationAt - Date.now());
+    if (!remaining) {
+      state.recalculationAt = null;
+      state.manualPriceReady = true;
+      calculateExnessButton.disabled = false;
+      exnessCountdown.textContent = 'Refreshing five-minute data...';
+      loadStock(state.symbol, true);
+      return;
+    }
+
+    const totalSeconds = Math.ceil(remaining / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = String(totalSeconds % 60).padStart(2, '0');
+    exnessCountdown.textContent = `Recalculating in ${minutes}:${seconds}`;
+  }
 
   function calculateAtr(bars) {
     const recent = bars.slice(-15);
@@ -159,9 +180,11 @@
     const bars = state.payload.bars;
     const atr = calculateAtr(bars);
     const breakout = calculateBreakout(bars);
-    const current = Number.isFinite(state.payload.price) ? state.payload.price : bars.at(-1)?.close;
+    const current = state.manualPriceReady && Number.isFinite(state.manualPrice)
+      ? state.manualPrice
+      : (Number.isFinite(state.payload.price) ? state.payload.price : bars.at(-1)?.close);
     const latestVolume = bars.at(-1)?.volume;
-    const entry = breakout?.trigger;
+    const entry = state.manualPriceReady && Number.isFinite(state.manualPrice) ? state.manualPrice : breakout?.trigger;
     const stopElement = document.getElementById('stop-price');
     const targetElement = document.getElementById('target-price');
     const stopDistance = document.getElementById('stop-distance');
@@ -177,7 +200,7 @@
     document.getElementById('start-price').textContent = levelMoney(entry);
     planStatus.className = 'plan-status';
 
-    if (!Number.isFinite(entry) || entry <= 0 || !Number.isFinite(atr) || !breakout.averageVolume) {
+    if (!Number.isFinite(entry) || entry <= 0 || !Number.isFinite(atr) || !breakout?.averageVolume) {
       document.getElementById('start-price').textContent = '--';
       stopElement.textContent = '--';
       targetElement.textContent = '--';
@@ -199,6 +222,11 @@
     targetDistance.textContent = `${targetReward.toFixed(2)}% above entry · 2× ATR`;
     const volumeRatio = Number.isFinite(latestVolume) ? latestVolume / breakout.averageVolume : 0;
     state.currentSetup = { entry, stop: calculatedStop, target: calculatedTarget };
+
+    if (state.recalculationAt) {
+      planStatus.textContent = `EXNESS PRICE CAPTURED · Using ${levelMoney(state.manualPrice)} as the entry basis.`;
+      return;
+    }
 
     if (activePosition) {
       clearPositionButton.hidden = false;
@@ -334,6 +362,19 @@
     loadStock(button.dataset.symbol);
   });
   refreshButton.addEventListener('click', () => loadStock(state.symbol, true));
+  calculateExnessButton.addEventListener('click', () => {
+    const price = Number(exnessPriceInput.value);
+    if (!Number.isFinite(price) || price <= 0) {
+      exnessCountdown.textContent = 'Enter a valid Exness XAUUSD price.';
+      exnessPriceInput.focus();
+      return;
+    }
+    state.manualPrice = price;
+    state.manualPriceReady = false;
+    state.recalculationAt = Date.now() + 300000;
+    calculateExnessButton.disabled = true;
+    updateExnessCountdown();
+  });
   markEntryButton.addEventListener('click', () => {
     if (!state.currentSetup) return;
     trackedPositions[state.symbol] = state.currentSetup;
@@ -354,6 +395,7 @@
   });
   window.addEventListener('resize', drawChart);
   if ('ResizeObserver' in window) new ResizeObserver(drawChart).observe(chart.parentElement);
+  window.setInterval(updateExnessCountdown, 1000);
   window.setInterval(() => {
     if (!state.loading) loadStock(state.symbol, true);
   }, 300000);
