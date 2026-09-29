@@ -98,9 +98,6 @@ body.stock-page::before { display: none; }
 .level-icon svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .level > div { display: grid; gap: 3px; min-width: 0; }
 .level-label { color: var(--stock-muted); font-size: 0.65rem; font-weight: 700; }
-.level-price { display: block; margin: 0; padding: 0; border: 0; background: transparent; color: var(--stock-ink); font: inherit; font-size: 1.04rem; font-weight: 800; font-variant-numeric: tabular-nums; text-align: left; cursor: copy; }
-.level-price:hover { color: var(--stock-green); }
-.level-price.is-copied { color: var(--stock-green); }
 .level-currency, .level-amount { display: block; }
 .level-currency { color: var(--stock-muted); font-size: 0.62rem; line-height: 1; }
 .level-amount { margin-top: 3px; }

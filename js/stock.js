@@ -48,43 +48,11 @@
   };
   function setLevelMoney(element, value, currency = state.payload?.currency || 'AUD') {
     if (!Number.isFinite(value)) {
-      delete element.dataset.copyValue;
       element.textContent = '--';
       return;
     }
     const currencyLabel = currency === 'USD' ? 'US$' : 'A$';
-    element.dataset.copyValue = `${currencyLabel} ${value.toFixed(2)}`;
     element.innerHTML = `<span class="level-currency">${currencyLabel}</span><span class="level-amount">${value.toFixed(2)}</span>`;
-  }
-
-  async function copyLevelPrice(button) {
-    const value = button.dataset.copyValue;
-    if (!value) return;
-
-    try {
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(value);
-      } else {
-        const fallback = document.createElement('textarea');
-        fallback.value = value;
-        fallback.setAttribute('readonly', '');
-        fallback.style.position = 'fixed';
-        fallback.style.opacity = '0';
-        document.body.appendChild(fallback);
-        fallback.select();
-        document.execCommand('copy');
-        fallback.remove();
-      }
-      const originalLabel = button.getAttribute('aria-label');
-      button.setAttribute('aria-label', `${value} copied`);
-      button.classList.add('is-copied');
-      window.setTimeout(() => {
-        button.setAttribute('aria-label', originalLabel);
-        button.classList.remove('is-copied');
-      }, 1200);
-    } catch {
-      button.setAttribute('aria-label', 'Copy failed; select the value manually');
-    }
   }
   const pct = (value) => `${value > 0 ? '+' : ''}${value.toFixed(2)}%`;
 
@@ -409,9 +377,6 @@
   recalculationMinutesSelect.addEventListener('change', () => {
     state.recalculationMinutes = Number(recalculationMinutesSelect.value);
     calculateExnessButton.textContent = `Calculate in ${state.recalculationMinutes} min`;
-  });
-  document.querySelectorAll('.level-price').forEach((button) => {
-    button.addEventListener('click', () => copyLevelPrice(button));
   });
   document.querySelector('.trade-direction').addEventListener('click', (event) => {
     const button = event.target.closest('[data-direction]');
