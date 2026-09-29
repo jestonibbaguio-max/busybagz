@@ -11,7 +11,9 @@ const haniyyahCourtsCsvPath = path.join(dataDir, 'court-haniyyah.csv');
 const haniyyahReceiptsDir = path.join(rootDir, 'uploads', 'haniyyah-receipts');
 const haniyyahQrDir = path.join(rootDir, 'uploads', 'haniyyah-qr');
 const haniyyahQrConfigPath = path.join(dataDir, 'court-haniyyah-qr.json');
-const mt5BridgeUrl = process.env.MT5_BRIDGE_URL || 'http://127.0.0.1:5001';
+const oandaApiUrl = process.env.OANDA_API_URL || 'https://api-fxpractice.oanda.com';
+const oandaApiToken = process.env.OANDA_API_TOKEN;
+const oandaAccountId = process.env.OANDA_ACCOUNT_ID;
 
 const mimeTypes = {
   '.html': 'text/html; charset=utf-8',
@@ -156,20 +158,47 @@ function sendJson(res, statusCode, payload) {
   res.end(JSON.stringify(payload));
 }
 
-async function fetchMt5Quote() {
-  let response;
-  try {
-    response = await fetch(`${mt5BridgeUrl}/quote?symbol=XAUUSD`, {
-      signal: AbortSignal.timeout(5000)
+async function fetchOandaQuote() {
+  if (!oandaApiToken) {
+    throw new Error('Set OANDA_API_TOKEN before starting the server.');
+  }
+
+  const headers = { Authorization: `Bearer ${oandaApiToken}` };
+  const candleResponse = await fetch(`${oandaApiUrl}/v3/instruments/XAU_USD/candles?granularity=M5&count=120&price=M`, {
+    headers,
+    signal: AbortSignal.timeout(10000)
+  });
+  const candlePayload = await candleResponse.json();
+  if (!candleResponse.ok || !Array.isArray(candlePayload.candles)) {
+    throw new Error(candlePayload.errorMessage || 'OANDA did not return XAU/USD candles.');
+  }
+
+  const candles = candlePayload.candles.filter((candle) => candle.complete && candle.mid).map((candle) => ({
+    time: Date.parse(candle.time),
+    open: Number(candle.mid.o),
+    high: Number(candle.mid.h),
+    low: Number(candle.mid.l),
+    close: Number(candle.mid.c),
+    volume: Number(candle.volume)
+  }));
+  if (candles.length < 21) throw new Error('OANDA returned insufficient XAU/USD candle history.');
+
+  let price = candles.at(-1).close;
+  let marketTime = candles.at(-1).time;
+  if (oandaAccountId) {
+    const pricingResponse = await fetch(`${oandaApiUrl}/v3/accounts/${encodeURIComponent(oandaAccountId)}/pricing?instruments=XAU_USD`, {
+      headers,
+      signal: AbortSignal.timeout(10000)
     });
-  } catch {
-    throw new Error('Start the Exness MT5 bridge first: install Python, then run "python mt5-bridge.py".');
+    const pricingPayload = await pricingResponse.json();
+    const priceData = pricingPayload.prices?.[0];
+    if (pricingResponse.ok && priceData) {
+      price = (Number(priceData.bids?.[0]?.price || price) + Number(priceData.asks?.[0]?.price || price)) / 2;
+      marketTime = Date.parse(priceData.time) || marketTime;
+    }
   }
-  const payload = await response.json();
-  if (!response.ok || !payload.success) {
-    throw new Error(payload.message || 'The Exness MT5 bridge is unavailable.');
-  }
-  return payload;
+
+  return { price, previousClose: candles.at(-2).close, marketTime, bars: candles };
 }
 
 async function handleStockApi(req, res, reqUrl) {
@@ -195,18 +224,18 @@ async function handleStockApi(req, res, reqUrl) {
 
   try {
     if (symbol === 'GC=F') {
-      const mt5Quote = await fetchMt5Quote();
+      const oandaQuote = await fetchOandaQuote();
       sendJson(res, 200, {
         success: true,
         symbol: 'XAU',
         name: stocks[symbol],
         currency: 'USD',
-        exchange: 'Exness MT5',
-        price: mt5Quote.price,
-        previousClose: mt5Quote.previousClose,
-        marketTime: mt5Quote.marketTime,
-        bars: mt5Quote.bars,
-        source: 'Exness MT5 feed'
+        exchange: 'OANDA',
+        price: oandaQuote.price,
+        previousClose: oandaQuote.previousClose,
+        marketTime: oandaQuote.marketTime,
+        bars: oandaQuote.bars,
+        source: 'OANDA XAU/USD feed'
       });
       return;
     }
@@ -256,7 +285,7 @@ async function handleStockApi(req, res, reqUrl) {
     sendJson(res, 502, {
       success: false,
       message: symbol === 'GC=F'
-        ? `Exness MT5 feed unavailable: ${error.message}`
+        ? `OANDA feed unavailable: ${error.message}`
         : error.name === 'TimeoutError'
         ? 'The free quote source took too long to respond.'
         : 'Could not load market data. Please try again shortly.'

@@ -1,23 +1,24 @@
 # BusyBagz
 
-## Exness MT5 feed
+## OANDA feed
 
-XAU uses the local MT5 bridge and the `XAUUSD` symbol from the logged-in Exness MT5 terminal.
+XAU uses OANDA's `XAU_USD` five-minute feed. This supplies analysis data; it does not place orders in Exness.
 
-1. Install Python 3 and the Exness MT5 desktop terminal on Windows.
-2. Log in to the Exness account in MT5 and confirm `XAUUSD` is visible in Market Watch.
-3. Install the bridge dependency:
-
-```powershell
-python -m pip install -r requirements.txt
-```
-
-4. Start the bridge in a separate terminal:
+1. Create an OANDA practice account and generate an API token.
+2. Set the token before starting the server:
 
 ```powershell
-python mt5-bridge.py
+$env:OANDA_API_TOKEN = 'your-practice-token'
+$env:OANDA_ACCOUNT_ID = 'your-account-id'
 ```
 
-5. Start BusyBagz with `npm start` and open `/stock.html`.
+3. Start BusyBagz with `npm start` and open `/stock.html`.
 
-The bridge reads the logged-in terminal session; credentials are not stored in this project. Set `MT5_SYMBOL` if Exness shows a broker-specific symbol such as `XAUUSDm`.
+For a live OANDA account, set the live API URL before starting the server:
+
+```powershell
+$env:OANDA_API_URL = 'https://api-fxtrade.oanda.com'
+```
+
+The account ID is optional. Without it, the app uses the latest completed five-minute candle. With it, the app also reads the current OANDA bid/ask midpoint.
+
