@@ -313,6 +313,9 @@
       renderWatchQuote(symbol, payload);
     } catch (error) {
       document.getElementById('market-time').textContent = error.message;
+      const planStatus = document.getElementById('plan-status');
+      planStatus.textContent = error.message;
+      planStatus.className = 'plan-status is-alert';
       if (!state.payload) {
         chart.hidden = true;
         chartEmpty.hidden = false;
