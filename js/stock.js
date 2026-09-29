@@ -251,6 +251,7 @@
     document.getElementById('market-time').textContent = marketDate
       ? `Last market data ${new Date(marketDate).toLocaleString('en-AU', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Australia/Sydney' })} AEST/AEDT`
       : 'Market timestamp unavailable';
+    document.getElementById('quote-source').textContent = `Source: ${payload.source || 'Market data feed'}`;
 
     const displayed = visibleBars();
     const low = Math.min(...displayed.map((bar) => bar.low));

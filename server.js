@@ -11,6 +11,7 @@ const haniyyahCourtsCsvPath = path.join(dataDir, 'court-haniyyah.csv');
 const haniyyahReceiptsDir = path.join(rootDir, 'uploads', 'haniyyah-receipts');
 const haniyyahQrDir = path.join(rootDir, 'uploads', 'haniyyah-qr');
 const haniyyahQrConfigPath = path.join(dataDir, 'court-haniyyah-qr.json');
+const mt5BridgeUrl = process.env.MT5_BRIDGE_URL || 'http://127.0.0.1:5001';
 
 const mimeTypes = {
   '.html': 'text/html; charset=utf-8',
@@ -155,6 +156,17 @@ function sendJson(res, statusCode, payload) {
   res.end(JSON.stringify(payload));
 }
 
+async function fetchMt5Quote() {
+  const response = await fetch(`${mt5BridgeUrl}/quote?symbol=XAUUSD`, {
+    signal: AbortSignal.timeout(5000)
+  });
+  const payload = await response.json();
+  if (!response.ok || !payload.success) {
+    throw new Error(payload.message || 'The Exness MT5 bridge is unavailable.');
+  }
+  return payload;
+}
+
 async function handleStockApi(req, res, reqUrl) {
   if (req.method !== 'GET') {
     sendJson(res, 405, { success: false, message: 'Method not allowed.' });
@@ -177,6 +189,23 @@ async function handleStockApi(req, res, reqUrl) {
   }
 
   try {
+    if (symbol === 'GC=F') {
+      const mt5Quote = await fetchMt5Quote();
+      sendJson(res, 200, {
+        success: true,
+        symbol: 'XAU',
+        name: stocks[symbol],
+        currency: 'USD',
+        exchange: 'Exness MT5',
+        price: mt5Quote.price,
+        previousClose: mt5Quote.previousClose,
+        marketTime: mt5Quote.marketTime,
+        bars: mt5Quote.bars,
+        source: 'Exness MT5 feed'
+      });
+      return;
+    }
+
     const upstreamUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?range=5d&interval=5m`;
     const upstream = await fetch(upstreamUrl, {
       headers: { 'User-Agent': 'Mozilla/5.0 BusyBagzStockDashboard/1.0' },
@@ -221,7 +250,9 @@ async function handleStockApi(req, res, reqUrl) {
   } catch (error) {
     sendJson(res, 502, {
       success: false,
-      message: error.name === 'TimeoutError'
+      message: symbol === 'GC=F'
+        ? `Exness MT5 feed unavailable: ${error.message}`
+        : error.name === 'TimeoutError'
         ? 'The free quote source took too long to respond.'
         : 'Could not load market data. Please try again shortly.'
     });
