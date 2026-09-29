@@ -8,11 +8,10 @@
   const chartEmpty = document.getElementById('chart-empty');
   const exnessPriceInput = document.getElementById('exness-price');
   const calculateExnessButton = document.getElementById('calculate-exness');
-  const recalculationMinutesSelect = document.getElementById('recalculation-minutes');
   const exnessCountdown = document.getElementById('exness-countdown');
   const numberFormat = new Intl.NumberFormat('en-AU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const compactFormat = new Intl.NumberFormat('en-AU', { notation: 'compact', maximumFractionDigits: 1 });
-  const state = { symbol: 'GC=F', direction: 'buy', range: '3m', loading: false, currentSetup: null, exitRefreshPending: false, manualPrice: null, manualPriceReady: false, recalculationAt: null, recalculationMinutes: 5 };
+  const state = { symbol: 'GC=F', direction: 'buy', range: '3m', loading: false, currentSetup: null, exitRefreshPending: false, manualPrice: null, manualPriceReady: false };
   const quoteCache = new Map();
   const pendingQuotes = new Map();
   let trackedPositions = {};
@@ -56,45 +55,14 @@
   }
   const pct = (value) => `${value > 0 ? '+' : ''}${value.toFixed(2)}%`;
 
-  function updateExnessCountdown() {
-    if (!state.recalculationAt) return;
-    const remaining = Math.max(0, state.recalculationAt - Date.now());
-    if (!remaining) {
-      state.recalculationAt = null;
-      state.manualPriceReady = true;
-      calculateExnessButton.disabled = false;
-      exnessCountdown.textContent = 'Refreshing five-minute data...';
-      loadStock(state.symbol, true);
-      return;
-    }
-
-    const totalSeconds = Math.ceil(remaining / 1000);
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = String(totalSeconds % 60).padStart(2, '0');
-    exnessCountdown.textContent = `Recalculating in ${minutes}:${seconds}`;
-  }
-
   function calculateAtr(bars) {
-    const recent = bars.slice(-15);
+    const recent = bars.slice(-13);
     const trueRanges = recent.slice(1).map((bar, index) => {
       const priorClose = recent[index].close;
       return Math.max(bar.high - bar.low, Math.abs(bar.high - priorClose), Math.abs(bar.low - priorClose));
     });
-    const sample = trueRanges.slice(-14);
+    const sample = trueRanges.slice(-12);
     return sample.length ? sample.reduce((sum, range) => sum + range, 0) / sample.length : NaN;
-  }
-
-  function calculateBreakout(bars) {
-    const previousSessions = bars.slice(-21, -1);
-    if (previousSessions.length < 20) return null;
-    const volumes = previousSessions.map((bar) => bar.volume).filter((volume) => Number.isFinite(volume) && volume > 0);
-    if (volumes.length < 15) return null;
-
-    return {
-      triggerHigh: Math.max(...previousSessions.map((bar) => bar.high)),
-      triggerLow: Math.min(...previousSessions.map((bar) => bar.low)),
-      averageVolume: volumes.reduce((sum, volume) => sum + volume, 0) / volumes.length
-    };
   }
 
   function visibleBars() {
@@ -185,15 +153,14 @@
     if (!state.payload) return;
     const bars = state.payload.bars;
     const atr = calculateAtr(bars);
-    const breakout = calculateBreakout(bars);
-    const current = state.manualPriceReady && Number.isFinite(state.manualPrice)
+    const hasExnessPrice = state.symbol === 'GC=F' && state.manualPriceReady && Number.isFinite(state.manualPrice);
+    const current = hasExnessPrice
       ? state.manualPrice
       : (Number.isFinite(state.payload.price) ? state.payload.price : bars.at(-1)?.close);
-    const latestVolume = bars.at(-1)?.volume;
     const isSell = state.direction === 'sell';
-    const entry = state.manualPriceReady && Number.isFinite(state.manualPrice)
-      ? state.manualPrice
-      : (isSell ? breakout?.triggerLow : breakout?.triggerHigh);
+    const entry = state.symbol === 'GC=F' && !hasExnessPrice
+      ? NaN
+      : (hasExnessPrice ? state.manualPrice : current);
     const stopElement = document.getElementById('stop-price');
     const targetElement = document.getElementById('target-price');
     const stopDistance = document.getElementById('stop-distance');
@@ -205,15 +172,17 @@
     state.currentSetup = null;
 
     document.getElementById('atr-value').textContent = money(atr);
-    document.getElementById('breakout-value').textContent = money(entry);
+    document.getElementById('breakout-value').textContent = money(Math.max(...bars.slice(-12).map((bar) => bar.high)));
     setLevelMoney(document.getElementById('start-price'), entry);
     planStatus.className = 'plan-status';
 
-    if (!Number.isFinite(entry) || entry <= 0 || !Number.isFinite(atr) || !breakout?.averageVolume) {
+    if (!Number.isFinite(entry) || entry <= 0 || !Number.isFinite(atr)) {
       document.getElementById('start-price').textContent = '--';
       stopElement.textContent = '--';
       targetElement.textContent = '--';
-      planStatus.textContent = 'Not enough recent price and volume history to calculate a breakout setup.';
+      planStatus.textContent = state.symbol === 'GC=F'
+        ? 'Enter your current Exness XAU/USD price to calculate the trade levels from Yahoo hourly data.'
+        : 'Not enough recent Yahoo hourly data to calculate the 12-hour setup.';
       return;
     }
 
@@ -229,13 +198,7 @@
     setLevelMoney(targetElement, target);
     stopDistance.textContent = `${stopRisk.toFixed(2)}% ${isSell ? 'above' : 'below'} entry · 1× ATR`;
     targetDistance.textContent = `${targetReward.toFixed(2)}% ${isSell ? 'below' : 'above'} entry · 2× ATR`;
-    const volumeRatio = Number.isFinite(latestVolume) ? latestVolume / breakout.averageVolume : 0;
     state.currentSetup = { entry, stop: calculatedStop, target: calculatedTarget, direction: state.direction };
-
-    if (state.recalculationAt) {
-      planStatus.textContent = `EXNESS PRICE CAPTURED · Using ${money(state.manualPrice)} as the entry basis.`;
-      return;
-    }
 
     if (activePosition) {
       clearPositionButton.hidden = false;
@@ -257,19 +220,9 @@
       } else {
         planStatus.textContent = `${positionIsSell ? 'SELL' : 'BUY'} POSITION ACTIVE · Current ${money(current)}. Stop ${money(activePosition.stop)}; take-profit ${money(activePosition.target)}.`;
       }
-    } else if ((!isSell && current >= target) || (isSell && current <= target)) {
-      planStatus.textContent = `TARGET PASSED · Price is already ${isSell ? 'at or below' : 'at or above'} ${money(target)}. Avoid chasing this breakout setup.`;
-      planStatus.classList.add('is-alert');
-    } else if ((!isSell && current < entry) || (isSell && current > entry)) {
-      planStatus.textContent = `WAIT · Breakout is not active. ${isSell ? 'Sell below' : 'Start above'} ${money(entry)} only with 1.5× average volume; after entry, stop at ${money(stop)} and target ${money(target)}.`;
-    } else if (((!isSell && current >= entry) || (isSell && current <= entry)) && volumeRatio >= 1.5) {
-      planStatus.textContent = `${isSell ? 'SELL' : 'START'} SIGNAL · Breakout is ${isSell ? 'below' : 'above'} ${money(entry)} with ${volumeRatio.toFixed(2)}× average volume. Planned stop ${money(stop)}; target ${money(target)}.`;
-      planStatus.classList.add('is-target');
-      markEntryButton.hidden = false;
-    } else if ((!isSell && current >= entry) || (isSell && current <= entry)) {
-      planStatus.textContent = `WAIT FOR VOLUME · Price is ${isSell ? 'below' : 'above'} ${money(entry)}, but volume is ${volumeRatio.toFixed(2)}× the 20-bar average; trigger requires 1.5×.`;
     } else {
-      planStatus.textContent = `WAIT · ${isSell ? 'Sell below' : 'Start above'} ${money(entry)} with volume at least 1.5× the 20-bar average. Current ${money(current)}.`;
+      planStatus.textContent = `${isSell ? 'SELL' : 'BUY'} LEVELS READY · Open ${money(entry)}; stop ${money(stop)}; take-profit ${money(target)}. Based on the latest 12 Yahoo hourly candles.`;
+      markEntryButton.hidden = false;
     }
   }
 
@@ -277,21 +230,29 @@
     const bars = payload.bars || [];
     const latest = bars.at(-1);
     const prior = bars.at(-2);
-    const price = Number.isFinite(payload.price) ? payload.price : latest?.close;
+    const yahooPrice = Number.isFinite(payload.price) ? payload.price : latest?.close;
+    const price = state.symbol === 'GC=F' && state.manualPriceReady && Number.isFinite(state.manualPrice)
+      ? state.manualPrice
+      : yahooPrice;
     const change = prior && price ? ((price - prior.close) / prior.close) * 100 : NaN;
 
     document.getElementById('quote-symbol').innerHTML = `${payload.symbol} <span>· ${payload.exchange}</span>`;
     document.getElementById('quote-name').textContent = payload.name;
     document.getElementById('quote-price').textContent = money(price);
     const changeElement = document.getElementById('quote-change');
-    changeElement.textContent = Number.isFinite(change) ? `${pct(change)} today` : 'Change unavailable';
+    const isExnessPrice = state.symbol === 'GC=F' && state.manualPriceReady && Number.isFinite(state.manualPrice);
+    changeElement.textContent = Number.isFinite(change)
+      ? `${pct(change)} ${isExnessPrice ? 'vs Yahoo close' : 'today'}`
+      : 'Change unavailable';
     changeElement.className = `quote-change${Number.isFinite(change) ? (change >= 0 ? ' is-up' : ' is-down') : ''}`;
 
     const marketDate = payload.marketTime || latest?.time;
     document.getElementById('market-time').textContent = marketDate
       ? `Last market data ${new Date(marketDate).toLocaleString('en-AU', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Australia/Sydney' })} AEST/AEDT`
       : 'Market timestamp unavailable';
-    document.getElementById('quote-source').textContent = `Source: ${payload.source || 'Market data feed'}`;
+    document.getElementById('quote-source').textContent = state.symbol === 'GC=F' && state.manualPriceReady
+      ? 'Current price: Exness · Volatility: Yahoo Finance'
+      : `Source: ${payload.source || 'Market data feed'}`;
 
     const displayed = visibleBars();
     const low = Math.min(...displayed.map((bar) => bar.low));
@@ -299,7 +260,7 @@
     document.getElementById('quote-volume').textContent = latest?.volume ? compactFormat.format(latest.volume) : '--';
     chartEmpty.hidden = true;
     chart.hidden = false;
-    chart.setAttribute('aria-label', `${payload.name} five-minute closing prices over the latest trading sessions`);
+    chart.setAttribute('aria-label', `${payload.name} hourly closing prices over the latest trading sessions`);
     drawChart();
     renderPlan();
   }
@@ -374,10 +335,6 @@
     loadStock(button.dataset.symbol);
   });
   refreshButton.addEventListener('click', () => loadStock(state.symbol, true));
-  recalculationMinutesSelect.addEventListener('change', () => {
-    state.recalculationMinutes = Number(recalculationMinutesSelect.value);
-    calculateExnessButton.textContent = `Calculate in ${state.recalculationMinutes} min`;
-  });
   document.querySelector('.trade-direction').addEventListener('click', (event) => {
     const button = event.target.closest('[data-direction]');
     if (!button) return;
@@ -393,10 +350,9 @@
       return;
     }
     state.manualPrice = price;
-    state.manualPriceReady = false;
-    state.recalculationAt = Date.now() + (state.recalculationMinutes * 60000);
-    calculateExnessButton.disabled = true;
-    updateExnessCountdown();
+    state.manualPriceReady = true;
+    exnessCountdown.textContent = 'Exness quote applied as the current XAU/USD and open price.';
+    if (state.payload) renderQuote(state.payload);
   });
   markEntryButton.addEventListener('click', () => {
     if (!state.currentSetup) return;
@@ -418,7 +374,6 @@
   });
   window.addEventListener('resize', drawChart);
   if ('ResizeObserver' in window) new ResizeObserver(drawChart).observe(chart.parentElement);
-  window.setInterval(updateExnessCountdown, 1000);
   window.setInterval(() => {
     if (!state.loading) loadStock(state.symbol, true);
   }, 300000);

@@ -177,7 +177,7 @@ async function handleStockApi(req, res, reqUrl) {
   }
 
   try {
-    const upstreamUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?range=5d&interval=5m`;
+    const upstreamUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?range=5d&interval=1h`;
     const upstream = await fetch(upstreamUrl, {
       headers: { 'User-Agent': 'Mozilla/5.0 BusyBagzStockDashboard/1.0' },
       signal: AbortSignal.timeout(10000)

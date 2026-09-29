@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ASX Gold Stocks | BusyBagz</title>
-  <meta name="description" content="Track selected markets with free delayed five-minute data and transparent ATR-based take-profit and stop levels.">
+  <meta name="description" content="Track selected markets with delayed hourly data and transparent 12-hour ATR-based take-profit and stop levels.">
   <link rel="canonical" href="https://busybagz.com/stock">
   <meta name="robots" content="index, follow">
   <link rel="stylesheet" href="css/styles.css">
@@ -91,20 +91,20 @@
           </div>
 
           <div class="chart-toolbar">
-            <div class="chart-legend"><span aria-hidden="true"></span> 5-minute close</div>
+            <div class="chart-legend"><span aria-hidden="true"></span> 1-hour close</div>
             <div class="range-tabs" role="group" aria-label="Chart period">
               <button type="button" data-range="1m" aria-pressed="false">22 bars</button>
               <button type="button" data-range="3m" aria-pressed="true">5 days</button>
             </div>
           </div>
           <div class="chart-wrap">
-            <canvas id="price-chart" role="img" aria-label="Daily closing price chart"></canvas>
+            <canvas id="price-chart" role="img" aria-label="Hourly closing price chart"></canvas>
             <p class="chart-empty" id="chart-empty" hidden></p>
           </div>
           <div class="quote-stats" aria-label="Recent trading statistics">
-            <div><span>14-bar ATR</span><strong id="atr-value">--</strong></div>
+            <div><span>12-hour ATR</span><strong id="atr-value">--</strong></div>
             <div><span>Period low</span><strong id="period-low">--</strong></div>
-            <div><span>20-bar breakout</span><strong id="breakout-value">--</strong></div>
+            <div><span>12-hour high</span><strong id="breakout-value">--</strong></div>
             <div><span>Volume</span><strong id="quote-volume">--</strong></div>
           </div>
         </section>
@@ -112,16 +112,16 @@
         <section class="plan-panel" aria-labelledby="plan-title">
           <div class="plan-heading">
             <div>
-              <p class="panel-kicker">Aggressive setup</p>
-              <h2 id="plan-title">Momentum breakout plan</h2>
+              <p class="panel-kicker">12-hour setup</p>
+              <h2 id="plan-title">XAU/USD trade levels</h2>
             </div>
-            <span class="plan-method">20-bar breakout · 5m</span>
+            <span class="plan-method">12 hourly candles · Yahoo</span>
           </div>
           <div class="plan-levels">
             <article class="level level-entry">
               <span class="level-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 17 17 5M7 5h10v10"/></svg></span>
-              <div><span class="level-label">Start / entry trigger</span><strong id="start-price">--</strong></div>
-              <small>Break above prior 20-bar high</small>
+              <div><span class="level-label">Open / entry price</span><strong id="start-price">--</strong></div>
+              <small>Current Exness quote</small>
             </article>
             <article class="level level-target">
               <span class="level-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 17h14M5 12h9M5 7h4"/><path d="m17 4 3 3-3 3"/></svg></span>
@@ -134,30 +134,21 @@
               <small id="stop-distance">1× ATR below entry</small>
             </article>
           </div>
-          <p class="entry-help">Start only on a breakout with volume at least 1.5× the 20-bar average. Stop = 1× ATR; target = 2× ATR.</p>
-          <p class="entry-help">Example: if Yahoo shows XAU at US$4,000 but Exness shows US$4,002, use the current Exness quote and recalculate the entry, stop loss, and target before placing the order.</p>
+          <p class="entry-help">Your Exness quote is the open / entry price. Yahoo's latest 12 hourly candles set the volatility distance: stop = 1× ATR; target = 2× ATR.</p>
           <div class="trade-direction" role="group" aria-label="Trade direction">
             <span>Direction</span>
             <button type="button" data-direction="buy" aria-pressed="true">Buy</button>
             <button type="button" data-direction="sell" aria-pressed="false">Sell</button>
           </div>
           <div class="manual-price-panel">
-            <label for="exness-price">Current Exness XAUUSD price</label>
+            <label for="exness-price">Current Exness XAU/USD price</label>
             <div class="manual-price-controls">
               <input id="exness-price" type="number" min="0" step="0.001" inputmode="decimal" placeholder="4155.895">
-              <select id="recalculation-minutes" aria-label="Recalculation delay">
-                <option value="5" selected>5 min</option>
-                <option value="10">10 min</option>
-                <option value="15">15 min</option>
-                <option value="20">20 min</option>
-                <option value="25">25 min</option>
-                <option value="30">30 min</option>
-              </select>
-              <button class="plan-action plan-action-primary" id="calculate-exness" type="button">Calculate in 5 min</button>
+              <button class="plan-action plan-action-primary" id="calculate-exness" type="button">Calculate levels</button>
             </div>
-            <small id="exness-countdown" role="status">Enter the current Exness price to begin.</small>
+            <small id="exness-countdown" role="status">Enter your Exness quote to calculate the open price, stop loss, and take-profit.</small>
           </div>
-          <p class="plan-status" id="plan-status" role="status">Loading breakout conditions...</p>
+          <p class="plan-status" id="plan-status" role="status">Loading 12-hour Yahoo data...</p>
           <div class="plan-actions">
             <button class="plan-action plan-action-primary" id="mark-entry" type="button" hidden>Mark entry taken</button>
             <button class="plan-action" id="clear-position" type="button" hidden>Clear tracked position</button>
@@ -167,7 +158,7 @@
     </section>
 
     <footer class="stock-disclaimer">
-      <strong>Market data can be delayed.</strong> Levels are illustrative calculations from historical volatility, not personalized investment advice or a recommendation to buy or sell. Prices can move through stops, and losses may exceed the planned risk. Verify quotes and consider your own circumstances before trading.
+      <strong>Market data can be delayed.</strong> XAU is represented by Yahoo Finance gold futures (GC=F), not Exness spot pricing. Levels are illustrative calculations from historical volatility, not a forecast, personalized investment advice, or a recommendation to buy or sell. Verify quotes and consider your own circumstances before trading.
     </footer>
   </main>
   <script src="js/site-shell.js"></script>
