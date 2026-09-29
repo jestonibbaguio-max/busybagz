@@ -166,12 +166,13 @@ async function handleStockApi(req, res, reqUrl) {
     'EVN.AX': 'Evolution Mining',
     'WGX.AX': 'Westgold Resources',
     'BGL.AX': 'Bellevue Gold',
-    'NEM.AX': 'Newmont Corporation'
+    'NEM.AX': 'Newmont Corporation',
+    'GC=F': 'Gold / US Dollar'
   };
   const symbol = reqUrl.searchParams.get('symbol') || 'NST.AX';
 
   if (!Object.hasOwn(stocks, symbol)) {
-    sendJson(res, 400, { success: false, message: 'Choose a supported ASX gold stock.' });
+    sendJson(res, 400, { success: false, message: 'Choose a supported market symbol.' });
     return;
   }
 
@@ -207,7 +208,7 @@ async function handleStockApi(req, res, reqUrl) {
 
     sendJson(res, 200, {
       success: true,
-      symbol,
+      symbol: symbol === 'GC=F' ? 'XAU' : symbol,
       name: stocks[symbol],
       currency: result.meta.currency || 'AUD',
       exchange: result.meta.exchangeName || 'ASX',

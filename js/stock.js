@@ -38,7 +38,10 @@
     }, 0);
   }
 
-  const money = (value) => Number.isFinite(value) ? `A$${numberFormat.format(value)}` : '--';
+  const money = (value, currency = state.payload?.currency || 'AUD') => {
+    if (!Number.isFinite(value)) return '--';
+    return `${currency === 'USD' ? 'US$' : 'A$'}${numberFormat.format(value)}`;
+  };
   const pct = (value) => `${value > 0 ? '+' : ''}${value.toFixed(2)}%`;
 
   function calculateAtr(bars) {
