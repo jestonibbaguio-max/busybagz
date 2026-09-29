@@ -99,6 +99,9 @@ body.stock-page::before { display: none; }
 .level > div { display: grid; gap: 3px; min-width: 0; }
 .level-label { color: var(--stock-muted); font-size: 0.65rem; font-weight: 700; }
 .level strong { font-size: 1.04rem; font-variant-numeric: tabular-nums; }
+.level-currency, .level-amount { display: block; }
+.level-currency { color: var(--stock-muted); font-size: 0.62rem; line-height: 1; }
+.level-amount { margin-top: 3px; }
 .level small { grid-column: 2; margin-top: 4px; color: var(--stock-muted); font-size: 0.65rem; }
 .plan-status { margin-top: 13px; color: var(--stock-muted); font-size: 0.7rem; }
 .plan-status.is-alert { color: var(--stock-red); font-weight: 800; }

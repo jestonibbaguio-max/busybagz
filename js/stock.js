@@ -45,10 +45,14 @@
     if (!Number.isFinite(value)) return '--';
     return `${currency === 'USD' ? 'US$' : 'A$'}${numberFormat.format(value)}`;
   };
-  const levelMoney = (value, currency = state.payload?.currency || 'AUD') => {
-    if (!Number.isFinite(value)) return '--';
-    return `${currency === 'USD' ? 'US$' : 'A$'}${value.toFixed(2)}`;
-  };
+  function setLevelMoney(element, value, currency = state.payload?.currency || 'AUD') {
+    if (!Number.isFinite(value)) {
+      element.textContent = '--';
+      return;
+    }
+    const currencyLabel = currency === 'USD' ? 'US$' : 'A$';
+    element.innerHTML = `<span class="level-currency">${currencyLabel}</span><span class="level-amount">${value.toFixed(2)}</span>`;
+  }
   const pct = (value) => `${value > 0 ? '+' : ''}${value.toFixed(2)}%`;
 
   function updateExnessCountdown() {
@@ -201,7 +205,7 @@
 
     document.getElementById('atr-value').textContent = money(atr);
     document.getElementById('breakout-value').textContent = money(entry);
-    document.getElementById('start-price').textContent = levelMoney(entry);
+    setLevelMoney(document.getElementById('start-price'), entry);
     planStatus.className = 'plan-status';
 
     if (!Number.isFinite(entry) || entry <= 0 || !Number.isFinite(atr) || !breakout?.averageVolume) {
@@ -219,16 +223,16 @@
     const target = activePosition?.target ?? calculatedTarget;
     const stopRisk = (Math.abs(planEntry - stop) / planEntry) * 100;
     const targetReward = (Math.abs(target - planEntry) / planEntry) * 100;
-    document.getElementById('start-price').textContent = levelMoney(planEntry);
-    stopElement.textContent = levelMoney(stop);
-    targetElement.textContent = levelMoney(target);
+    setLevelMoney(document.getElementById('start-price'), planEntry);
+    setLevelMoney(stopElement, stop);
+    setLevelMoney(targetElement, target);
     stopDistance.textContent = `${stopRisk.toFixed(2)}% ${isSell ? 'above' : 'below'} entry · 1× ATR`;
     targetDistance.textContent = `${targetReward.toFixed(2)}% ${isSell ? 'below' : 'above'} entry · 2× ATR`;
     const volumeRatio = Number.isFinite(latestVolume) ? latestVolume / breakout.averageVolume : 0;
     state.currentSetup = { entry, stop: calculatedStop, target: calculatedTarget, direction: state.direction };
 
     if (state.recalculationAt) {
-      planStatus.textContent = `EXNESS PRICE CAPTURED · Using ${levelMoney(state.manualPrice)} as the entry basis.`;
+      planStatus.textContent = `EXNESS PRICE CAPTURED · Using ${money(state.manualPrice)} as the entry basis.`;
       return;
     }
 
