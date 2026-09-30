@@ -65,6 +65,56 @@
     return sample.length ? sample.reduce((sum, range) => sum + range, 0) / sample.length : NaN;
   }
 
+  function renderSuggestions(entry, atr, isSell) {
+    const suggestions = document.getElementById('trade-suggestions');
+    suggestions.replaceChildren();
+
+    if (!Number.isFinite(entry) || entry <= 0 || !Number.isFinite(atr)) {
+      const message = document.createElement('p');
+      message.className = 'suggestions-empty';
+      message.textContent = 'Enter a valid price and load recent candles to calculate scenarios.';
+      suggestions.append(message);
+      return;
+    }
+
+    const direction = isSell ? 'Sell' : 'Buy';
+    const setupOffsets = [
+      { multiple: 0, label: 'At current price' },
+      { multiple: 0.5, label: `0.5× ATR ${isSell ? 'rally' : 'pullback'}` },
+      { multiple: 1, label: `1× ATR ${isSell ? 'rally' : 'pullback'}` },
+    ];
+
+    setupOffsets.forEach(({ multiple, label }) => {
+      const scenarioEntry = entry + (isSell ? 1 : -1) * atr * multiple;
+      const stop = isSell ? scenarioEntry + atr : Math.max(0, scenarioEntry - atr);
+      const target = isSell ? Math.max(0, scenarioEntry - (atr * 2)) : scenarioEntry + (atr * 2);
+      const card = document.createElement('article');
+      card.className = 'suggestion-item';
+
+      const title = document.createElement('h4');
+      title.textContent = `${direction} · ${label}`;
+      card.append(title);
+
+      const levels = document.createElement('div');
+      levels.className = 'suggestion-levels';
+      [
+        ['Entry', scenarioEntry],
+        ['Stop', stop],
+        ['Target', target],
+      ].forEach(([name, value]) => {
+        const level = document.createElement('div');
+        const labelElement = document.createElement('span');
+        labelElement.textContent = name;
+        const valueElement = document.createElement('strong');
+        valueElement.textContent = money(value);
+        level.append(labelElement, valueElement);
+        levels.append(level);
+      });
+      card.append(levels);
+      suggestions.append(card);
+    });
+  }
+
   function visibleBars() {
     const bars = state.payload?.bars || [];
     return state.range === '1m' ? bars.slice(-22) : bars;
@@ -177,6 +227,7 @@
     planStatus.className = 'plan-status';
 
     if (!Number.isFinite(entry) || entry <= 0 || !Number.isFinite(atr)) {
+      renderSuggestions(NaN, atr, isSell);
       document.getElementById('start-price').textContent = '--';
       stopElement.textContent = '--';
       targetElement.textContent = '--';
@@ -186,6 +237,7 @@
       return;
     }
 
+    renderSuggestions(entry, atr, isSell);
     const calculatedStop = isSell ? entry + atr : Math.max(0, entry - atr);
     const calculatedTarget = isSell ? Math.max(0, entry - (atr * 2)) : entry + (atr * 2);
     const planEntry = activePosition?.entry ?? entry;

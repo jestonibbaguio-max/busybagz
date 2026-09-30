@@ -87,6 +87,18 @@ body.stock-page::before { display: none; }
 .entry-control input { width: 100%; min-width: 0; height: 38px; border: 0; outline: 0; background: transparent; color: var(--stock-ink); font: inherit; font-size: 0.82rem; font-variant-numeric: tabular-nums; }
 .entry-help { margin-top: 13px; color: var(--stock-muted); font-size: 0.67rem; line-height: 1.55; }
 .plan-levels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
+.suggestions-panel { margin-top: 17px; padding-top: 13px; border-top: 1px solid var(--stock-line); }
+.suggestions-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 5px 12px; }
+.suggestions-heading h3 { font-size: 0.78rem; font-weight: 800; }
+.suggestions-heading > span { color: var(--stock-muted); font-size: 0.64rem; }
+.suggestions-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 9px; }
+.suggestion-item { min-width: 0; padding: 10px; border: 1px solid var(--stock-line); border-radius: 4px; background: #fbfdfb; }
+.suggestion-item h4 { min-height: 2.2em; color: var(--stock-ink); font-size: 0.67rem; font-weight: 800; line-height: 1.4; }
+.suggestion-levels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; margin-top: 8px; }
+.suggestion-levels div { display: grid; gap: 4px; min-width: 0; }
+.suggestion-levels span { color: var(--stock-muted); font-size: 0.59rem; }
+.suggestion-levels strong { overflow-wrap: anywhere; font-size: 0.65rem; font-variant-numeric: tabular-nums; }
+.suggestions-empty { color: var(--stock-muted); font-size: 0.68rem; }
 .level { display: grid; grid-template-columns: 36px minmax(0, 1fr); align-items: center; gap: 0 10px; min-width: 0; padding: 12px; border: 1px solid var(--stock-line); border-radius: 4px; }
 .level-entry { background: #f6fbf7; }
 .level-stop { background: #fffdfc; }
@@ -145,6 +157,8 @@ body.stock-page::before { display: none; }
   .quote-stats div:nth-child(2n) { padding-left: 8px; }
   .plan-heading { align-items: flex-start; }
   .plan-levels { grid-template-columns: 1fr; }
+  .suggestions-list { grid-template-columns: 1fr; }
+  .suggestion-item h4 { min-height: 0; }
   .level { min-height: 72px; }
 }
 
