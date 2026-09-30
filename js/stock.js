@@ -80,8 +80,8 @@
     const direction = isSell ? 'Sell' : 'Buy';
     const setupOffsets = [
       { multiple: 0, label: 'At current price' },
+      { multiple: 0.25, label: `0.25× ATR ${isSell ? 'rally' : 'pullback'}` },
       { multiple: 0.5, label: `0.5× ATR ${isSell ? 'rally' : 'pullback'}` },
-      { multiple: 1, label: `1× ATR ${isSell ? 'rally' : 'pullback'}` },
     ];
 
     setupOffsets.forEach(({ multiple, label }) => {
@@ -104,9 +104,17 @@
       ].forEach(([name, value]) => {
         const level = document.createElement('div');
         const labelElement = document.createElement('span');
+        labelElement.className = 'suggestion-label';
         labelElement.textContent = name;
         const valueElement = document.createElement('strong');
-        valueElement.textContent = money(value);
+        valueElement.className = 'suggestion-price';
+        const currencyElement = document.createElement('span');
+        currencyElement.className = 'suggestion-currency';
+        currencyElement.textContent = state.payload?.currency === 'USD' ? 'US$' : 'A$';
+        const amountElement = document.createElement('span');
+        amountElement.className = 'suggestion-amount';
+        amountElement.textContent = value.toFixed(2);
+        valueElement.append(currencyElement, amountElement);
         level.append(labelElement, valueElement);
         levels.append(level);
       });

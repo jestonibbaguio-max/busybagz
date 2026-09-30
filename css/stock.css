@@ -96,8 +96,11 @@ body.stock-page::before { display: none; }
 .suggestion-item h4 { min-height: 2.2em; color: var(--stock-ink); font-size: 0.67rem; font-weight: 800; line-height: 1.4; }
 .suggestion-levels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; margin-top: 8px; }
 .suggestion-levels div { display: grid; gap: 4px; min-width: 0; }
-.suggestion-levels span { color: var(--stock-muted); font-size: 0.59rem; }
+.suggestion-levels .suggestion-label { color: var(--stock-muted); font-size: 0.59rem; }
 .suggestion-levels strong { overflow-wrap: anywhere; font-size: 0.65rem; font-variant-numeric: tabular-nums; }
+.suggestion-currency, .suggestion-amount { display: block; }
+.suggestion-currency { color: var(--stock-ink); font-size: 0.59rem; }
+.suggestion-amount { margin-top: 2px; }
 .suggestions-empty { color: var(--stock-muted); font-size: 0.68rem; }
 .level { display: grid; grid-template-columns: 36px minmax(0, 1fr); align-items: center; gap: 0 10px; min-width: 0; padding: 12px; border: 1px solid var(--stock-line); border-radius: 4px; }
 .level-entry { background: #f6fbf7; }
