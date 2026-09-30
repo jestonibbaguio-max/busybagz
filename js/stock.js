@@ -87,7 +87,7 @@
     setupOffsets.forEach(({ multiple, label }) => {
       const scenarioEntry = entry + (isSell ? 1 : -1) * atr * multiple;
       const stop = isSell ? scenarioEntry + atr : Math.max(0, scenarioEntry - atr);
-      const target = isSell ? Math.max(0, scenarioEntry - (atr * 2)) : scenarioEntry + (atr * 2);
+      const target = isSell ? Math.max(0, scenarioEntry - atr) : scenarioEntry + atr;
       const card = document.createElement('article');
       card.className = 'suggestion-item';
 
@@ -99,8 +99,8 @@
       levels.className = 'suggestion-levels';
       [
         ['Entry', scenarioEntry],
-        ['Stop', stop],
         ['Target', target],
+        ['Stop', stop],
       ].forEach(([name, value]) => {
         const level = document.createElement('div');
         const labelElement = document.createElement('span');
